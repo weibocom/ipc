@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	rpc "github.com/icycrystal4/steem-rpc"
-	"github.com/icycrystal4/steem-rpc/transactions"
-	"github.com/icycrystal4/steem-rpc/transports/websocket"
+	rpc "github.com/weibocom/steem-rpc"
+	"github.com/weibocom/steem-rpc/transactions"
+	"github.com/weibocom/steem-rpc/transports/websocket"
 )
 
 func main() {

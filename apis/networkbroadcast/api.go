@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 
 	// RPC
-	"github.com/icycrystal4/steem-rpc/interfaces"
-	"github.com/icycrystal4/steem-rpc/types"
+	"github.com/weibocom/steem-rpc/interfaces"
+	"github.com/weibocom/steem-rpc/types"
 
 	// Vendor
 	"github.com/pkg/errors"

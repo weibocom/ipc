@@ -7,8 +7,8 @@ import (
 	"time"
 
 	// RPC
-	"github.com/icycrystal4/steem-rpc/encoding/wif"
-	"github.com/icycrystal4/steem-rpc/types"
+	"github.com/weibocom/steem-rpc/encoding/wif"
+	"github.com/weibocom/steem-rpc/types"
 )
 
 var tx *types.Transaction

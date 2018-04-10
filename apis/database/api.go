@@ -6,9 +6,9 @@ import (
 	"errors"
 
 	// RPC
-	"github.com/icycrystal4/steem-rpc/interfaces"
-	"github.com/icycrystal4/steem-rpc/internal/call"
-	"github.com/icycrystal4/steem-rpc/types"
+	"github.com/weibocom/steem-rpc/interfaces"
+	"github.com/weibocom/steem-rpc/internal/call"
+	"github.com/weibocom/steem-rpc/types"
 )
 
 const (

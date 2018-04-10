@@ -2,7 +2,7 @@ package types
 
 import (
 	// RPC
-	"github.com/icycrystal4/steem-rpc/encoding/transaction"
+	"github.com/weibocom/steem-rpc/encoding/transaction"
 
 	// Vendor
 	"github.com/pkg/errors"

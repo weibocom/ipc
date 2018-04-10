@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 
 	// Vendor
-	"github.com/icycrystal4/steem-rpc/interfaces"
+	"github.com/weibocom/steem-rpc/interfaces"
 )
 
 var EmptyParams = struct{}{}

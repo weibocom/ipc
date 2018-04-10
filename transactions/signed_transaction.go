@@ -11,8 +11,8 @@ import (
 	"unsafe"
 
 	// RPC
-	"github.com/icycrystal4/steem-rpc/encoding/transaction"
-	"github.com/icycrystal4/steem-rpc/types"
+	"github.com/weibocom/steem-rpc/encoding/transaction"
+	"github.com/weibocom/steem-rpc/types"
 
 	// Vendor
 	"github.com/pkg/errors"

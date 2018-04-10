@@ -10,11 +10,11 @@ import (
 	"syscall"
 
 	// RPC
-	"github.com/icycrystal4/steem-rpc"
-	"github.com/icycrystal4/steem-rpc/encoding/wif"
-	"github.com/icycrystal4/steem-rpc/transactions"
-	"github.com/icycrystal4/steem-rpc/transports/websocket"
-	"github.com/icycrystal4/steem-rpc/types"
+	"github.com/weibocom/steem-rpc"
+	"github.com/weibocom/steem-rpc/encoding/wif"
+	"github.com/weibocom/steem-rpc/transactions"
+	"github.com/weibocom/steem-rpc/transports/websocket"
+	"github.com/weibocom/steem-rpc/types"
 
 	// Vendor
 	"github.com/pkg/errors"

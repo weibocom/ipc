@@ -9,9 +9,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/icycrystal4/steem-rpc"
-	"github.com/icycrystal4/steem-rpc/transports/websocket"
-	"github.com/icycrystal4/steem-rpc/types"
+	"github.com/weibocom/steem-rpc"
+	"github.com/weibocom/steem-rpc/transports/websocket"
+	"github.com/weibocom/steem-rpc/types"
 )
 
 func main() {
