@@ -9,9 +9,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/go-steem/rpc"
-	"github.com/go-steem/rpc/transports/websocket"
-	"github.com/go-steem/rpc/types"
+	"github.com/icycrystal4/steem-rpc"
+	"github.com/icycrystal4/steem-rpc/transports/websocket"
+	"github.com/icycrystal4/steem-rpc/types"
 )
 
 func main() {
@@ -133,7 +133,7 @@ func run() (err error) {
 			lastBlock++
 		}
 
-		// Sleep for STEEMIT_BLOCK_INTERVAL seconds before the next iteration.
-		time.Sleep(time.Duration(config.SteemitBlockInterval) * time.Second)
+		// Sleep for STEEM_BLOCK_INTERVAL seconds before the next iteration.
+		time.Sleep(time.Duration(config.SteemBlockInterval) * time.Second)
 	}
 }

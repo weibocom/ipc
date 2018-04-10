@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 
 	// Vendor
-	"github.com/go-steem/rpc/interfaces"
+	"github.com/icycrystal4/steem-rpc/interfaces"
 )
 
-var EmptyParams = []string{}
+var EmptyParams = struct{}{}
 
 func Raw(caller interfaces.Caller, method string, params interface{}) (*json.RawMessage, error) {
 	var resp json.RawMessage

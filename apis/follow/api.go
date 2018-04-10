@@ -5,8 +5,7 @@ import (
 	"encoding/json"
 
 	// RPC
-	"github.com/go-steem/rpc/interfaces"
-	"github.com/go-steem/rpc/internal/rpc"
+	"github.com/icycrystal4/steem-rpc/interfaces"
 
 	// Vendor
 	"github.com/pkg/errors"
@@ -20,15 +19,15 @@ type API struct {
 }
 
 func NewAPI(caller interfaces.Caller) (*API, error) {
-	id, err := rpc.GetNumericAPIID(caller, APIID)
-	if err != nil {
-		return nil, err
-	}
-	return &API{id, caller}, nil
+	// id, err := rpc.GetNumericAPIID(caller, APIID)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	return &API{0, caller}, nil
 }
 
 func (api *API) call(method string, params, resp interface{}) error {
-	return api.caller.Call("call", []interface{}{"follow_api", method, params}, resp)
+	return api.caller.Call(APIID+".call", []interface{}{"follow_api", method, params}, resp)
 }
 
 func (api *API) GetFollowersRaw(

@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 
 	// RPC
-	"github.com/go-steem/rpc/interfaces"
+	"github.com/icycrystal4/steem-rpc/interfaces"
 
 	// Vendor
 	"github.com/pkg/errors"
@@ -25,7 +25,7 @@ func NewAPI(caller interfaces.Caller) *API {
 }
 
 func (api *API) call(method string, params, resp interface{}) error {
-	return api.caller.Call("call", []interface{}{NumbericAPIID, method, params}, resp)
+	return api.caller.Call(APIID+".call", []interface{}{NumbericAPIID, method, params}, resp)
 }
 
 func (api *API) LoginRaw(username, password string) (*json.RawMessage, error) {

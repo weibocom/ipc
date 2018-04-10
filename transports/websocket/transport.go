@@ -1,6 +1,7 @@
 package websocket
 
 import (
+	"fmt"
 	"io"
 	// Stdlib
 	"context"
@@ -228,6 +229,7 @@ func (t *Transport) dialer() error {
 			if err == nil {
 				break
 			}
+			fmt.Println("dial err:", err.Error())
 
 			select {
 			case <-time.After(delay):

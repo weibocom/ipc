@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 
 	// RPC
-	"github.com/go-steem/rpc/encoding/transaction"
+	"github.com/icycrystal4/steem-rpc/encoding/transaction"
 )
 
 // FC_REFLECT( steemit::chain::report_over_production_operation,
