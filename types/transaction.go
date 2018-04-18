@@ -10,15 +10,15 @@ import (
 
 // Transaction represents a blockchain transaction.
 type Transaction struct {
-	RefBlockNum    UInt16     `json:"ref_block_num"`
-	RefBlockPrefix UInt32     `json:"ref_block_prefix"`
-	Expiration     *Time      `json:"expiration"`
-	Operations     Operations `json:"operations"`
-	Signatures     []string   `json:"signatures"`
+	RefBlockNum    UInt16            `json:"ref_block_num"`
+	RefBlockPrefix UInt32            `json:"ref_block_prefix"`
+	Expiration     *TimePointSeconds `json:"expiration"`
+	Operations     Operations        `json:"operations"`
+	Signatures     []string          `json:"signatures"`
 }
 
 // MarshalTransaction implements transaction.Marshaller interface.
-func (tx *Transaction) MarshalTransaction(encoder *transaction.Encoder) error {
+func (tx Transaction) MarshalTransaction(encoder *transaction.Encoder) error {
 	if len(tx.Operations) == 0 {
 		return errors.New("no operation specified")
 	}

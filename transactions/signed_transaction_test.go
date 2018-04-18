@@ -3,39 +3,91 @@ package transactions
 import (
 	// Stdlib
 	"encoding/hex"
+	"encoding/json"
+	"fmt"
 	"testing"
-	"time"
 
 	// RPC
 	"github.com/weibocom/steem-rpc/encoding/wif"
+	"github.com/weibocom/steem-rpc/steem"
+	"github.com/weibocom/steem-rpc/transactions"
 	"github.com/weibocom/steem-rpc/types"
 )
 
-var tx *types.Transaction
+// 该测试序列化的 expectedHex 都由steem的源代码计算产生
+// 源代码的对象由json反序列化产生。json对应的内容如下：
+var txJson = `
+{
+  "ref_block_num": 12699,
+  "ref_block_prefix": 103618507,
+  "expiration": "2018-04-12T13:33:22",
+  "operations": [
+    [
+      "account_create",
+      {
+        "fee": [
+          10,
+          3,
+          "@@000000021"
+        ],
+        "creator": "initminer",
+        "new_account_name": "icy-1",
+        "owner": {
+          "account_auths": [],
+          "key_auths": [
+            [
+              "STM6iqZbzYGBnX8mZkn7xK5Z4i7DxcU7GUFo3yWgXuE8BhcbaZpkz",
+              3
+            ]
+          ],
+          "weight_threshold": 110
+        },
+        "active": {
+          "account_auths": [],
+          "key_auths": [
+            [
+              "STM6iqZbzYGBnX8mZkn7xK5Z4i7DxcU7GUFo3yWgXuE8BhcbaZpkz",
+              218
+            ]
+          ],
+          "weight_threshold": 111
+        },
+        "posting": {
+          "account_auths": [],
+          "key_auths": [
+            [
+              "STM6iqZbzYGBnX8mZkn7xK5Z4i7DxcU7GUFo3yWgXuE8BhcbaZpkz",
+              1
+            ]
+          ],
+          "weight_threshold": 1
+        },
+        "memo_key": "STM6iqZbzYGBnX8mZkn7xK5Z4i7DxcU7GUFo3yWgXuE8BhcbaZpkz",
+        "json_metadata": "{\"meta\":\"icy data\"}"
+      }
+    ]
+  ],
+  "signatures": [
+    "1f34e818ea8545a1a55a49cf455b310f722af0d3246448fd63ad383ee9c62e8ebf7b456a4470a1c4de9439348fd0d1512a335d598024e0098e65be1454e02777a3"  ]
+}
+`
 
-func init() {
-	// Prepare the transaction.
-	expiration := time.Date(2016, 8, 8, 12, 24, 17, 0, time.UTC)
-	tx = &types.Transaction{
-		RefBlockNum:    36029,
-		RefBlockPrefix: 1164960351,
-		Expiration:     &types.Time{&expiration},
+var (
+	tx   types.Transaction
+	wifs = []string{
+		"5JzpcbsNCu6Hpad1TYmudH4rj1A22SW9Zhb1ofBGHRZSp5poqAX",
 	}
-	tx.PushOperation(&types.VoteOperation{
-		Voter:    "xeroc",
-		Author:   "xeroc",
-		Permlink: "piston",
-		Weight:   10000,
-	})
-}
-
-var wifs = []string{
-	"5JLw5dgQAx6rhZEgNN5C2ds1V47RweGshynFSWFbaMohsYsBvE8",
-}
-
-var privateKeys = make([][]byte, 0, len(wifs))
+	publicKeys  = make([][]byte, 0, len(wifs))
+	privateKeys = make([][]byte, 0, len(wifs))
+)
 
 func init() {
+	// init transaction
+	if err := json.Unmarshal([]byte(txJson), &tx); err != nil {
+		panic(err)
+	}
+
+	// decode wif
 	for _, v := range wifs {
 		privKey, err := wif.Decode(v)
 		if err != nil {
@@ -43,11 +95,8 @@ func init() {
 		}
 		privateKeys = append(privateKeys, privKey)
 	}
-}
 
-var publicKeys = make([][]byte, 0, len(wifs))
-
-func init() {
+	// generate public key
 	for _, v := range wifs {
 		pubKey, err := wif.GetPublicKey(v)
 		if err != nil {
@@ -58,11 +107,11 @@ func init() {
 }
 
 func TestTransaction_Digest(t *testing.T) {
-	expected := "582176b1daf89984bc8b4fdcb24ff1433d1eb114a8c4bf20fb22ad580d035889"
+	expected := "3afe4571043381d00504d4bc4d02ed81f9b0714317edc9cd1c05070b1decdfae"
 
-	stx := NewSignedTransaction(tx)
+	stx := transactions.NewSignedTransaction(&tx)
 
-	digest, err := stx.Digest(SteemChain)
+	digest, err := stx.Digest(steem.SteemChain)
 	if err != nil {
 		t.Error(err)
 	}
@@ -79,8 +128,8 @@ func TestTransaction_SignAndVerify(t *testing.T) {
 		tx.Signatures = nil
 	}()
 
-	stx := NewSignedTransaction(tx)
-	if err := stx.Sign(privateKeys, SteemChain); err != nil {
+	stx := transactions.NewSignedTransaction(&tx)
+	if err := stx.Sign(privateKeys, steem.SteemChain); err != nil {
 		t.Error(err)
 	}
 
@@ -88,11 +137,12 @@ func TestTransaction_SignAndVerify(t *testing.T) {
 		t.Error("expected signatures not appended to the transaction")
 	}
 
-	ok, err := stx.Verify(publicKeys, SteemChain)
+	ok, err := stx.Verify(publicKeys, steem.SteemChain)
 	if err != nil {
 		t.Error(err)
 	}
 	if !ok {
 		t.Error("verification failed")
 	}
+	fmt.Printf("sigs:%v\n", stx.Signatures)
 }

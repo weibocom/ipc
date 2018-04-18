@@ -1,11 +1,11 @@
-package transactions
+package steem
 
 type Chain struct {
 	ID string
 }
 
 var SteemChain = &Chain{
-	ID: "0000000000000000000000000000000000000000000000000000000000000000",
+	ID: "2ac122bd70a2f74d6f761c331f4c4da1028b783cc185d23bf5449ac5af49e198",
 }
 
 var TestChain = &Chain{

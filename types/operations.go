@@ -122,13 +122,13 @@ func (op *POWOperation) Data() interface{} {
 //             (json_metadata) )
 
 type AccountCreateOperation struct {
-	Fee            string     `json:"fee"`
+	Fee            Asset      `json:"fee"`
 	Creator        string     `json:"creator"`
 	NewAccountName string     `json:"new_account_name"`
 	Owner          *Authority `json:"owner"`
 	Active         *Authority `json:"active"`
 	Posting        *Authority `json:"posting"`
-	MemoKey        string     `json:"memo_key"`
+	MemoKey        PublicKey  `json:"memo_key"`
 	JsonMetadata   string     `json:"json_metadata"`
 }
 
@@ -138,6 +138,20 @@ func (op *AccountCreateOperation) Type() OpType {
 
 func (op *AccountCreateOperation) Data() interface{} {
 	return op
+}
+
+func (op *AccountCreateOperation) MarshalTransaction(encoder *transaction.Encoder) error {
+	enc := transaction.NewRollingEncoder(encoder)
+	enc.Encode(uint8(TypeAccountCreate.Code()))
+	enc.Encode(op.Fee)
+	enc.Encode(op.Creator)
+	enc.Encode(op.NewAccountName)
+	enc.Encode(op.Owner)
+	enc.Encode(op.Active)
+	enc.Encode(op.Posting)
+	enc.Encode(op.MemoKey)
+	enc.Encode(op.JsonMetadata)
+	return enc.Err()
 }
 
 // FC_REFLECT( steemit::chain::account_update_operation,
@@ -350,12 +364,12 @@ func (op *VoteOperation) MarshalTransaction(encoder *transaction.Encoder) error 
 //             (expiration) )
 
 type LimitOrderCreateOperation struct {
-	Owner        string `json:"owner"`
-	OrderID      uint32 `json:"orderid"`
-	AmountToSell string `json:"amount_to_sell"`
-	MinToReceive string `json:"min_to_receive"`
-	FillOrKill   bool   `json:"fill_or_kill"`
-	Expiration   *Time  `json:"expiration"`
+	Owner        string            `json:"owner"`
+	OrderID      uint32            `json:"orderid"`
+	AmountToSell string            `json:"amount_to_sell"`
+	MinToReceive string            `json:"min_to_receive"`
+	FillOrKill   bool              `json:"fill_or_kill"`
+	Expiration   *TimePointSeconds `json:"expiration"`
 }
 
 func (op *LimitOrderCreateOperation) Type() OpType {
@@ -427,10 +441,27 @@ func (op *CommentOptionsOperation) Data() interface{} {
 	return op
 }
 
+type AuthorityClassification uint8
+
+const (
+	AuthorityClassificationOwner = iota
+	AuthorityClassificationActive
+	AuthorityClassificationKey
+	AuthorityClassificationPosting
+)
+
 type Authority struct {
-	AccountAuths    StringInt64Map `json:"account_auths"`
-	KeyAuths        StringInt64Map `json:"key_auths"`
-	WeightThreshold uint32         `json:"weight_threshold"`
+	AccountAuths    KeyAuthorityMap `json:"account_auths"`
+	KeyAuths        KeyAuthorityMap `json:"key_auths"`
+	WeightThreshold uint32          `json:"weight_threshold"`
+}
+
+func (a Authority) MarshalTransaction(encoder *transaction.Encoder) error {
+	enc := transaction.NewRollingEncoder(encoder)
+	enc.Encode(uint32(a.WeightThreshold))
+	enc.Encode(a.AccountAuths)
+	enc.Encode(a.KeyAuths)
+	return enc.Err()
 }
 
 type UnknownOperation struct {

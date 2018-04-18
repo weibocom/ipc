@@ -28,7 +28,9 @@ func NewAPI(caller interfaces.Caller) (*API, error) {
 }
 
 func (api *API) call(method string, params, resp interface{}) error {
-	return api.caller.Call(APIID+".call", []interface{}{api.id, method, params}, resp)
+	_args := make(map[string]interface{})
+	_args["trx"] = params
+	return api.caller.Call(APIID+"."+method, _args, resp)
 }
 
 /*
@@ -36,7 +38,7 @@ func (api *API) call(method string, params, resp interface{}) error {
  */
 
 func (api *API) BroadcastTransaction(tx *types.Transaction) error {
-	params := []interface{}{tx}
+	params := tx
 	return api.call("broadcast_transaction", params, nil)
 }
 
@@ -45,7 +47,7 @@ func (api *API) BroadcastTransaction(tx *types.Transaction) error {
  */
 
 func (api *API) BroadcastTransactionSynchronousRaw(tx *types.Transaction) (*json.RawMessage, error) {
-	params := []interface{}{tx}
+	params := tx
 
 	var resp json.RawMessage
 	if err := api.call("broadcast_transaction_synchronous", params, &resp); err != nil {

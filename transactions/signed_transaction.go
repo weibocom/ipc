@@ -7,11 +7,14 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"encoding/hex"
+	"fmt"
 	"time"
 	"unsafe"
 
 	// RPC
+
 	"github.com/weibocom/steem-rpc/encoding/transaction"
+	"github.com/weibocom/steem-rpc/steem"
 	"github.com/weibocom/steem-rpc/types"
 
 	// Vendor
@@ -30,7 +33,7 @@ type SignedTransaction struct {
 func NewSignedTransaction(tx *types.Transaction) *SignedTransaction {
 	if tx.Expiration == nil {
 		expiration := time.Now().Add(30 * time.Second)
-		tx.Expiration = &types.Time{&expiration}
+		tx.Expiration = types.NewTimePointSeconds(expiration)
 	}
 
 	return &SignedTransaction{tx}
@@ -46,7 +49,7 @@ func (tx *SignedTransaction) Serialize() ([]byte, error) {
 	return b.Bytes(), nil
 }
 
-func (tx *SignedTransaction) Digest(chain *Chain) ([]byte, error) {
+func (tx *SignedTransaction) Digest(chain *steem.Chain) ([]byte, error) {
 	var msgBuffer bytes.Buffer
 
 	// Write the chain ID.
@@ -54,6 +57,8 @@ func (tx *SignedTransaction) Digest(chain *Chain) ([]byte, error) {
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to decode chain ID: %v", chain.ID)
 	}
+
+	fmt.Printf("%v %d\n", rawChainID, len(rawChainID))
 
 	if _, err := msgBuffer.Write(rawChainID); err != nil {
 		return nil, errors.Wrap(err, "failed to write chain ID")
@@ -69,12 +74,15 @@ func (tx *SignedTransaction) Digest(chain *Chain) ([]byte, error) {
 		return nil, errors.Wrap(err, "failed to write serialized transaction")
 	}
 
+	fmt.Printf("digest buffer:\n%v\ntotal len:%d\n", msgBuffer.Bytes(), msgBuffer.Len())
+
 	// Compute the digest.
 	digest := sha256.Sum256(msgBuffer.Bytes())
 	return digest[:], nil
 }
 
-func (tx *SignedTransaction) Sign(privKeys [][]byte, chain *Chain) error {
+// 基于C实现的签名，与CVerify对应
+func (tx *SignedTransaction) Sign(privKeys [][]byte, chain *steem.Chain) error {
 	digest, err := tx.Digest(chain)
 	if err != nil {
 		return err
@@ -95,7 +103,7 @@ func (tx *SignedTransaction) Sign(privKeys [][]byte, chain *Chain) error {
 	}()
 
 	sigs := make([][]byte, 0, len(privKeys))
-	for _, cKey := range cKeys {
+	for i, cKey := range cKeys {
 		var (
 			signature [64]byte
 			recid     C.int
@@ -110,6 +118,7 @@ func (tx *SignedTransaction) Sign(privKeys [][]byte, chain *Chain) error {
 		sig := make([]byte, 65)
 		sig[0] = byte(recid)
 		copy(sig[1:], signature[:])
+		fmt.Printf("digest:%v\nprivate key:%v %d\nrecid:%v\nsig:%v\n", hex.EncodeToString(digest[:]), privKeys[i], len(privKeys[i]), recid, hex.EncodeToString(sig))
 
 		sigs = append(sigs, sig)
 	}
@@ -124,7 +133,7 @@ func (tx *SignedTransaction) Sign(privKeys [][]byte, chain *Chain) error {
 	return nil
 }
 
-func (tx *SignedTransaction) Verify(pubKeys [][]byte, chain *Chain) (bool, error) {
+func (tx *SignedTransaction) Verify(pubKeys [][]byte, chain *steem.Chain) (bool, error) {
 	// Compute the digest, again.
 	digest, err := tx.Digest(chain)
 	if err != nil {

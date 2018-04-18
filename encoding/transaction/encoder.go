@@ -3,6 +3,7 @@ package transaction
 import (
 	// Stdlib
 	"encoding/binary"
+	"fmt"
 	"io"
 	"strings"
 
@@ -14,8 +15,18 @@ type Encoder struct {
 	w io.Writer
 }
 
+type debug_writer struct {
+	io.Writer
+}
+
+func (d debug_writer) Write(p []byte) (n int, err error) {
+	fmt.Printf("%v %d\n", p, len(p))
+	return d.Writer.Write(p)
+}
+
 func NewEncoder(w io.Writer) *Encoder {
-	return &Encoder{w}
+	dw := debug_writer{w}
+	return &Encoder{dw}
 }
 
 func (encoder *Encoder) EncodeVarint(i int64) error {
@@ -71,9 +82,11 @@ func (encoder *Encoder) Encode(v interface{}) error {
 
 	case string:
 		return encoder.encodeString(v)
+	case []byte:
+		return encoder.writeBytes(v)
 
 	default:
-		return errors.Errorf("encoder: unsupported type encountered")
+		return errors.Errorf("encoder: unsupported type(%v) encountered", v)
 	}
 }
 

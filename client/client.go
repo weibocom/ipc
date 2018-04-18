@@ -1,4 +1,4 @@
-package rpc
+package client
 
 import (
 	// RPC
@@ -53,6 +53,6 @@ func NewClient(cc interfaces.CallCloser) (*Client, error) {
 
 // Close should be used to close the client when no longer needed.
 // It simply calls Close() on the underlying CallCloser.
-func (client *Client) Close() error {
-	return client.cc.Close()
+func (c *Client) Close() error {
+	return c.cc.Close()
 }

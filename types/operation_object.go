@@ -5,23 +5,23 @@ import (
 )
 
 type OperationObject struct {
-	BlockNumber            uint32    `json:"block"`
-	TransactionID          string    `json:"trx_id"`
-	TransactionInBlock     uint32    `json:"trx_in_block"`
-	Operation              Operation `json:"op"`
-	OperationInTransaction uint16    `json:"op_in_trx"`
-	VirtualOperation       uint64    `json:"virtual_op"`
-	Timestamp              *Time     `json:"timestamp"`
+	BlockNumber            uint32            `json:"block"`
+	TransactionID          string            `json:"trx_id"`
+	TransactionInBlock     uint32            `json:"trx_in_block"`
+	Operation              Operation         `json:"op"`
+	OperationInTransaction uint16            `json:"op_in_trx"`
+	VirtualOperation       uint64            `json:"virtual_op"`
+	Timestamp              *TimePointSeconds `json:"timestamp"`
 }
 
 type rawOperationObject struct {
-	BlockNumber            uint32          `json:"block"`
-	TransactionID          string          `json:"trx_id"`
-	TransactionInBlock     uint32          `json:"trx_in_block"`
-	Operation              *operationTuple `json:"op"`
-	OperationInTransaction uint16          `json:"op_in_trx"`
-	VirtualOperation       uint64          `json:"virtual_op"`
-	Timestamp              *Time           `json:"timestamp"`
+	BlockNumber            uint32            `json:"block"`
+	TransactionID          string            `json:"trx_id"`
+	TransactionInBlock     uint32            `json:"trx_in_block"`
+	Operation              *operationTuple   `json:"op"`
+	OperationInTransaction uint16            `json:"op_in_trx"`
+	VirtualOperation       uint64            `json:"virtual_op"`
+	Timestamp              *TimePointSeconds `json:"timestamp"`
 }
 
 func (op *OperationObject) UnmarshalJSON(p []byte) error {
