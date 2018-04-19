@@ -7,6 +7,7 @@ import (
 	"crypto/rand"
 
 	"github.com/btcsuite/btcd/btcec"
+	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/btcsuite/btcutil"
 	base58 "github.com/btcsuite/btcutil/base58"
 	"github.com/pkg/errors"
@@ -14,27 +15,20 @@ import (
 
 // Decode can be used to turn WIF into a raw private key (32 bytes).
 func Decode(wif string) ([]byte, error) {
-	w, err := btcutil.DecodeWIF(wif)
+	w, err := DecodeWIF(wif)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to decode WIF")
 	}
 
-	return w.PrivKey.Serialize(), nil
+	return w.Serialize(), nil
 }
 
-func ParseWif(wif string) (*btcutil.WIF, error) {
-	return btcutil.DecodeWIF(wif)
-}
-
-// GetPublicKey returns the public key associated with the given WIF
-// in the 33-byte compressed format.
-func GetPublicKey(wif string) ([]byte, error) {
+func DecodeWIF(wif string) (*WIF, error) {
 	w, err := btcutil.DecodeWIF(wif)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to decode WIF")
+		return nil, err
 	}
-
-	return w.PrivKey.PubKey().SerializeCompressed(), nil
+	return (*WIF)(w), nil
 }
 
 func ParsePrivateKey(pk []byte) *btcec.PrivateKey {
@@ -55,14 +49,18 @@ func ParseSignature(sigStr []byte) (*btcec.Signature, error) {
 	return btcec.ParseSignature(sigStr, btcec.S256())
 }
 
-func ParsePubKey(pubKeyStr []byte) (*btcec.PublicKey, error) {
-	return btcec.ParsePubKey(pubKeyStr, btcec.S256())
-}
-
-func NewPrivateKey() (*btcec.PrivateKey, error) {
+func GenerateKey() (*PrivateKey, error) {
 	key, err := ecdsa.GenerateKey(btcec.S256(), rand.Reader)
 	if err != nil {
 		return nil, err
 	}
-	return (*btcec.PrivateKey)(key), nil
+	return (*PrivateKey)((*btcec.PrivateKey)(key)), nil
+}
+
+func NewWIF(pk *PrivateKey) (*WIF, error) {
+	w, err := btcutil.NewWIF((*btcec.PrivateKey)(pk), &chaincfg.MainNetParams, false)
+	if err != nil {
+		return nil, err
+	}
+	return (*WIF)(w), nil
 }

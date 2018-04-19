@@ -2,16 +2,12 @@ package wif
 
 import (
 	// Stdlib
-	"bytes"
+
 	"encoding/hex"
-	"fmt"
 	mr "math/rand"
 	"testing"
 	"time"
 
-	"github.com/btcsuite/btcd/chaincfg"
-	"github.com/btcsuite/btcutil"
-	"github.com/btcsuite/btcutil/base58"
 	"github.com/weibocom/steem-rpc/encoding/wif"
 )
 
@@ -39,42 +35,80 @@ func TestPublicKey(t *testing.T) {
 	wifStr := "5JzpcbsNCu6Hpad1TYmudH4rj1A22SW9Zhb1ofBGHRZSp5poqAX"
 	// 不带 STM 等前缀
 	pubkeyStr := "6kbKsZj5kY5QrG8huATPtwfVmZmKzFDfUXz1eEbKYF58LorAxF"
-	direct, l := wif.ParsePubKeyBase58(pubkeyStr)
 
-	fromPriKey, err := wif.GetPublicKey(wifStr)
+	w, err := wif.DecodeWIF(wifStr)
 	if err != nil {
 		t.Error(err)
+		return
+	}
+	var pubKey wif.PublicKey
+	err = pubKey.From(pubkeyStr)
+	if err != nil {
+		t.Error(err)
+		return
 	}
 
-	if !bytes.Equal(fromPriKey, direct) {
-		t.Errorf("public key parse failed. \n\tpublic key generated from private key:%v\n\tpublic key directly parse from base58:%v\n", fromPriKey, direct)
+	pubks := pubKey.String(false)
+	if pubks != pubkeyStr {
+		t.Errorf("expect %s but got %s", pubkeyStr, pubks)
 	}
-	if l != len(direct) {
-		t.Logf("public key parse from base58 maybe trunced from %d to %d", l, len(direct))
+
+	pubksFromWif := w.PublicKey().String(false)
+	if pubksFromWif != pubkeyStr {
+		t.Errorf("expect %s but got %s", pubkeyStr, pubksFromWif)
 	}
+
 }
 
 func TestParser(t *testing.T) {
 	wifStr := "5JzpcbsNCu6Hpad1TYmudH4rj1A22SW9Zhb1ofBGHRZSp5poqAX"
 	// pubkeyStr := "6kbKsZj5kY5QrG8huATPtwfVmZmKzFDfUXz1eEbKYF58LorAxF"
-	w, err := wif.ParseWif(wifStr)
+	w, err := wif.DecodeWIF(wifStr)
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	pk := w.PrivKey.Serialize()
-	fmt.Printf("private key:%v len:%d\n", pk, len(pk))
-	fmt.Printf("wif base 58:%v\n", base58.Decode(wifStr))
-
-	priv, err := wif.NewPrivateKey()
+	wstr := w.String()
+	if wstr != wifStr {
+		t.Errorf("expect %s but got %s", wifStr, wstr)
+		return
+	}
+	priv, err := wif.GenerateKey()
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	wif1, err := btcutil.NewWIF(priv, &chaincfg.MainNetParams, false)
+	_, err = wif.NewWIF(priv)
 	if err != nil {
 		t.Error(err)
 	}
 
-	fmt.Printf("witness:%v\n", wif1.String())
+}
+
+func TestNewWIF(t *testing.T) {
+	pk, err := wif.GenerateKey()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	_, err = wif.NewWIF(pk)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestWifParser(t *testing.T) {
+	wifStr := "5JzpcbsNCu6Hpad1TYmudH4rj1A22SW9Zhb1ofBGHRZSp5poqAX"
+	pubkeyStr := "STM6kbKsZj5kY5QrG8huATPtwfVmZmKzFDfUXz1eEbKYF58LorAxF"
+	w, err := wif.DecodeWIF(wifStr)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	recoverPubKeyStr := w.PublicKey().String(true)
+
+	if pubkeyStr != recoverPubKeyStr {
+		t.Errorf("expected %v but got %v", pubkeyStr, recoverPubKeyStr)
+	}
 }
