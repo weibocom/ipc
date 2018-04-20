@@ -53,7 +53,7 @@ func (tx *SignedTransaction) Digest(chain *steem.Chain) ([]byte, error) {
 	var msgBuffer bytes.Buffer
 
 	// Write the chain ID.
-	rawChainID, err := hex.DecodeString(chain.ID)
+	rawChainID, err := chain.DecodeID()
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to decode chain ID: %v", chain.ID)
 	}
