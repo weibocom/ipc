@@ -319,6 +319,26 @@ func (op *CommentOperation) IsStoryOperation() bool {
 	return op.ParentAuthor == ""
 }
 
+//             (parent_author)
+//             (parent_permlink)
+//             (author)
+//             (permlink)
+//             (title)
+//             (body)
+//             (json_metadata) )
+func (op *CommentOperation) MarshalTransaction(encoder *transaction.Encoder) error {
+	enc := transaction.NewRollingEncoder(encoder)
+	enc.EncodeUVarint(uint64(op.Type().Code()))
+	enc.Encode(op.ParentAuthor)
+	enc.Encode(op.ParentPermlink)
+	enc.Encode(op.Author)
+	enc.Encode(op.Permlink)
+	enc.Encode(op.Title)
+	enc.Encode(op.Body)
+	enc.Encode(op.JsonMetadata)
+	return enc.Err()
+}
+
 // FC_REFLECT( steemit::chain::vote_operation,
 //             (voter)
 //             (author)
