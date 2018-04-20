@@ -6,7 +6,7 @@ import (
 	"github.com/btcsuite/btcd/btcec"
 	"github.com/btcsuite/btcutil"
 	"github.com/btcsuite/btcutil/base58"
-	"github.com/weibocom/steem-rpc/steem"
+	"github.com/weibocom/steem-rpc/config"
 	"golang.org/x/crypto/ripemd160"
 )
 
@@ -28,9 +28,10 @@ func (p *PublicKey) Serialize() []byte {
 
 // 输入的是BASE58编码的字符串
 func (p *PublicKey) From(str string) error {
+	prefix := config.GetAddressPrefix()
 	key := str
-	if strings.IndexAny(key, steem.STEEM_ADDRESS_PREFIX) == 0 {
-		key = key[len(steem.STEEM_ADDRESS_PREFIX):]
+	if strings.IndexAny(key, prefix) == 0 {
+		key = key[len(prefix):]
 	}
 	b := base58.Decode(key)
 	return p.FromBytes(b)
@@ -57,7 +58,7 @@ func (p *PublicKey) String(prefix bool) string {
 
 	str := base58.Encode(serWithSum)
 	if prefix {
-		str = steem.STEEM_ADDRESS_PREFIX + str
+		str = config.GetAddressPrefix() + str
 	}
 
 	return str

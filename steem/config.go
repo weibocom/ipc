@@ -1,42 +1,28 @@
 package steem
 
-const (
-	STEEM_ADDRESS_PREFIX = "STM"
+import (
+	"github.com/weibocom/steem-rpc/config"
+	"github.com/weibocom/steem-rpc/encoding/wif"
 )
 
-var wifs = []string{
-	"5JzpcbsNCu6Hpad1TYmudH4rj1A22SW9Zhb1ofBGHRZSp5poqAX",
+var privateKeys = make([][]byte, 0, len(config.GetWIFs()))
+var publicKeys = make([][]byte, 0, len(config.GetWIFs()))
+
+func init() {
+	for _, v := range config.GetWIFs() {
+		w, err := wif.DecodeWIF(v)
+		if err != nil {
+			panic(err)
+		}
+		privateKeys = append(privateKeys, w.Serialize())
+		publicKeys = append(publicKeys, w.PublicKey().Serialize())
+	}
 }
 
-// var privateKeys = make([][]byte, 0, len(wifs))
-// var publicKeys = make([][]byte, 0, len(wifs))
+func GetPrivateKeys() [][]byte {
+	return privateKeys
+}
 
-// func init() {
-// 	for _, v := range wifs {
-// 		privKey, err := wif.Decode(v)
-// 		if err != nil {
-// 			panic(err)
-// 		}
-// 		privateKeys = append(privateKeys, privKey)
-// 	}
-
-// 	for _, v := range wifs {
-// 		pubKey, err := wif.GetPublicKey(v)
-// 		if err != nil {
-// 			panic(err)
-// 		}
-// 		publicKeys = append(publicKeys, pubKey)
-// 	}
-// }
-
-// func GetWifs() []string {
-// 	return wifs
-// }
-
-// func GetPrivateKeys() [][]byte {
-// 	return privateKeys
-// }
-
-// func GetPublicKeys() [][]byte {
-// 	return publicKeys
-// }
+func GetPublicKeys() [][]byte {
+	return publicKeys
+}

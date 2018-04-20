@@ -5,17 +5,18 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/weibocom/steem-rpc/config"
 	"github.com/weibocom/steem-rpc/encoding/transaction"
 	"github.com/weibocom/steem-rpc/encoding/wif"
-	"github.com/weibocom/steem-rpc/steem"
 )
 
 type PublicKey string
 
 func (p PublicKey) MarshalTransaction(encoder *transaction.Encoder) error {
+	prefix := config.GetAddressPrefix()
 	key := string(p)
-	if strings.IndexAny(key, steem.STEEM_ADDRESS_PREFIX) == 0 {
-		key = key[len(steem.STEEM_ADDRESS_PREFIX):]
+	if strings.IndexAny(key, prefix) == 0 {
+		key = key[len(prefix):]
 	}
 	compressedKeys, _ := wif.ParsePubKeyBase58(key)
 	return encoder.Encode(compressedKeys)
