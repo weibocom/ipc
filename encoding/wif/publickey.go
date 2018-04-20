@@ -4,15 +4,10 @@ import (
 	"strings"
 
 	"github.com/btcsuite/btcd/btcec"
-	"github.com/btcsuite/btcutil"
 	"github.com/btcsuite/btcutil/base58"
 	"github.com/weibocom/steem-rpc/config"
 	"golang.org/x/crypto/ripemd160"
 )
-
-type WIF btcutil.WIF
-
-type PrivateKey btcec.PrivateKey
 
 type PublicKey btcec.PublicKey
 
@@ -62,21 +57,4 @@ func (p *PublicKey) String(prefix bool) string {
 	}
 
 	return str
-}
-
-func (w *WIF) PrivateKey() *PrivateKey {
-	return (*PrivateKey)(w.PrivKey)
-}
-
-func (w *WIF) PublicKey() *PublicKey {
-	return (*PublicKey)(w.PrivKey.PubKey())
-}
-
-// Serialize can be used to turn WIF into a raw private key (32 bytes).
-func (w *WIF) Serialize() []byte {
-	return w.PrivKey.Serialize()
-}
-
-func (w *WIF) String() string {
-	return ((*btcutil.WIF)(w)).String()
 }
