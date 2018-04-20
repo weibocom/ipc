@@ -3,6 +3,7 @@ package client
 import (
 	// RPC
 
+	"github.com/weibocom/steem-rpc/apis/condenser"
 	"github.com/weibocom/steem-rpc/apis/database"
 	"github.com/weibocom/steem-rpc/apis/follow"
 	"github.com/weibocom/steem-rpc/apis/login"
@@ -28,6 +29,9 @@ type Client struct {
 
 	// NetworkBroadcast represents network_broadcast_api.
 	NetworkBroadcast *networkbroadcast.API
+
+	// Condenser represents condenser_api.
+	Condenser *condenser.API
 }
 
 // NewClient creates a new RPC client that use the given CallCloser internally.
@@ -47,6 +51,12 @@ func NewClient(cc interfaces.CallCloser) (*Client, error) {
 		return nil, err
 	}
 	client.NetworkBroadcast = networkBroadcastAPI
+
+	condenserAPI := condenser.NewAPI(client.cc)
+	if err != nil {
+		return nil, err
+	}
+	client.Condenser = condenserAPI
 
 	return client, nil
 }
