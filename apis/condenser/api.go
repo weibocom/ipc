@@ -5,6 +5,7 @@ import (
 
 	"github.com/weibocom/steem-rpc/interfaces"
 	"github.com/weibocom/steem-rpc/internal/call"
+	"github.com/weibocom/steem-rpc/types"
 )
 
 const (
@@ -19,6 +20,89 @@ type API struct {
 
 func NewAPI(caller interfaces.Caller) *API {
 	return &API{caller}
+}
+
+/*
+   // Accounts
+   (get_accounts)
+   (get_account_references)
+   (lookup_account_names)
+   (lookup_accounts)
+   (get_account_count)
+   (get_conversion_requests)
+   (get_account_history)
+*/
+
+func (api *API) GetAccounts(accountNames []string) ([]*Account, error) {
+	raw, err := call.Raw(api.caller, APIID+".get_accounts", [][]string{accountNames})
+	if err != nil {
+		return nil, err
+	}
+	var resp []*Account
+	if err := json.Unmarshal([]byte(*raw), &resp); err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (api *API) LookupAccountNames(accountNames []string) ([]*Account, error) {
+	raw, err := call.Raw(api.caller, APIID+".lookup_account_names", [][]string{accountNames})
+	if err != nil {
+		return nil, err
+	}
+	var resp []*Account
+	if err := json.Unmarshal([]byte(*raw), &resp); err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (api *API) LookupAccounts(lowerBoundName string, limit uint32) ([]string, error) {
+	raw, err := call.Raw(api.caller, APIID+".lookup_accounts", []interface{}{lowerBoundName, limit})
+	if err != nil {
+		return nil, err
+	}
+	var resp []string
+	if err := json.Unmarshal([]byte(*raw), &resp); err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (api *API) GetAccountCount() (uint32, error) {
+	raw, err := call.Raw(api.caller, APIID+".get_account_count", emptyParams)
+	if err != nil {
+		return 0, err
+	}
+	var resp uint32
+	if err := json.Unmarshal([]byte(*raw), &resp); err != nil {
+		return 0, err
+	}
+	return resp, nil
+}
+
+func (api *API) GetAccountHistory(account string, from int64, limit uint32) ([]*types.OperationObject, error) {
+	raw, err := call.Raw(api.caller, APIID+".get_account_history", []interface{}{account, from, limit})
+	if err != nil {
+		return nil, err
+	}
+	var tmp1 [][]interface{}
+	if err := json.Unmarshal([]byte(*raw), &tmp1); err != nil {
+		return nil, err
+	}
+	var resp []*types.OperationObject
+	for _, v := range tmp1 {
+		byteData, errm := json.Marshal(&v[1])
+		if errm != nil {
+			return nil, errm
+		}
+		var tmp *types.OperationObject
+		if err := json.Unmarshal(byteData, &tmp); err != nil {
+			return nil, err
+		}
+		resp = append(resp, tmp)
+	}
+	return resp, nil
 }
 
 /*
