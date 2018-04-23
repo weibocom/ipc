@@ -3,7 +3,6 @@ package client
 import (
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/weibocom/steem-rpc/apis/networkbroadcast"
 	"github.com/weibocom/steem-rpc/steem"
@@ -40,14 +39,14 @@ func (c *Client) CreateSignedTransaction(creator string, name string, fee int, j
 func (c *Client) SendTrx(operations ...types.Operation) (resp *networkbroadcast.BroadcastResponse, err error) {
 	props, cfgErr := c.Database.GetDynamicGlobalProperties()
 	if cfgErr != nil {
-		fmt.Println("failed to get config:%s", cfgErr.Error())
-		os.Exit(-3)
+		fmt.Printf("failed to get config: %s \n", cfgErr.Error())
+		return nil, cfgErr
 	}
 
 	refBlockPrefix, err := transactions.RefBlockPrefix(props.HeadBlockID)
 	if err != nil {
 		fmt.Printf("failed to parse ref block prefix:%v\n", err.Error())
-		return
+		return nil, err
 	}
 
 	tx := &types.Transaction{
@@ -69,7 +68,7 @@ func (c *Client) SendTrx(operations ...types.Operation) (resp *networkbroadcast.
 	resp, err = c.NetworkBroadcast.BroadcastTransactionSynchronous(stx.Transaction)
 	if err != nil {
 		log.Printf("broadcast failed:%v\n", err.Error())
-		return
+		return nil, err
 	}
 
 	return resp, err
