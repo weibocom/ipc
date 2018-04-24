@@ -7,18 +7,6 @@ import (
 	"github.com/weibocom/steem-rpc/types"
 )
 
-type Pair struct {
-	Public  string
-	Private string
-}
-
-type Account struct {
-	OwnerKey   Pair
-	ActiveKey  Pair
-	PostingKey Pair
-	MemoKey    Pair
-}
-
 func (c *Client) NewAccount(creator string, name string, fee int, jsonMeta string) (*Account, error) {
 	privKey, err := wif.GenerateKey()
 	if err != nil {

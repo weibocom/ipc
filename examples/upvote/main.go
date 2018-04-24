@@ -1,23 +1,25 @@
 package main
 
 import (
+
 	// Stdlib
+	"errors"
 	"flag"
 	"fmt"
 	"log"
+	"net/rpc"
 	"os"
 	"os/signal"
 	"syscall"
 
 	// RPC
-	"github.com/weibocom/steem-rpc"
+
 	"github.com/weibocom/steem-rpc/encoding/wif"
 	"github.com/weibocom/steem-rpc/transactions"
 	"github.com/weibocom/steem-rpc/transports/websocket"
 	"github.com/weibocom/steem-rpc/types"
 
 	// Vendor
-	"github.com/pkg/errors"
 	"golang.org/x/crypto/ssh/terminal"
 )
 
