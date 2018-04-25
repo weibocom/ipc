@@ -3,6 +3,7 @@ package condenser
 import (
 	"encoding/json"
 
+	"github.com/pkg/errors"
 	"github.com/weibocom/steem-rpc/interfaces"
 	"github.com/weibocom/steem-rpc/internal/call"
 	"github.com/weibocom/steem-rpc/types"
@@ -175,4 +176,51 @@ func (api *API) GetActiveWitnesses() ([]string, error) {
 		return nil, err
 	}
 	return resp, nil
+}
+
+func (api *API) GetFeedEntriesRaw(
+	accountName string,
+	entryID uint32,
+	limit uint16,
+) (*json.RawMessage, error) {
+
+	if limit == 0 {
+		limit = 500
+	}
+
+	params := []interface{}{accountName, entryID, limit}
+
+	raw, err := call.Raw(api.caller, APIID+".get_feed_entries", params)
+	if err != nil {
+		return nil, err
+	}
+
+	return raw, nil
+}
+
+func (api *API) GetFeedEntries(
+	accountName string,
+	entryID uint32,
+	limit uint16,
+) ([]*FeedEntry, error) {
+
+	raw, err := api.GetFeedEntriesRaw(accountName, entryID, limit)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp []*FeedEntry
+	if err := json.Unmarshal([]byte(*raw), &resp); err != nil {
+		return nil, errors.Wrap(
+			err, "go-steem/rpc: follow_api: failed to unmarshal get_feed_entries response")
+	}
+	return resp, nil
+}
+
+func (api *API) GetContent(author, permlink string) (*Content, error) {
+	var resp Content
+	if err := api.caller.Call(APIID+".get_content", []string{author, permlink}, &resp); err != nil {
+		return nil, err
+	}
+	return &resp, nil
 }

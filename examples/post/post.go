@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 
+	"github.com/kr/pretty"
 	"github.com/weibocom/steem-rpc/client"
 	"github.com/weibocom/steem-rpc/transports/websocket"
 )
@@ -23,7 +25,18 @@ func main() {
 	}
 	defer c.Close()
 
-	ok, err := c.Post("initminer", "a test post", "a test text", "", "test", "", []string{"test"})
+	// wb-8000 a test tital body body body weibo-8000-9000 wb
+	ok, err := c.Post("initminer", "a test post", "a test text", "weibo-8000-9000", "wb", "", []string{"test"})
+
+	//ok, err := c.Post("initminer", "a test post", "a test text", "", "test", "", []string{"test"})
 
 	fmt.Println(ok, err)
+
+	content, err := c.Condenser.GetContent("initminer", "weibo-8000-9000")
+
+	if err != nil {
+		log.Fatalf("failed to getConent: %v", err)
+	}
+
+	log.Println(pretty.Sprint(content))
 }

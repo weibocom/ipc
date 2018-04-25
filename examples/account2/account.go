@@ -2,6 +2,8 @@ package main
 
 import (
 	"log"
+	"math/rand"
+	"strconv"
 
 	"github.com/kr/pretty"
 
@@ -22,9 +24,10 @@ func main() {
 	}
 	defer c.Close()
 
-	//create(c, "user1")
-	//getAccounts(c, "user1")
-	//lookupAccountNames(c, "user1")
+	account := "user" + strconv.Itoa(rand.Int())
+	create(c, account)
+	getAccounts(c, account)
+	lookupAccountNames(c, account)
 
 	lookupAccounts(c, "")
 	getAccountCount(c)
