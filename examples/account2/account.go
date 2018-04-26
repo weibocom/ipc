@@ -4,6 +4,7 @@ import (
 	"log"
 	"math/rand"
 	"strconv"
+	"time"
 
 	"github.com/kr/pretty"
 
@@ -24,7 +25,8 @@ func main() {
 	}
 	defer c.Close()
 
-	account := "user" + strconv.Itoa(rand.Int())
+	rand.Seed(time.Now().UnixNano())
+	account := "wbuser-" + strconv.Itoa(rand.Intn(10000))
 	create(c, account)
 	getAccounts(c, account)
 	lookupAccountNames(c, account)
@@ -32,7 +34,7 @@ func main() {
 	lookupAccounts(c, "")
 	getAccountCount(c)
 
-	getAccountHistory(c, "user1")
+	getAccountHistory(c, account)
 }
 
 func create(c *client.Client, account string) {
@@ -40,6 +42,11 @@ func create(c *client.Client, account string) {
 	activePubKey := "STM5bdqA1f1RggUMnBBmcd9vvTMguwWQshkadh8KWuHNX38bSPMif"
 	postingPubKey := "STM7zTZCAUvjZZuo9o7FjHsv6irgaAUrWWpR39bWAdpwwpTm8TfbF"
 	memoPubKey := "STM6xBkq3xdpvuMKPq6EW2JPXTwoNNDPt6Vqt1w43qCESvBELcniU"
+
+	// ownerPubKey := "STM6iqZbzYGBnX8mZkn7xK5Z4i7DxcU7GUFo3yWgXuE8BhcbaZpkz"
+	// activePubKey := "STM6iqZbzYGBnX8mZkn7xK5Z4i7DxcU7GUFo3yWgXuE8BhcbaZpkz"
+	// postingPubKey := "STM6iqZbzYGBnX8mZkn7xK5Z4i7DxcU7GUFo3yWgXuE8BhcbaZpkz"
+	// memoPubKey := "STM6iqZbzYGBnX8mZkn7xK5Z4i7DxcU7GUFo3yWgXuE8BhcbaZpkz"
 
 	_, err := c.CreateAccount("initminer", account, 1, ownerPubKey, activePubKey, postingPubKey, memoPubKey, `{"meta":"test"}`)
 
