@@ -48,7 +48,7 @@ func create(c *client.Client, account string) {
 	// postingPubKey := "STM6iqZbzYGBnX8mZkn7xK5Z4i7DxcU7GUFo3yWgXuE8BhcbaZpkz"
 	// memoPubKey := "STM6iqZbzYGBnX8mZkn7xK5Z4i7DxcU7GUFo3yWgXuE8BhcbaZpkz"
 
-	_, err := c.CreateAccount("initminer", account, 1, ownerPubKey, activePubKey, postingPubKey, memoPubKey, `{"meta":"test"}`)
+	err := c.CreateAccount("initminer", account, 1, ownerPubKey, activePubKey, postingPubKey, memoPubKey, `{"meta":"test"}`)
 
 	if err != nil {
 		log.Fatalln(err)

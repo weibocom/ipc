@@ -1,7 +1,6 @@
 package client
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/weibocom/ipc/apis/networkbroadcast"
@@ -37,23 +36,10 @@ func (c *Client) CreateSignedTransaction(creator string, name string, fee int, j
 
 // SendTrx signs and sends transactions.
 func (c *Client) SendTrx(operations ...types.Operation) (resp *networkbroadcast.BroadcastResponse, err error) {
-	props, cfgErr := c.Database.GetDynamicGlobalProperties()
-	if cfgErr != nil {
-		fmt.Printf("failed to get config: %s \n", cfgErr.Error())
-		return nil, cfgErr
-	}
-
-	refBlockPrefix, err := transactions.RefBlockPrefix(props.HeadBlockID)
+	tx, err := c.CreateTransaction()
 	if err != nil {
-		fmt.Printf("failed to parse ref block prefix:%v\n", err.Error())
 		return nil, err
 	}
-
-	tx := &types.Transaction{
-		RefBlockNum:    transactions.RefBlockNum(props.HeadBlockNumber),
-		RefBlockPrefix: refBlockPrefix,
-	}
-
 	stx := transactions.NewSignedTransaction(tx)
 
 	for _, op := range operations {
