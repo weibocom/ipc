@@ -14,10 +14,10 @@ import (
 
 	// RPC
 
-	"github.com/weibocom/steem-rpc/encoding/wif"
 	"github.com/weibocom/steem-rpc/steem/types"
 	"github.com/weibocom/steem-rpc/transactions"
 	"github.com/weibocom/steem-rpc/transports/websocket"
+	"github.com/weibocom/steem-rpc/wif"
 
 	// Vendor
 	"golang.org/x/crypto/ssh/terminal"

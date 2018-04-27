@@ -7,7 +7,7 @@ import (
 
 	"github.com/weibocom/steem-rpc/config"
 	"github.com/weibocom/steem-rpc/encoding/transaction"
-	"github.com/weibocom/steem-rpc/encoding/wif"
+	"github.com/weibocom/steem-rpc/wif"
 )
 
 type PublicKey string
