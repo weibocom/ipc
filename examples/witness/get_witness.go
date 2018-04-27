@@ -23,7 +23,7 @@ func main() {
 	}
 	defer c.Close()
 
-	testGetActiveWitnesses(c)
+	//testGetActiveWitnesses(c)
 }
 
 func testGetWitnesses(c *client.Client) {
@@ -56,4 +56,8 @@ func testGetActiveWitnesses(c *client.Client) {
 	}
 
 	fmt.Printf("%+v\n", witnesses)
+}
+
+func testUpdateWitness(c *client.Client) {
+
 }

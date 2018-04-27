@@ -58,7 +58,7 @@ func (c *Client) NewAccount(creator string, name string, fee int, jsonMeta strin
 }
 
 // CreateAccount creates a new account.
-func (c *Client) CreateAccount(creator string, name string, fee int64, ownerPubKey, activePubKey, postingPubKey, memoPubKey string, jsonMeta string) (bool, error) {
+func (c *Client) CreateAccount(creator string, name string, fee int64, ownerPubKey, activePubKey, postingPubKey, memoPubKey string, jsonMeta string) error {
 
 	operation := &types.AccountCreateOperation{
 		Fee:            types.NewSteemAsset(fee),
@@ -73,7 +73,7 @@ func (c *Client) CreateAccount(creator string, name string, fee int64, ownerPubK
 
 	_, err := c.SendTrx(operation)
 
-	return err == nil, err
+	return err
 }
 
 func pubKey2Auth(key string) *types.Authority {

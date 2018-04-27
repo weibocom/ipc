@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 
 	// RPC
+	"github.com/go-steem/rpc/encoding/transaction"
 	"github.com/weibocom/ipc/encoding"
 )
 
@@ -248,6 +249,33 @@ func (op *WithdrawVestingOperation) Data() interface{} {
 //             (block_signing_key)
 //             (props)
 //             (fee) )
+
+type WitnessUpdateOperation struct {
+	Owner           string           `json:"owner"`
+	URL             string           `json:"url"`
+	BlockSigningKey PublicKey        `json:"block_signing_key"`
+	Props           *ChainProperties `json:"props"`
+	Fee             Asset            `json:"fee"`
+}
+
+func (op *WitnessUpdateOperation) Type() OpType {
+	return TypeWitnessUpdate
+}
+
+func (op *WitnessUpdateOperation) Data() interface{} {
+	return op
+}
+
+func (op *WitnessUpdateOperation) MarshalTransaction(encoder *transaction.Encoder) error {
+	enc := transaction.NewRollingEncoder(encoder)
+	enc.EncodeUVarint(uint64(TypeWitnessUpdate.Code()))
+	enc.Encode(op.Owner)
+	enc.Encode(op.URL)
+	enc.Encode(op.BlockSigningKey)
+	enc.Encode(op.Props)
+	enc.Encode(op.Fee)
+	return enc.Err()
+}
 
 // FC_REFLECT( steemit::chain::account_witness_vote_operation,
 //             (account)
