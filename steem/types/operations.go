@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 
 	// RPC
-	"github.com/weibocom/ipc/encoding/transaction"
+	"github.com/weibocom/steem-rpc/encoding/transaction"
 )
 
 // FC_REFLECT( steemit::chain::report_over_production_operation,

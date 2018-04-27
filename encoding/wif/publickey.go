@@ -43,7 +43,8 @@ func (p *PublicKey) FromBytes(b []byte) error {
 	return nil
 }
 
-func (p *PublicKey) String(prefix bool) string {
+// String 1. serialize bytes; 2. 末尾增加4个字节的ripemd160的hash值 3. 用base56编码
+func (p *PublicKey) String() string {
 	ser := p.Serialize()
 	hash := ripemd160.New()
 	hash.Write(ser)
@@ -51,10 +52,14 @@ func (p *PublicKey) String(prefix bool) string {
 
 	serWithSum := append(ser, sum...)
 
-	str := base58.Encode(serWithSum)
-	if prefix {
-		str = config.GetAddressPrefix() + str
-	}
+	return base58.Encode(serWithSum)
+}
 
-	return str
+// ParsePublicKey returns the public key associated with the given public-base58-formatted stringent key
+// in the 33-byte compressed format.
+// pubkeyStr  不包含任何前缀。比如STM等。
+func ParsePubKeyBase58(pubkeyStr string) ([]byte, int) {
+	// TODO: 该函数返回的字节数并不是33，而是37. 具体原因待分析。但前面33个字节与通过 private key生成的public key相同。因此，直接截取前面33个字节
+	b := base58.Decode(pubkeyStr)
+	return b[:btcec.PubKeyBytesLenCompressed], len(b)
 }

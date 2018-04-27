@@ -4,14 +4,14 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"net/rpc"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
-	"github.com/weibocom/steem-rpc"
+	"github.com/weibocom/steem-rpc/steem/types"
 	"github.com/weibocom/steem-rpc/transports/websocket"
-	"github.com/weibocom/steem-rpc/types"
 )
 
 func main() {

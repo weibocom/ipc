@@ -6,9 +6,9 @@ import (
 
 	"github.com/weibocom/steem-rpc/client"
 	"github.com/weibocom/steem-rpc/steem"
+	"github.com/weibocom/steem-rpc/steem/types"
 	"github.com/weibocom/steem-rpc/transactions"
 	"github.com/weibocom/steem-rpc/transports/websocket"
-	"github.com/weibocom/steem-rpc/types"
 )
 
 func main() {

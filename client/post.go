@@ -3,8 +3,8 @@ package client
 import (
 	"fmt"
 
-	"github.com/weibocom/steem-rpc/translit"
-	"github.com/weibocom/steem-rpc/types"
+	"github.com/weibocom/steem-rpc/steem/translit"
+	"github.com/weibocom/steem-rpc/steem/types"
 )
 
 // Post add a post.

@@ -8,7 +8,7 @@ import (
 	"time"
 
 	// RPC
-	"github.com/weibocom/ipc/encoding/transaction"
+	"github.com/weibocom/steem-rpc/encoding/transaction"
 )
 
 func TestTransaction_MarshalTransaction(t *testing.T) {

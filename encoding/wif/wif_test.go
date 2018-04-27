@@ -3,12 +3,12 @@ package wif
 import (
 	// Stdlib
 
-	"encoding/hex"
 	mr "math/rand"
 	"testing"
 	"time"
 
-	"github.com/weibocom/steem-rpc/encoding/wif"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 type testData struct {
@@ -33,17 +33,13 @@ func init() {
 
 func TestDecode(t *testing.T) {
 	for _, d := range TestData {
-		privKey, err := wif.Decode(d.WIF)
-		if err != nil {
-			t.Error(err)
-		}
+		w, err := DecodeWIF(d.WIF)
+		require.NoError(t, err, "decode wif")
 
 		expected := d.PrivateKeyHex
-		got := hex.EncodeToString(privKey)
+		got := w.PrivateKey().HexString()
 
-		if got != expected {
-			t.Errorf("expected %v, got %v", expected, got)
-		}
+		assert.Equal(t, expected, got, "private key")
 	}
 }
 
@@ -52,24 +48,24 @@ func TestPublicKey(t *testing.T) {
 	// 不带 STM 等前缀
 	pubkeyStr := "6kbKsZj5kY5QrG8huATPtwfVmZmKzFDfUXz1eEbKYF58LorAxF"
 
-	w, err := wif.DecodeWIF(wifStr)
+	w, err := DecodeWIF(wifStr)
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	var pubKey wif.PublicKey
+	var pubKey PublicKey
 	err = pubKey.From(pubkeyStr)
 	if err != nil {
 		t.Error(err)
 		return
 	}
 
-	pubks := pubKey.String(false)
+	pubks := pubKey.String()
 	if pubks != pubkeyStr {
 		t.Errorf("expect %s but got %s", pubkeyStr, pubks)
 	}
 
-	pubksFromWif := w.PublicKey().String(false)
+	pubksFromWif := w.PublicKey().String()
 	if pubksFromWif != pubkeyStr {
 		t.Errorf("expect %s but got %s", pubkeyStr, pubksFromWif)
 	}
@@ -79,7 +75,7 @@ func TestPublicKey(t *testing.T) {
 func TestParser(t *testing.T) {
 	wifStr := "5JzpcbsNCu6Hpad1TYmudH4rj1A22SW9Zhb1ofBGHRZSp5poqAX"
 	// pubkeyStr := "6kbKsZj5kY5QrG8huATPtwfVmZmKzFDfUXz1eEbKYF58LorAxF"
-	w, err := wif.DecodeWIF(wifStr)
+	w, err := DecodeWIF(wifStr)
 	if err != nil {
 		t.Error(err)
 		return
@@ -89,12 +85,12 @@ func TestParser(t *testing.T) {
 		t.Errorf("expect %s but got %s", wifStr, wstr)
 		return
 	}
-	priv, err := wif.GenerateKey()
+	priv, err := GenerateKey()
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	_, err = wif.NewWIF(priv)
+	_, err = NewWIF(priv)
 	if err != nil {
 		t.Error(err)
 	}
@@ -102,12 +98,12 @@ func TestParser(t *testing.T) {
 }
 
 func TestNewWIF(t *testing.T) {
-	pk, err := wif.GenerateKey()
+	pk, err := GenerateKey()
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	_, err = wif.NewWIF(pk)
+	_, err = NewWIF(pk)
 	if err != nil {
 		t.Error(err)
 		return
@@ -116,15 +112,11 @@ func TestNewWIF(t *testing.T) {
 
 func TestWifParser(t *testing.T) {
 	wifStr := "5JzpcbsNCu6Hpad1TYmudH4rj1A22SW9Zhb1ofBGHRZSp5poqAX"
-	pubkeyStr := "STM6kbKsZj5kY5QrG8huATPtwfVmZmKzFDfUXz1eEbKYF58LorAxF"
-	w, err := wif.DecodeWIF(wifStr)
-	if err != nil {
-		t.Error(err)
-		return
-	}
-	recoverPubKeyStr := w.PublicKey().String(true)
+	pubkeyStr := "6kbKsZj5kY5QrG8huATPtwfVmZmKzFDfUXz1eEbKYF58LorAxF"
+	w, err := DecodeWIF(wifStr)
+	require.NoError(t, err, "decode wif")
+	recoverPubKeyStr := w.PublicKey().String()
 
-	if pubkeyStr != recoverPubKeyStr {
-		t.Errorf("expected %v but got %v", pubkeyStr, recoverPubKeyStr)
-	}
+	assert.Equal(t, pubkeyStr, recoverPubKeyStr, "recover public key from wif")
+
 }

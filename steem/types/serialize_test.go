@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/weibocom/ipc/encoding/hash"
-	"github.com/weibocom/ipc/steem/types"
+	"github.com/weibocom/steem-rpc/encoding/hash"
+	"github.com/weibocom/steem-rpc/steem/types"
 )
 
 // 该测试序列化的 expectedHex 都由steem的源代码计算产生

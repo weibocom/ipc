@@ -6,8 +6,8 @@ import (
 
 	"github.com/weibocom/steem-rpc/apis/networkbroadcast"
 	"github.com/weibocom/steem-rpc/steem"
+	"github.com/weibocom/steem-rpc/steem/types"
 	"github.com/weibocom/steem-rpc/transactions"
-	"github.com/weibocom/steem-rpc/types"
 )
 
 func (c *Client) CreateTransaction() (*types.Transaction, error) {

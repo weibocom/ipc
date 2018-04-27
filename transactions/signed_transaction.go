@@ -14,7 +14,7 @@ import (
 	"github.com/weibocom/steem-rpc/encoding/transaction"
 	"github.com/weibocom/steem-rpc/signature"
 	"github.com/weibocom/steem-rpc/steem"
-	"github.com/weibocom/steem-rpc/types"
+	"github.com/weibocom/steem-rpc/steem/types"
 
 	// Vendor
 	"github.com/pkg/errors"

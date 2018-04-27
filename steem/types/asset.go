@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/weibocom/ipc/encoding/transaction"
+	"github.com/weibocom/steem-rpc/encoding/transaction"
 )
 
 type Asset []interface{}

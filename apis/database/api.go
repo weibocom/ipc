@@ -8,7 +8,7 @@ import (
 	// RPC
 	"github.com/weibocom/steem-rpc/interfaces"
 	"github.com/weibocom/steem-rpc/internal/call"
-	"github.com/weibocom/steem-rpc/types"
+	"github.com/weibocom/steem-rpc/steem/types"
 )
 
 const (
