@@ -20,7 +20,7 @@ func TestTransaction_Marshal(t *testing.T) {
 	tx := Transaction{
 		RefBlockNum:    36029,
 		RefBlockPrefix: 1164960351,
-		Expiration:     &Time{&expiration},
+		Expiration:     &TimePointSeconds{&expiration},
 	}
 	tx.PushOperation(&VoteOperation{
 		Voter:    "xeroc",

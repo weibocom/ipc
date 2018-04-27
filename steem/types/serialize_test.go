@@ -4,8 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/weibocom/ipc/encoding/hash"
-	"github.com/weibocom/ipc/steem/types"
+	"github.com/weibocom/ipc/encoding"
 )
 
 // 该测试序列化的 expectedHex 都由steem的源代码计算产生
@@ -77,8 +76,8 @@ func TestAssetDecode(t *testing.T) {
 	*/
 	expectedHex := "3e14d2f1238109c407a634eb31e64371aa905c940c748773630aa6314f958f94"
 
-	fee := types.NewSteemAsset(9)
-	serializedHex, err := hash.Hash256(fee)
+	fee := NewSteemAsset(9)
+	serializedHex, err := encoding.Hash256(fee)
 	if err != nil {
 		t.Error(err)
 	}
@@ -101,10 +100,10 @@ func TestKeyAuthorityMapDecode(t *testing.T) {
 	expectedHex := "969db862132ac12f3922e8dbc2143386ea2038e0df44bfaeb6f603a887b1d6ee"
 
 	publicKeyStr := "STM6kbKsZj5kY5QrG8huATPtwfVmZmKzFDfUXz1eEbKYF58LorAxF"
-	kam := types.NewKeyAuthorityMap()
+	kam := NewKeyAuthorityMap()
 	kam.AddAuthority(publicKeyStr, 3)
 
-	serializedHex, err := hash.Hash256(kam)
+	serializedHex, err := encoding.Hash256(kam)
 	if err != nil {
 		t.Error(err)
 	}
@@ -132,15 +131,15 @@ func TestAuthorityDecode(t *testing.T) {
 
 	ownerPublicKey := "STM6iqZbzYGBnX8mZkn7xK5Z4i7DxcU7GUFo3yWgXuE8BhcbaZpkz"
 
-	keyAuths := types.NewKeyAuthorityMap()
+	keyAuths := NewKeyAuthorityMap()
 	keyAuths.AddAuthority(ownerPublicKey, 3)
 
-	owner := &types.Authority{
+	owner := &Authority{
 		KeyAuths:        keyAuths,
 		WeightThreshold: 110,
 	}
 
-	serializedHex, err := hash.Hash256(owner)
+	serializedHex, err := encoding.Hash256(owner)
 	if err != nil {
 		t.Error(err)
 	}
@@ -165,27 +164,27 @@ func TestAccountCreateOperationDecode(t *testing.T) {
 	expectedHex := "d1a44ea478e28d5aea585abdf54b2e7fc5b26c5a6b4bf458640366853ca28da5"
 	accountPubKeyStr := "STM6iqZbzYGBnX8mZkn7xK5Z4i7DxcU7GUFo3yWgXuE8BhcbaZpkz"
 
-	newAuthority := func(weight int64, weightThreshold uint32) *types.Authority {
-		keyAuths := types.NewKeyAuthorityMap()
+	newAuthority := func(weight int64, weightThreshold uint32) *Authority {
+		keyAuths := NewKeyAuthorityMap()
 		keyAuths.AddAuthority(accountPubKeyStr, weight)
-		return &types.Authority{
+		return &Authority{
 			KeyAuths:        keyAuths,
 			WeightThreshold: weightThreshold,
 		}
 	}
 
-	op := &types.AccountCreateOperation{
-		Fee:            types.NewSteemAsset(10),
+	op := &AccountCreateOperation{
+		Fee:            NewSteemAsset(10),
 		Creator:        "initminer",
 		NewAccountName: "icy-1",
 		Owner:          newAuthority(3, 110),
 		Active:         newAuthority(218, 111),
 		Posting:        newAuthority(1, 1),
-		MemoKey:        types.PublicKey(accountPubKeyStr),
+		MemoKey:        PublicKey(accountPubKeyStr),
 		JsonMetadata:   `{"meta":"icy data"}`,
 	}
 
-	serializedHex, err := hash.Hash256(op)
+	serializedHex, err := encoding.Hash256(op)
 	if err != nil {
 		t.Error(err)
 	}
@@ -208,13 +207,13 @@ func TestTransactionAccountOperationDecode(t *testing.T) {
 	   auto pstr = enc.result().str();
 	*/
 	expectedHex := "78343ab5d8702137ba6c7a590cd82dec2655490aa9b1c759c3215a427beab0cd"
-	var tx types.Transaction
+	var tx Transaction
 	if err := json.Unmarshal([]byte(txJson), &tx); err != nil {
 		t.Errorf("unmarshal transaction error:%v\n", err)
 		return
 	}
 
-	serializedHex, err := hash.Hash256(tx)
+	serializedHex, err := encoding.Hash256(tx)
 	if err != nil {
 		t.Errorf("hash transaction error:%v\n", err)
 		return
