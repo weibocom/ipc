@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	// RPC
-	"github.com/weibocom/steem-rpc/steem/types"
+	"github.com/weibocom/ipc/steem/types"
 )
 
 type Config struct {

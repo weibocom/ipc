@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/weibocom/steem-rpc/apis/networkbroadcast"
-	"github.com/weibocom/steem-rpc/steem"
-	"github.com/weibocom/steem-rpc/steem/types"
-	"github.com/weibocom/steem-rpc/transactions"
+	"github.com/weibocom/ipc/apis/networkbroadcast"
+	"github.com/weibocom/ipc/steem"
+	"github.com/weibocom/ipc/steem/types"
+	"github.com/weibocom/ipc/transactions"
 )
 
 func (c *Client) CreateTransaction() (*types.Transaction, error) {

@@ -7,7 +7,7 @@ import (
 	"encoding/hex"
 
 	// RPC
-	"github.com/weibocom/steem-rpc/steem/types"
+	"github.com/weibocom/ipc/steem/types"
 
 	// Vendor
 	"github.com/pkg/errors"

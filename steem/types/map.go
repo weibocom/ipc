@@ -5,9 +5,9 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/weibocom/steem-rpc/config"
-	"github.com/weibocom/steem-rpc/encoding"
-	"github.com/weibocom/steem-rpc/wif"
+	"github.com/weibocom/ipc/config"
+	"github.com/weibocom/ipc/encoding"
+	"github.com/weibocom/ipc/wif"
 )
 
 type PublicKey string

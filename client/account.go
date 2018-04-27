@@ -3,8 +3,8 @@ package client
 import (
 	"fmt"
 
-	"github.com/weibocom/steem-rpc/steem/types"
-	"github.com/weibocom/steem-rpc/wif"
+	"github.com/weibocom/ipc/steem/types"
+	"github.com/weibocom/ipc/wif"
 )
 
 func (c *Client) NewAccount(creator string, name string, fee int, jsonMeta string) (*Account, error) {

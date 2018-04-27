@@ -3,7 +3,7 @@ package steem
 import (
 	"encoding/hex"
 
-	"github.com/weibocom/steem-rpc/config"
+	"github.com/weibocom/ipc/config"
 )
 
 type Chain struct {

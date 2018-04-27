@@ -1,6 +1,6 @@
 # go-steem/rpc
 
-[![GoDoc](https://godoc.org/github.com/weibocom/steem-rpc?status.svg)](https://godoc.org/github.com/weibocom/steem-rpc)
+[![GoDoc](https://godoc.org/github.com/weibocom/ipc?status.svg)](https://godoc.org/github.com/weibocom/ipc)
 
 Golang RPC client library for [Steem](https://steem.io).
 
@@ -11,7 +11,7 @@ Golang RPC client library for [Steem](https://steem.io).
 ## Usage
 
 ```go
-import "github.com/weibocom/steem-rpc"
+import "github.com/weibocom/ipc"
 ```
 
 This package is still very much in development, so `gopkg.in` is not yet available.

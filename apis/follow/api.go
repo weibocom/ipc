@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 
 	// RPC
-	"github.com/weibocom/steem-rpc/interfaces"
+	"github.com/weibocom/ipc/interfaces"
 
 	// Vendor
 	"github.com/pkg/errors"

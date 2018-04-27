@@ -5,7 +5,7 @@ import (
 
 	"time"
 
-	"github.com/weibocom/steem-rpc/encoding"
+	"github.com/weibocom/ipc/encoding"
 )
 
 const Layout = `"2006-01-02T15:04:05"`

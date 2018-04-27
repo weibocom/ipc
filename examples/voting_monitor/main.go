@@ -10,8 +10,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/weibocom/steem-rpc/steem/types"
-	"github.com/weibocom/steem-rpc/transports/websocket"
+	"github.com/weibocom/ipc/steem/types"
+	"github.com/weibocom/ipc/transports/websocket"
 )
 
 func main() {

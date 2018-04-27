@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/weibocom/steem-rpc/wif"
+	"github.com/weibocom/ipc/wif"
 )
 
 func TestSecp256k1(t *testing.T) {

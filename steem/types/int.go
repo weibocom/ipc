@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	// RPC
-	"github.com/weibocom/steem-rpc/encoding"
+	"github.com/weibocom/ipc/encoding"
 
 	// Vendor
 	"github.com/pkg/errors"

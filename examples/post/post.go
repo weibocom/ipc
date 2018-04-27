@@ -8,8 +8,8 @@ import (
 	"strconv"
 
 	"github.com/kr/pretty"
-	"github.com/weibocom/steem-rpc/client"
-	"github.com/weibocom/steem-rpc/transports/websocket"
+	"github.com/weibocom/ipc/client"
+	"github.com/weibocom/ipc/transports/websocket"
 )
 
 func main() {

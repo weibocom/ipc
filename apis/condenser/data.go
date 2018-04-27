@@ -1,6 +1,6 @@
 package condenser
 
-import "github.com/weibocom/steem-rpc/steem/types"
+import "github.com/weibocom/ipc/steem/types"
 
 type AccountKeys struct {
 	WeightThreshold *types.Int    `json:"weight_threshold"`

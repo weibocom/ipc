@@ -5,7 +5,7 @@ import (
 
 	"github.com/btcsuite/btcd/btcec"
 	"github.com/btcsuite/btcutil/base58"
-	"github.com/weibocom/steem-rpc/config"
+	"github.com/weibocom/ipc/config"
 	"golang.org/x/crypto/ripemd160"
 )
 

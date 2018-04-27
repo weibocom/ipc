@@ -11,10 +11,10 @@ import (
 
 	// RPC
 
-	"github.com/weibocom/steem-rpc/encoding"
-	"github.com/weibocom/steem-rpc/signature"
-	"github.com/weibocom/steem-rpc/steem"
-	"github.com/weibocom/steem-rpc/steem/types"
+	"github.com/weibocom/ipc/encoding"
+	"github.com/weibocom/ipc/signature"
+	"github.com/weibocom/ipc/steem"
+	"github.com/weibocom/ipc/steem/types"
 
 	// Vendor
 	"github.com/pkg/errors"

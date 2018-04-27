@@ -1,8 +1,8 @@
 package steem
 
 import (
-	"github.com/weibocom/steem-rpc/config"
-	"github.com/weibocom/steem-rpc/wif"
+	"github.com/weibocom/ipc/config"
+	"github.com/weibocom/ipc/wif"
 )
 
 var privateKeys = make([][]byte, 0, len(config.GetWIFs()))

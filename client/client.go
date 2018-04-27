@@ -3,12 +3,12 @@ package client
 import (
 	// RPC
 
-	"github.com/weibocom/steem-rpc/apis/condenser"
-	"github.com/weibocom/steem-rpc/apis/database"
-	"github.com/weibocom/steem-rpc/apis/follow"
-	"github.com/weibocom/steem-rpc/apis/login"
-	"github.com/weibocom/steem-rpc/apis/networkbroadcast"
-	"github.com/weibocom/steem-rpc/interfaces"
+	"github.com/weibocom/ipc/apis/condenser"
+	"github.com/weibocom/ipc/apis/database"
+	"github.com/weibocom/ipc/apis/follow"
+	"github.com/weibocom/ipc/apis/login"
+	"github.com/weibocom/ipc/apis/networkbroadcast"
+	"github.com/weibocom/ipc/interfaces"
 )
 
 // Client can be used to access Steem remote APIs.

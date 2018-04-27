@@ -8,8 +8,8 @@ import (
 	"testing"
 
 	// RPC
-	"github.com/weibocom/steem-rpc/encoding"
-	"github.com/weibocom/steem-rpc/steem/types"
+	"github.com/weibocom/ipc/encoding"
+	"github.com/weibocom/ipc/steem/types"
 
 	base58 "github.com/itchyny/base58-go"
 )
