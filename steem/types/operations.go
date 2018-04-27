@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 
 	// RPC
-	"github.com/go-steem/rpc/encoding/transaction"
 	"github.com/weibocom/ipc/encoding"
 )
 
@@ -266,8 +265,8 @@ func (op *WitnessUpdateOperation) Data() interface{} {
 	return op
 }
 
-func (op *WitnessUpdateOperation) MarshalTransaction(encoder *transaction.Encoder) error {
-	enc := transaction.NewRollingEncoder(encoder)
+func (op *WitnessUpdateOperation) Marshal(encoder *encoding.Encoder) error {
+	enc := encoding.NewRollingEncoder(encoder)
 	enc.EncodeUVarint(uint64(TypeWitnessUpdate.Code()))
 	enc.Encode(op.Owner)
 	enc.Encode(op.URL)
