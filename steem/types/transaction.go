@@ -2,7 +2,7 @@ package types
 
 import (
 	// RPC
-	"github.com/weibocom/steem-rpc/encoding/transaction"
+	"github.com/weibocom/steem-rpc/encoding"
 
 	// Vendor
 	"github.com/pkg/errors"
@@ -18,12 +18,12 @@ type Transaction struct {
 }
 
 // MarshalTransaction implements transaction.Marshaller interface.
-func (tx Transaction) MarshalTransaction(encoder *transaction.Encoder) error {
+func (tx Transaction) Marshal(encoder *encoding.Encoder) error {
 	if len(tx.Operations) == 0 {
 		return errors.New("no operation specified")
 	}
 
-	enc := transaction.NewRollingEncoder(encoder)
+	enc := encoding.NewRollingEncoder(encoder)
 
 	enc.Encode(tx.RefBlockNum)
 	enc.Encode(tx.RefBlockPrefix)

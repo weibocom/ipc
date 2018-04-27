@@ -6,13 +6,13 @@ import (
 	"strings"
 
 	"github.com/weibocom/steem-rpc/config"
-	"github.com/weibocom/steem-rpc/encoding/transaction"
+	"github.com/weibocom/steem-rpc/encoding"
 	"github.com/weibocom/steem-rpc/wif"
 )
 
 type PublicKey string
 
-func (p PublicKey) MarshalTransaction(encoder *transaction.Encoder) error {
+func (p PublicKey) Marshal(encoder *encoding.Encoder) error {
 	prefix := config.GetAddressPrefix()
 	key := string(p)
 	if strings.IndexAny(key, prefix) == 0 {
@@ -90,8 +90,8 @@ func (m KeyAuthorityMap) Len() int {
 	return len(m)
 }
 
-func (m KeyAuthorityMap) MarshalTransaction(encoder *transaction.Encoder) error {
-	enc := transaction.NewRollingEncoder(encoder)
+func (m KeyAuthorityMap) Marshal(encoder *encoding.Encoder) error {
+	enc := encoding.NewRollingEncoder(encoder)
 	enc.EncodeUVarint(uint64(m.Len()))
 	if m.Len() > 0 {
 		for k, v := range m {

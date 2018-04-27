@@ -13,7 +13,7 @@ import (
 
 	// RPC
 
-	"github.com/weibocom/steem-rpc/encoding/transaction"
+	"github.com/weibocom/steem-rpc/encoding"
 	"github.com/weibocom/steem-rpc/steem"
 	"github.com/weibocom/steem-rpc/steem/types"
 
@@ -41,7 +41,7 @@ func NewSignedTransaction(tx *types.Transaction) *SignedTransaction {
 
 func (tx *SignedTransaction) Serialize() ([]byte, error) {
 	var b bytes.Buffer
-	encoder := transaction.NewEncoder(&b)
+	encoder := encoding.NewEncoder(&b)
 
 	if err := encoder.Encode(tx.Transaction); err != nil {
 		return nil, err

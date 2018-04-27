@@ -1,4 +1,4 @@
-package transaction
+package encoding
 
 import (
 	// Stdlib
@@ -52,8 +52,8 @@ func (encoder *Encoder) EncodeNumber(v interface{}) error {
 }
 
 func (encoder *Encoder) Encode(v interface{}) error {
-	if marshaller, ok := v.(TransactionMarshaller); ok {
-		return marshaller.MarshalTransaction(encoder)
+	if marshaller, ok := v.(Marshaller); ok {
+		return marshaller.Marshal(encoder)
 	}
 
 	switch v := v.(type) {

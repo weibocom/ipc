@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	// RPC
-	"github.com/weibocom/steem-rpc/encoding/transaction"
+	"github.com/weibocom/steem-rpc/encoding"
 
 	// Vendor
 	"github.com/pkg/errors"
@@ -57,7 +57,7 @@ func (num *Int8) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (num Int8) MarshalTransaction(encoder *transaction.Encoder) error {
+func (num Int8) Marshal(encoder *encoding.Encoder) error {
 	return encoder.EncodeNumber(int(num))
 }
 
@@ -73,7 +73,7 @@ func (num *Int16) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (num Int16) MarshalTransaction(encoder *transaction.Encoder) error {
+func (num Int16) Marshal(encoder *encoding.Encoder) error {
 	return encoder.EncodeNumber(int16(num))
 }
 
@@ -89,7 +89,7 @@ func (num *Int32) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (num Int32) MarshalTransaction(encoder *transaction.Encoder) error {
+func (num Int32) Marshal(encoder *encoding.Encoder) error {
 	return encoder.EncodeNumber(int32(num))
 }
 
@@ -105,6 +105,6 @@ func (num *Int64) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (num Int64) MarshalTransaction(encoder *transaction.Encoder) error {
+func (num Int64) Marshal(encoder *encoding.Encoder) error {
 	return encoder.EncodeNumber(int64(num))
 }

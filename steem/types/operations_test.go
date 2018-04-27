@@ -8,13 +8,13 @@ import (
 	"testing"
 
 	// RPC
-	"github.com/weibocom/steem-rpc/encoding/transaction"
+	"github.com/weibocom/steem-rpc/encoding"
 	"github.com/weibocom/steem-rpc/steem/types"
 
 	base58 "github.com/itchyny/base58-go"
 )
 
-func TestVoteOperation_MarshalTransaction(t *testing.T) {
+func TestVoteOperation_Marshal(t *testing.T) {
 	op := &types.VoteOperation{
 		Voter:    "xeroc",
 		Author:   "xeroc",
@@ -25,7 +25,7 @@ func TestVoteOperation_MarshalTransaction(t *testing.T) {
 	expectedHex := "00057865726f63057865726f6306706973746f6e1027"
 
 	var b bytes.Buffer
-	encoder := transaction.NewEncoder(&b)
+	encoder := encoding.NewEncoder(&b)
 
 	if err := encoder.Encode(op); err != nil {
 		t.Error(err)
@@ -60,7 +60,7 @@ func TestAccountCreateOperation(t *testing.T) {
 	}
 
 	// var b bytes.Buffer
-	// encoder := transaction.NewEncoder(&b)
+	// encoder := encoding.NewEncoder(&b)
 	// encoder.Encode(operation.Owner)
 	// hash := sha256.Sum256(b.Bytes())
 	// serializedHex := hex.EncodeToString(hash[:])

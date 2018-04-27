@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 
 	// RPC
-	"github.com/weibocom/steem-rpc/encoding/transaction"
+	"github.com/weibocom/steem-rpc/encoding"
 )
 
 // FC_REFLECT( steemit::chain::report_over_production_operation,
@@ -140,8 +140,8 @@ func (op *AccountCreateOperation) Data() interface{} {
 	return op
 }
 
-func (op *AccountCreateOperation) MarshalTransaction(encoder *transaction.Encoder) error {
-	enc := transaction.NewRollingEncoder(encoder)
+func (op *AccountCreateOperation) Marshal(encoder *encoding.Encoder) error {
+	enc := encoding.NewRollingEncoder(encoder)
 	enc.Encode(uint8(TypeAccountCreate.Code()))
 	enc.Encode(op.Fee)
 	enc.Encode(op.Creator)
@@ -326,8 +326,8 @@ func (op *CommentOperation) IsStoryOperation() bool {
 //             (title)
 //             (body)
 //             (json_metadata) )
-func (op *CommentOperation) MarshalTransaction(encoder *transaction.Encoder) error {
-	enc := transaction.NewRollingEncoder(encoder)
+func (op *CommentOperation) Marshal(encoder *encoding.Encoder) error {
+	enc := encoding.NewRollingEncoder(encoder)
 	enc.EncodeUVarint(uint64(op.Type().Code()))
 	enc.Encode(op.ParentAuthor)
 	enc.Encode(op.ParentPermlink)
@@ -360,8 +360,8 @@ func (op *VoteOperation) Data() interface{} {
 	return op
 }
 
-func (op *VoteOperation) MarshalTransaction(encoder *transaction.Encoder) error {
-	enc := transaction.NewRollingEncoder(encoder)
+func (op *VoteOperation) Marshal(encoder *encoding.Encoder) error {
+	enc := encoding.NewRollingEncoder(encoder)
 	enc.EncodeUVarint(uint64(TypeVote.Code()))
 	enc.Encode(op.Voter)
 	enc.Encode(op.Author)
@@ -476,8 +476,8 @@ type Authority struct {
 	WeightThreshold uint32          `json:"weight_threshold"`
 }
 
-func (a Authority) MarshalTransaction(encoder *transaction.Encoder) error {
-	enc := transaction.NewRollingEncoder(encoder)
+func (a Authority) Marshal(encoder *encoding.Encoder) error {
+	enc := encoding.NewRollingEncoder(encoder)
 	enc.Encode(uint32(a.WeightThreshold))
 	enc.Encode(a.AccountAuths)
 	enc.Encode(a.KeyAuths)

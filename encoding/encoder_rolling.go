@@ -1,4 +1,4 @@
-package transaction
+package encoding
 
 type RollingEncoder struct {
 	next *Encoder

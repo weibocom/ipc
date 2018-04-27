@@ -5,7 +5,7 @@ import (
 
 	"time"
 
-	"github.com/weibocom/steem-rpc/encoding/transaction"
+	"github.com/weibocom/steem-rpc/encoding"
 )
 
 const Layout = `"2006-01-02T15:04:05"`
@@ -41,6 +41,6 @@ func (t *TimePointSeconds) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (t *TimePointSeconds) MarshalTransaction(encoder *transaction.Encoder) error {
+func (t *TimePointSeconds) Marshal(encoder *encoding.Encoder) error {
 	return encoder.Encode(uint32(t.Time.Unix()))
 }

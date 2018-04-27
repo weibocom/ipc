@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/weibocom/steem-rpc/encoding/transaction"
+	"github.com/weibocom/steem-rpc/encoding"
 )
 
 type Asset []interface{}
@@ -19,13 +19,13 @@ func NewSteemAsset(fee int64) Asset {
 }
 
 // 一共16个字节。8个字节存储fee。1个字节存储类型。7个字节存储SYMBOL
-func (a Asset) MarshalTransaction(encoder *transaction.Encoder) error {
+func (a Asset) Marshal(encoder *encoding.Encoder) error {
 	fee, err := convertToInt64(a[0])
 	if err != nil {
 		return err
 	}
 
-	enc := transaction.NewRollingEncoder(encoder)
+	enc := encoding.NewRollingEncoder(encoder)
 	enc.Encode(fee) // 8 bytes
 	// symbol 一共8个字节 第一个字节3表示类型：是STEEM、SBD等。
 	symbol := []byte{3, 'S', 'T', 'E', 'E', 'M', 0, 0}

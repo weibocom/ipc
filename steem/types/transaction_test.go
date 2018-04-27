@@ -8,10 +8,10 @@ import (
 	"time"
 
 	// RPC
-	"github.com/weibocom/steem-rpc/encoding/transaction"
+	"github.com/weibocom/steem-rpc/encoding"
 )
 
-func TestTransaction_MarshalTransaction(t *testing.T) {
+func TestTransaction_Marshal(t *testing.T) {
 	// The result we expect.
 	expected := "bd8c5fe26f45f179a8570100057865726f63057865726f6306706973746f6e102700"
 
@@ -31,9 +31,9 @@ func TestTransaction_MarshalTransaction(t *testing.T) {
 
 	// Marshal the transaction.
 	var b bytes.Buffer
-	encoder := transaction.NewEncoder(&b)
+	encoder := encoding.NewEncoder(&b)
 
-	if err := tx.MarshalTransaction(encoder); err != nil {
+	if err := tx.Marshal(encoder); err != nil {
 		t.Error(err)
 	}
 	got := hex.EncodeToString(b.Bytes())
