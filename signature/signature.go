@@ -1,6 +1,10 @@
 package signature
 
 type Signature interface {
-	Sign(pk []byte, digest []byte) ([]byte, error)
-	Verify(pubKey []byte, digest []byte, sig []byte) (bool, error)
+	Sign(privKeys [][]byte, digest []byte) ([][]byte, error)
+	Verify(pubKeys [][]byte, digest []byte, sigs [][]byte) (bool, error)
+}
+
+func NewSignature() Signature {
+	return &secp256k1{}
 }

@@ -10,7 +10,6 @@ import (
 	// RPC
 	"github.com/weibocom/steem-rpc/encoding/wif"
 	"github.com/weibocom/steem-rpc/steem"
-	"github.com/weibocom/steem-rpc/transactions"
 	"github.com/weibocom/steem-rpc/types"
 )
 
@@ -89,27 +88,20 @@ func init() {
 
 	// decode wif
 	for _, v := range wifs {
-		privKey, err := wif.Decode(v)
+		w, err := wif.DecodeWIF(v)
 		if err != nil {
 			panic(err)
 		}
-		privateKeys = append(privateKeys, privKey)
+		privateKeys = append(privateKeys, w.PrivateKey().Serialize())
+		publicKeys = append(publicKeys, w.PublicKey().Serialize())
 	}
 
-	// generate public key
-	for _, v := range wifs {
-		pubKey, err := wif.GetPublicKey(v)
-		if err != nil {
-			panic(err)
-		}
-		publicKeys = append(publicKeys, pubKey)
-	}
 }
 
-func TestTransaction_Digest(t *testing.T) {
+func TestTransactionDigest(t *testing.T) {
 	expected := "3afe4571043381d00504d4bc4d02ed81f9b0714317edc9cd1c05070b1decdfae"
 
-	stx := transactions.NewSignedTransaction(&tx)
+	stx := NewSignedTransaction(&tx)
 
 	digest, err := stx.Digest(steem.SteemChain)
 	if err != nil {
@@ -122,13 +114,13 @@ func TestTransaction_Digest(t *testing.T) {
 	}
 }
 
-func TestTransaction_SignAndVerify(t *testing.T) {
+func TestTransactionSignAndVerify(t *testing.T) {
 	tx.Signatures = nil
 	defer func() {
 		tx.Signatures = nil
 	}()
 
-	stx := transactions.NewSignedTransaction(&tx)
+	stx := NewSignedTransaction(&tx)
 	if err := stx.Sign(privateKeys, steem.SteemChain); err != nil {
 		t.Error(err)
 	}

@@ -3,7 +3,6 @@ package transaction
 import (
 	// Stdlib
 	"encoding/binary"
-	"fmt"
 	"io"
 	"strings"
 
@@ -20,7 +19,7 @@ type debug_writer struct {
 }
 
 func (d debug_writer) Write(p []byte) (n int, err error) {
-	fmt.Printf("%v %d\n", p, len(p))
+	// fmt.Printf("%v %d\n", p, len(p))
 	return d.Writer.Write(p)
 }
 

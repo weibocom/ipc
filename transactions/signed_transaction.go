@@ -7,13 +7,12 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"encoding/hex"
-	"fmt"
 	"time"
-	"unsafe"
 
 	// RPC
 
 	"github.com/weibocom/steem-rpc/encoding/transaction"
+	"github.com/weibocom/steem-rpc/signature"
 	"github.com/weibocom/steem-rpc/steem"
 	"github.com/weibocom/steem-rpc/types"
 
@@ -21,10 +20,10 @@ import (
 	"github.com/pkg/errors"
 )
 
-// #cgo LDFLAGS: -lsecp256k1
-// #include <stdlib.h>
-// #include "signing.h"
-import "C"
+// // #cgo LDFLAGS: -lsecp256k1
+// // #include <stdlib.h>
+// // #include "signing.h"
+// import "C"
 
 type SignedTransaction struct {
 	*types.Transaction
@@ -58,8 +57,6 @@ func (tx *SignedTransaction) Digest(chain *steem.Chain) ([]byte, error) {
 		return nil, errors.Wrapf(err, "failed to decode chain ID: %v", chain.ID)
 	}
 
-	fmt.Printf("%v %d\n", rawChainID, len(rawChainID))
-
 	if _, err := msgBuffer.Write(rawChainID); err != nil {
 		return nil, errors.Wrap(err, "failed to write chain ID")
 	}
@@ -74,8 +71,6 @@ func (tx *SignedTransaction) Digest(chain *steem.Chain) ([]byte, error) {
 		return nil, errors.Wrap(err, "failed to write serialized transaction")
 	}
 
-	fmt.Printf("digest buffer:\n%v\ntotal len:%d\n", msgBuffer.Bytes(), msgBuffer.Len())
-
 	// Compute the digest.
 	digest := sha256.Sum256(msgBuffer.Bytes())
 	return digest[:], nil
@@ -88,39 +83,10 @@ func (tx *SignedTransaction) Sign(privKeys [][]byte, chain *steem.Chain) error {
 		return err
 	}
 
-	// Sign.
-	cDigest := C.CBytes(digest)
-	defer C.free(cDigest)
-
-	cKeys := make([]unsafe.Pointer, 0, len(privKeys))
-	for _, key := range privKeys {
-		cKeys = append(cKeys, C.CBytes(key))
-	}
-	defer func() {
-		for _, cKey := range cKeys {
-			C.free(cKey)
-		}
-	}()
-
-	sigs := make([][]byte, 0, len(privKeys))
-	for i, cKey := range cKeys {
-		var (
-			signature [64]byte
-			recid     C.int
-		)
-
-		code := C.sign_transaction(
-			(*C.uchar)(cDigest), (*C.uchar)(cKey), (*C.uchar)(&signature[0]), &recid)
-		if code == 0 {
-			return errors.New("sign_transaction returned 0")
-		}
-
-		sig := make([]byte, 65)
-		sig[0] = byte(recid)
-		copy(sig[1:], signature[:])
-		fmt.Printf("digest:%v\nprivate key:%v %d\nrecid:%v\nsig:%v\n", hex.EncodeToString(digest[:]), privKeys[i], len(privKeys[i]), recid, hex.EncodeToString(sig))
-
-		sigs = append(sigs, sig)
+	s := signature.NewSignature()
+	sigs, err := s.Sign(privKeys, digest)
+	if err != nil {
+		return err
 	}
 
 	// Set the signature array in the transaction.
@@ -140,48 +106,15 @@ func (tx *SignedTransaction) Verify(pubKeys [][]byte, chain *steem.Chain) (bool,
 		return false, err
 	}
 
-	cDigest := C.CBytes(digest)
-	defer C.free(cDigest)
-
-	// Make sure to free memory.
-	cSigs := make([]unsafe.Pointer, 0, len(tx.Signatures))
-	defer func() {
-		for _, cSig := range cSigs {
-			C.free(cSig)
-		}
-	}()
-
-	// Collect verified public keys.
-	pubKeysFound := make([][]byte, len(pubKeys))
-	for i, signature := range tx.Signatures {
-		sig, err := hex.DecodeString(signature)
+	sigs := make([][]byte, 0, len(tx.Signatures))
+	for _, sigStr := range tx.Signatures {
+		sig, err := hex.DecodeString(sigStr)
 		if err != nil {
-			return false, errors.Wrap(err, "failed to decode signature hex")
+			return false, err
 		}
-
-		recoverParameter := sig[0] - 27 - 4
-		sig = sig[1:]
-
-		cSig := C.CBytes(sig)
-		cSigs = append(cSigs, cSig)
-
-		var publicKey [33]byte
-
-		code := C.verify_recoverable_signature(
-			(*C.uchar)(cDigest),
-			(*C.uchar)(cSig),
-			(C.int)(recoverParameter),
-			(*C.uchar)(&publicKey[0]),
-		)
-		if code == 1 {
-			pubKeysFound[i] = publicKey[:]
-		}
+		sigs = append(sigs, sig)
 	}
 
-	for i := range pubKeys {
-		if !bytes.Equal(pubKeysFound[i], pubKeys[i]) {
-			return false, nil
-		}
-	}
-	return true, nil
+	s := signature.NewSignature()
+	return s.Verify(pubKeys, digest, sigs)
 }
