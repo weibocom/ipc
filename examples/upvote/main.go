@@ -14,8 +14,8 @@ import (
 
 	// RPC
 
+	"github.com/weibocom/ipc/steem/transactions"
 	"github.com/weibocom/ipc/steem/types"
-	"github.com/weibocom/ipc/transactions"
 	"github.com/weibocom/ipc/transports/websocket"
 	"github.com/weibocom/ipc/wif"
 

@@ -1,11 +1,8 @@
 package wif
 
 import (
-	"strings"
-
 	"github.com/btcsuite/btcd/btcec"
 	"github.com/btcsuite/btcutil/base58"
-	"github.com/weibocom/ipc/config"
 	"golang.org/x/crypto/ripemd160"
 )
 
@@ -22,14 +19,8 @@ func (p *PublicKey) Serialize() []byte {
 }
 
 // 输入的是BASE58编码的字符串
-func (p *PublicKey) From(str string) error {
-	prefix := config.GetAddressPrefix()
-	key := str
-	if strings.IndexAny(key, prefix) == 0 {
-		key = key[len(prefix):]
-	}
-	b := base58.Decode(key)
-	return p.FromBytes(b)
+func (p *PublicKey) From(key string) error {
+	return p.FromBytes(base58.Decode(key))
 }
 
 func (p *PublicKey) FromBytes(b []byte) error {

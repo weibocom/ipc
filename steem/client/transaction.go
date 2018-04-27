@@ -3,10 +3,11 @@ package client
 import (
 	"log"
 
-	"github.com/weibocom/ipc/apis/networkbroadcast"
+	"github.com/weibocom/ipc/chain"
 	"github.com/weibocom/ipc/steem"
+	"github.com/weibocom/ipc/steem/apis/networkbroadcast"
+	"github.com/weibocom/ipc/steem/transactions"
 	"github.com/weibocom/ipc/steem/types"
-	"github.com/weibocom/ipc/transactions"
 )
 
 func (c *Client) CreateTransaction() (*types.Transaction, error) {
@@ -14,13 +15,13 @@ func (c *Client) CreateTransaction() (*types.Transaction, error) {
 	if err != nil {
 		return nil, err
 	}
-	refBlockPrefix, err := transactions.RefBlockPrefix(props.HeadBlockID)
+	refBlockPrefix, err := steem.RefBlockPrefix(props.HeadBlockID)
 	if err != nil {
 		return nil, err
 	}
 
 	tx := &types.Transaction{
-		RefBlockNum:    transactions.RefBlockNum(props.HeadBlockNumber),
+		RefBlockNum:    steem.RefBlockNum(props.HeadBlockNumber),
 		RefBlockPrefix: refBlockPrefix,
 	}
 	return tx, nil
@@ -46,7 +47,7 @@ func (c *Client) SendTrx(operations ...types.Operation) (resp *networkbroadcast.
 		stx.PushOperation(op)
 	}
 
-	if err := stx.Sign(steem.GetPrivateKeys(), steem.SteemChain); err != nil {
+	if err := stx.Sign(steem.GetPrivateKeys(), chain.MainChain); err != nil {
 		log.Printf("transaction sig err:%v\n", err.Error())
 		return nil, err
 	}

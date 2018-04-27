@@ -1,26 +1,18 @@
 package config
 
-// const (
-// 	steemAddressPrefix = "STM"
-// 	chainID            = "2ac122bd70a2f74d6f761c331f4c4da1028b783cc185d23bf5449ac5af49e198"
-// 	testChainID        = "18dcf0a285365fc58b71f18b3d3fec954aa0c141c44e4e5cb4cf777b9eab274e"
-// )
-
-// var wifs = []string{"5JzpcbsNCu6Hpad1TYmudH4rj1A22SW9Zhb1ofBGHRZSp5poqAX"}
-
-var defaultConfig = SteemConfig{
-	Wifs:               []string{"5JzpcbsNCu6Hpad1TYmudH4rj1A22SW9Zhb1ofBGHRZSp5poqAX"},
-	ChainID:            "2ac122bd70a2f74d6f761c331f4c4da1028b783cc185d23bf5449ac5af49e198",
-	SteemAddressPrefix: "STM",
+var defaultConfig = IPCConfig{
+	Wifs:          []string{"5JzpcbsNCu6Hpad1TYmudH4rj1A22SW9Zhb1ofBGHRZSp5poqAX"},
+	ChainID:       "2ac122bd70a2f74d6f761c331f4c4da1028b783cc185d23bf5449ac5af49e198",
+	AddressPrefix: "STM",
 }
 
-type SteemConfig struct {
-	Wifs               []string
-	ChainID            string
-	SteemAddressPrefix string
+type IPCConfig struct {
+	Wifs          []string
+	ChainID       string
+	AddressPrefix string
 }
 
-func SetConfig(conf SteemConfig) {
+func SetConfig(conf IPCConfig) {
 	defaultConfig = conf
 }
 
@@ -33,5 +25,5 @@ func GetChainID() string {
 }
 
 func GetAddressPrefix() string {
-	return defaultConfig.SteemAddressPrefix
+	return defaultConfig.AddressPrefix
 }

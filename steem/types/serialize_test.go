@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"github.com/weibocom/ipc/encoding"
 )
 
@@ -78,13 +80,9 @@ func TestAssetDecode(t *testing.T) {
 
 	fee := NewSteemAsset(9)
 	serializedHex, err := encoding.Hash256(fee)
-	if err != nil {
-		t.Error(err)
-	}
+	require.NoError(t, err, "encoding asset ")
 
-	if serializedHex != expectedHex {
-		t.Errorf("expected %v, got %v", expectedHex, serializedHex)
-	}
+	assert.Equal(t, expectedHex, serializedHex, "asset")
 
 }
 
@@ -104,13 +102,9 @@ func TestKeyAuthorityMapDecode(t *testing.T) {
 	kam.AddAuthority(publicKeyStr, 3)
 
 	serializedHex, err := encoding.Hash256(kam)
-	if err != nil {
-		t.Error(err)
-	}
+	require.NoError(t, err, "encoding")
 
-	if serializedHex != expectedHex {
-		t.Errorf("expected %v, got %v", expectedHex, serializedHex)
-	}
+	assert.Equal(t, expectedHex, serializedHex, "key authority map")
 
 }
 
@@ -140,13 +134,9 @@ func TestAuthorityDecode(t *testing.T) {
 	}
 
 	serializedHex, err := encoding.Hash256(owner)
-	if err != nil {
-		t.Error(err)
-	}
+	require.NoError(t, err, "encoding and hash authority map")
 
-	if serializedHex != expectedHex {
-		t.Errorf("expected %v, got %v", expectedHex, serializedHex)
-	}
+	assert.Equal(t, expectedHex, serializedHex, "encoding hex string")
 }
 
 func TestAccountCreateOperationDecode(t *testing.T) {
@@ -185,13 +175,9 @@ func TestAccountCreateOperationDecode(t *testing.T) {
 	}
 
 	serializedHex, err := encoding.Hash256(op)
-	if err != nil {
-		t.Error(err)
-	}
+	require.NoError(t, err, "encoding and hash transaction")
 
-	if serializedHex != expectedHex {
-		t.Errorf("expected %v, got %v", expectedHex, serializedHex)
-	}
+	assert.Equal(t, expectedHex, serializedHex, "account create operation")
 }
 
 func TestTransactionAccountOperationDecode(t *testing.T) {
@@ -208,17 +194,11 @@ func TestTransactionAccountOperationDecode(t *testing.T) {
 	*/
 	expectedHex := "78343ab5d8702137ba6c7a590cd82dec2655490aa9b1c759c3215a427beab0cd"
 	var tx Transaction
-	if err := json.Unmarshal([]byte(txJson), &tx); err != nil {
-		t.Errorf("unmarshal transaction error:%v\n", err)
-		return
-	}
+	err := json.Unmarshal([]byte(txJson), &tx)
+	require.NoError(t, err, "unmarshal transaction json")
 
 	serializedHex, err := encoding.Hash256(tx)
-	if err != nil {
-		t.Errorf("hash transaction error:%v\n", err)
-		return
-	}
-	if serializedHex != expectedHex {
-		t.Errorf("expected %v, got %v", expectedHex, serializedHex)
-	}
+	require.NoError(t, err, "encoding and hash transaction")
+
+	assert.Equal(t, expectedHex, serializedHex, "account create transaction")
 }

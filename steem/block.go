@@ -1,4 +1,4 @@
-package transactions
+package steem
 
 import (
 	// Stdlib

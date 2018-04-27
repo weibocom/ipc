@@ -1,6 +1,6 @@
 package client
 
-type Client interface {
+type IClient interface {
 	CreateAccount(name string, meta interface{}) (*Account, error)
 	Post(author string, title string, content []byte, abstracts []string, url string) (*DNA, error)
 	LookupContent(dna DNA) (*Content, error)

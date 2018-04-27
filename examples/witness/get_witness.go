@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/weibocom/ipc/client"
+	"github.com/weibocom/ipc/steem/client"
 	"github.com/weibocom/ipc/transports/websocket"
 )
 

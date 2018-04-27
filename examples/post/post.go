@@ -8,7 +8,7 @@ import (
 	"strconv"
 
 	"github.com/kr/pretty"
-	"github.com/weibocom/ipc/client"
+	"github.com/weibocom/ipc/steem/client"
 	"github.com/weibocom/ipc/transports/websocket"
 )
 

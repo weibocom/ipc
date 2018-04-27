@@ -4,11 +4,11 @@ import (
 	// Stdlib
 	"encoding/hex"
 	"encoding/json"
-	"fmt"
 	"testing"
 
 	// RPC
-	"github.com/weibocom/ipc/steem"
+
+	"github.com/weibocom/ipc/chain"
 	"github.com/weibocom/ipc/steem/types"
 	"github.com/weibocom/ipc/wif"
 )
@@ -103,7 +103,7 @@ func TestTransactionDigest(t *testing.T) {
 
 	stx := NewSignedTransaction(&tx)
 
-	digest, err := stx.Digest(steem.SteemChain)
+	digest, err := stx.Digest(chain.MainChain)
 	if err != nil {
 		t.Error(err)
 	}
@@ -121,7 +121,7 @@ func TestTransactionSignAndVerify(t *testing.T) {
 	}()
 
 	stx := NewSignedTransaction(&tx)
-	if err := stx.Sign(privateKeys, steem.SteemChain); err != nil {
+	if err := stx.Sign(privateKeys, chain.MainChain); err != nil {
 		t.Error(err)
 	}
 
@@ -129,12 +129,11 @@ func TestTransactionSignAndVerify(t *testing.T) {
 		t.Error("expected signatures not appended to the transaction")
 	}
 
-	ok, err := stx.Verify(publicKeys, steem.SteemChain)
+	ok, err := stx.Verify(publicKeys, chain.MainChain)
 	if err != nil {
 		t.Error(err)
 	}
 	if !ok {
 		t.Error("verification failed")
 	}
-	fmt.Printf("sigs:%v\n", stx.Signatures)
 }

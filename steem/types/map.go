@@ -3,24 +3,9 @@ package types
 import (
 	"encoding/json"
 	"errors"
-	"strings"
 
-	"github.com/weibocom/ipc/config"
 	"github.com/weibocom/ipc/encoding"
-	"github.com/weibocom/ipc/wif"
 )
-
-type PublicKey string
-
-func (p PublicKey) Marshal(encoder *encoding.Encoder) error {
-	prefix := config.GetAddressPrefix()
-	key := string(p)
-	if strings.IndexAny(key, prefix) == 0 {
-		key = key[len(prefix):]
-	}
-	compressedKeys, _ := wif.ParsePubKeyBase58(key)
-	return encoder.Encode(compressedKeys)
-}
 
 // KeyAuthorityMap  refered to `typedef flat_map< public_key_type, weight_type >                key_authority_map;`
 type KeyAuthorityMap map[PublicKey]int64

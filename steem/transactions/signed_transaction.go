@@ -1,9 +1,6 @@
-// +build !nosigning
-
 package transactions
 
 import (
-	// Stdlib
 	"bytes"
 	"crypto/sha256"
 	"encoding/hex"
@@ -11,19 +8,12 @@ import (
 
 	// RPC
 
+	"github.com/weibocom/ipc/chain"
 	"github.com/weibocom/ipc/encoding"
 	"github.com/weibocom/ipc/signature"
-	"github.com/weibocom/ipc/steem"
 	"github.com/weibocom/ipc/steem/types"
-
 	// Vendor
-	"github.com/pkg/errors"
 )
-
-// // #cgo LDFLAGS: -lsecp256k1
-// // #include <stdlib.h>
-// // #include "signing.h"
-// import "C"
 
 type SignedTransaction struct {
 	*types.Transaction
@@ -38,46 +28,23 @@ func NewSignedTransaction(tx *types.Transaction) *SignedTransaction {
 	return &SignedTransaction{tx}
 }
 
-func (tx *SignedTransaction) Serialize() ([]byte, error) {
+func (tx *SignedTransaction) Digest(c *chain.Chain) ([]byte, error) {
 	var b bytes.Buffer
-	encoder := encoding.NewEncoder(&b)
+	encoder := encoding.NewRollingEncoder(encoding.NewEncoder(&b))
+	encoder.Encode(c.ID())
+	encoder.Encode(tx.Transaction)
 
-	if err := encoder.Encode(tx.Transaction); err != nil {
-		return nil, err
-	}
-	return b.Bytes(), nil
-}
-
-func (tx *SignedTransaction) Digest(chain *steem.Chain) ([]byte, error) {
-	var msgBuffer bytes.Buffer
-
-	// Write the chain ID.
-	rawChainID, err := chain.DecodeID()
-	if err != nil {
-		return nil, errors.Wrapf(err, "failed to decode chain ID: %v", chain.ID)
-	}
-
-	if _, err := msgBuffer.Write(rawChainID); err != nil {
-		return nil, errors.Wrap(err, "failed to write chain ID")
-	}
-
-	// Write the serialized transaction.
-	rawTx, err := tx.Serialize()
-	if err != nil {
-		return nil, err
-	}
-
-	if _, err := msgBuffer.Write(rawTx); err != nil {
-		return nil, errors.Wrap(err, "failed to write serialized transaction")
+	if encoder.Err() != nil {
+		return nil, encoder.Err()
 	}
 
 	// Compute the digest.
-	digest := sha256.Sum256(msgBuffer.Bytes())
+	digest := sha256.Sum256(b.Bytes())
 	return digest[:], nil
 }
 
 // 基于C实现的签名，与CVerify对应
-func (tx *SignedTransaction) Sign(privKeys [][]byte, chain *steem.Chain) error {
+func (tx *SignedTransaction) Sign(privKeys [][]byte, chain *chain.Chain) error {
 	digest, err := tx.Digest(chain)
 	if err != nil {
 		return err
@@ -99,7 +66,7 @@ func (tx *SignedTransaction) Sign(privKeys [][]byte, chain *steem.Chain) error {
 	return nil
 }
 
-func (tx *SignedTransaction) Verify(pubKeys [][]byte, chain *steem.Chain) (bool, error) {
+func (tx *SignedTransaction) Verify(pubKeys [][]byte, chain *chain.Chain) (bool, error) {
 	// Compute the digest, again.
 	digest, err := tx.Digest(chain)
 	if err != nil {

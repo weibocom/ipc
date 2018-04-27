@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/weibocom/ipc/client"
+	"github.com/weibocom/ipc/chain"
 	"github.com/weibocom/ipc/steem"
+	"github.com/weibocom/ipc/steem/client"
+	"github.com/weibocom/ipc/steem/transactions"
 	"github.com/weibocom/ipc/steem/types"
-	"github.com/weibocom/ipc/transactions"
 	"github.com/weibocom/ipc/transports/websocket"
 )
 
@@ -32,7 +33,7 @@ func main() {
 		os.Exit(-3)
 	}
 
-	refBlockPrefix, err := transactions.RefBlockPrefix(props.HeadBlockID)
+	refBlockPrefix, err := steem.RefBlockPrefix(props.HeadBlockID)
 	if err != nil {
 		fmt.Printf("failed to parse ref block prefix:%v\n", err.Error())
 		return
@@ -41,7 +42,7 @@ func main() {
 	// expire := time.Date(2018, 4, 14, 17, 8, 35, 0, time.UTC)
 
 	tx := &types.Transaction{
-		RefBlockNum:    transactions.RefBlockNum(props.HeadBlockNumber),
+		RefBlockNum:    steem.RefBlockNum(props.HeadBlockNumber),
 		RefBlockPrefix: refBlockPrefix,
 		// RefBlockNum:    29929,
 		// RefBlockPrefix: 2639820075,
@@ -70,7 +71,7 @@ func main() {
 
 	stx.PushOperation(operation)
 
-	if err := stx.Sign(steem.GetPrivateKeys(), steem.SteemChain); err != nil {
+	if err := stx.Sign(steem.GetPrivateKeys(), chain.MainChain); err != nil {
 		fmt.Printf("transaction sig err:%v\n", err.Error())
 		return
 	}
