@@ -1,4 +1,4 @@
-package wif
+package keys
 
 import (
 	"crypto/ecdsa"
@@ -12,6 +12,10 @@ type PrivateKey btcec.PrivateKey
 
 func (p *PrivateKey) pk() *btcec.PrivateKey {
 	return (*btcec.PrivateKey)(p)
+}
+
+func (p *PrivateKey) Public() *PublicKey {
+	return (*PublicKey)(p.pk().PubKey())
 }
 
 // Serialize can be used to turn private key into a raw private key (32 bytes).

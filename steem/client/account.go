@@ -3,7 +3,7 @@ package client
 import (
 	"fmt"
 
-	"github.com/weibocom/ipc.bak/keys"
+	"github.com/weibocom/ipc/keys"
 	"github.com/weibocom/ipc/steem/types"
 )
 

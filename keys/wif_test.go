@@ -1,4 +1,4 @@
-package wif
+package keys
 
 import (
 	// Stdlib

@@ -9,8 +9,8 @@ import (
 	// RPC
 
 	"github.com/weibocom/ipc/chain"
+	"github.com/weibocom/ipc/keys"
 	"github.com/weibocom/ipc/steem/types"
-	"github.com/weibocom/ipc/wif"
 )
 
 // 该测试序列化的 expectedHex 都由steem的源代码计算产生

@@ -17,7 +17,6 @@ import (
 	"github.com/weibocom/ipc/steem/transactions"
 	"github.com/weibocom/ipc/steem/types"
 	"github.com/weibocom/ipc/transports/websocket"
-	"github.com/weibocom/ipc/wif"
 
 	// Vendor
 	"golang.org/x/crypto/ssh/terminal"
@@ -43,7 +42,7 @@ func run() (err error) {
 	}
 	author, permlink, voter := args[0], args[1], args[2]
 
-	// Prompt for WIF.
+	// Prompt for keys.
 	wifKey, err := promptWIF(voter)
 	if err != nil {
 		return err
@@ -114,7 +113,7 @@ func run() (err error) {
 	})
 
 	// Sign.
-	privKey, err := wif.Decode(wifKey)
+	privKey, err := keys.Decode(wifKey)
 	if err != nil {
 		return err
 	}
