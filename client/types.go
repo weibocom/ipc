@@ -1,6 +1,10 @@
 package client
 
-type Account struct{}
+type Account struct {
+	Name       string
+	PrivateKey string
+	PublicKey  string
+}
 
 type DNA struct{}
 

@@ -3,8 +3,11 @@ package keys
 import (
 	"github.com/btcsuite/btcd/btcec"
 	"github.com/btcsuite/btcutil/base58"
+	"github.com/weibocom/ipc/config"
 	"golang.org/x/crypto/ripemd160"
 )
+
+var prefix = config.GetAddressPrefix()
 
 type PublicKey btcec.PublicKey
 
@@ -43,7 +46,7 @@ func (p *PublicKey) String() string {
 
 	serWithSum := append(ser, sum...)
 
-	return base58.Encode(serWithSum)
+	return prefix + base58.Encode(serWithSum)
 }
 
 // ParsePublicKey returns the public key associated with the given public-base58-formatted stringent key
