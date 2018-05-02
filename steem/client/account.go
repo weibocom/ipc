@@ -3,16 +3,16 @@ package client
 import (
 	"fmt"
 
+	"github.com/weibocom/ipc.bak/keys"
 	"github.com/weibocom/ipc/steem/types"
-	"github.com/weibocom/ipc/wif"
 )
 
 func (c *Client) NewAccount(creator string, name string, fee int, jsonMeta string) (*Account, error) {
-	privKey, err := wif.GenerateKey()
+	privKey, err := keys.GenerateKey()
 	if err != nil {
 		return nil, err
 	}
-	w, err := wif.NewWIF(privKey)
+	w, err := keys.NewWIF(privKey)
 	if err != nil {
 		return nil, err
 	}

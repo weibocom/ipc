@@ -1,8 +1,8 @@
 package steem
 
 import (
+	"github.com/weibocom/ipc.bak/keys"
 	"github.com/weibocom/ipc/config"
-	"github.com/weibocom/ipc/wif"
 )
 
 var privateKeys = make([][]byte, 0, len(config.GetWIFs()))
@@ -10,7 +10,7 @@ var publicKeys = make([][]byte, 0, len(config.GetWIFs()))
 
 func init() {
 	for _, v := range config.GetWIFs() {
-		w, err := wif.DecodeWIF(v)
+		w, err := keys.DecodeWIF(v)
 		if err != nil {
 			panic(err)
 		}
