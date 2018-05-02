@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/weibocom/ipc/chain"
+	"github.com/weibocom/ipc/config"
 	"github.com/weibocom/ipc/steem"
 	"github.com/weibocom/ipc/steem/apis/networkbroadcast"
 	"github.com/weibocom/ipc/steem/transactions"
@@ -47,7 +48,7 @@ func (c *Client) SendTrx(operations ...types.Operation) (resp *networkbroadcast.
 		stx.PushOperation(op)
 	}
 
-	if err := stx.Sign(steem.GetPrivateKeys(), chain.MainChain); err != nil {
+	if err := stx.Sign(config.GetPrivateKeys(), chain.MainChain); err != nil {
 		log.Printf("transaction sig err:%v\n", err.Error())
 		return nil, err
 	}

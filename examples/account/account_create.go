@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/weibocom/ipc/chain"
+	"github.com/weibocom/ipc/config"
 	"github.com/weibocom/ipc/steem"
 	"github.com/weibocom/ipc/steem/client"
 	"github.com/weibocom/ipc/steem/transactions"
@@ -71,7 +72,7 @@ func main() {
 
 	stx.PushOperation(operation)
 
-	if err := stx.Sign(steem.GetPrivateKeys(), chain.MainChain); err != nil {
+	if err := stx.Sign(config.GetPrivateKeys(), chain.MainChain); err != nil {
 		fmt.Printf("transaction sig err:%v\n", err.Error())
 		return
 	}
