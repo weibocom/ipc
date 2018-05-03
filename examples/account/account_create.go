@@ -21,6 +21,7 @@ func main() {
 		os.Exit(-2)
 	}
 	defer client.Close()
-	a, err := client.CreateAccount("icy-444", `{"meta":"icy data"}`)
+	name := os.Args[1]
+	a, err := client.CreateAccount(name, `{"meta":"icy data"}`)
 	fmt.Printf("create account:%v, %v", a, err)
 }

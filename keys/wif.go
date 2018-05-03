@@ -41,6 +41,14 @@ func NewWIF(pk *PrivateKey) (*WIF, error) {
 	return (*WIF)(w), nil
 }
 
+func GenerateWIF() (*WIF, error) {
+	pk, err := GenerateKey()
+	if err != nil {
+		return nil, err
+	}
+	return NewWIF(pk)
+}
+
 func ParseSignature(sigStr []byte) (*btcec.Signature, error) {
 	return btcec.ParseSignature(sigStr, btcec.S256())
 }

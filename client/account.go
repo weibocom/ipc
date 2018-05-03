@@ -15,15 +15,19 @@ func (c *client) saveAccount(a *Account) error {
 	return nil
 }
 
+func (c *client) lookupAccount(name string) (*Account, error) {
+	return nil, nil
+}
+
 func (c *client) CreateAccount(name string, meta string) (*Account, error) {
 	if err := c.checkAccount(name); err != nil {
 		return nil, err
 	}
-	pk, err := keys.GenerateKey()
+	wif, err := keys.GenerateWIF()
 	if err != nil {
 		return nil, err
 	}
-	publicKey := pk.Public().String()
+	publicKey := wif.PublicKey().String()
 
 	creator := config.GetCreator()
 	fee := config.GetCreateAccountFee()
@@ -33,9 +37,8 @@ func (c *client) CreateAccount(name string, meta string) (*Account, error) {
 	}
 
 	account := &Account{
-		Name:       name,
-		PrivateKey: pk.HexString(),
-		PublicKey:  publicKey,
+		Name: name,
+		WIF:  wif,
 	}
 	c.saveAccount(account)
 	return account, nil
