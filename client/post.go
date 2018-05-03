@@ -4,12 +4,10 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"errors"
-	"strings"
 
-	"github.com/rfguri/bowsim"
+	"github.com/weibocom/ipc/content"
 	"github.com/weibocom/ipc/signature"
 	"github.com/weibocom/ipc/util"
-	"github.com/yanyiwu/gojieba"
 )
 
 type Post struct {
@@ -129,15 +127,5 @@ func (c *client) CheckSimilar(a, b DNA) (float64, error) {
 		return 0, err
 	}
 
-	return similarity(string(post1.Content), string(post2.Content)), nil
-}
-
-func similarity(a, b string) float64 {
-	x := gojieba.NewJieba()
-	defer x.Free()
-
-	words1 := x.Cut(a, true)
-	words2 := x.Cut(b, true)
-
-	return bowsim.Get(strings.Join(words1, " "), strings.Join(words2, " "))
+	return content.Similarity(string(post1.Content), string(post2.Content)), nil
 }
