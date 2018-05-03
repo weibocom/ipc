@@ -10,6 +10,7 @@ import (
 
 	"github.com/juju/ratelimit"
 	"github.com/weibocom/ipc/steem/client"
+	"github.com/weibocom/ipc/steem/types"
 	"github.com/weibocom/ipc/transports/websocket"
 
 	metrics "github.com/rcrowley/go-metrics"
@@ -17,6 +18,7 @@ import (
 
 var (
 	rpcServer = flag.String("rpc", "ws://52.80.76.2:8090", "steem rpc server")
+	batch     = flag.Int("batch", 1, "operation count in one batch")
 	cc        = flag.Int("c", runtime.GOMAXPROCS(-1), "concurrency count")
 	pr        = flag.Int("pr", 2000, "max rate for post, not used yet")
 )
@@ -52,7 +54,14 @@ func main() {
 			for j := 0; ; j++ {
 				postLimter.Wait(1)
 				start := time.Now()
-				_, err = c.Post("initminer", "人民日报评论：如何聆听“年轻的声音”？​​​"+strconv.Itoa(i)+strconv.Itoa(j), "这几天，一封来自北大学生的公开信传播甚广。信中提到的北大相关学院对这位同学提请信息公开一事的处置，引发舆论关注和思考。", "weibo-8000-9000", "wb", "", []string{"test"})
+
+				var ops []types.Operation
+				for k := 0; k < *batch; k++ {
+					op := client.CreateCommentOperation("initminer", "人民日报评论：如何聆听“年轻的声音”？​​​"+strconv.Itoa(i)+strconv.Itoa(j)+strconv.Itoa(k), "这几天，一封来自北大学生的公开信传播甚广。信中提到的北大相关学院对这位同学提请信息公开一事的处置，引发舆论关注和思考。", "weibo-8000-9000", "wb", "", []string{"test"})
+					ops = append(ops, op)
+
+				}
+				_, err = c.BatchPost(ops)
 
 				if err == nil {
 					postSuccessMeter.UpdateSince(start)

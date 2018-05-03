@@ -9,6 +9,15 @@ import (
 
 // Post add a post.
 func (c *Client) Post(authorname, title, body, permlink, ptag, postImage string, tags []string) (bool, error) {
+	op := CreateCommentOperation(authorname, title, body, permlink, ptag, postImage, tags)
+	_, err := c.SendTrx(op)
+
+	return err == nil, err
+
+}
+
+// CreateCommentOperation creates a CommentOeration.
+func CreateCommentOperation(authorname, title, body, permlink, ptag, postImage string, tags []string) *types.CommentOperation {
 	if permlink == "" {
 		permlink = translit.EncodeTitle(title)
 	} else {
@@ -27,7 +36,7 @@ func (c *Client) Post(authorname, title, body, permlink, ptag, postImage string,
 		"lib":   "go-steem-rpc"
 	}`, tag, postImage)
 
-	op := &types.CommentOperation{
+	return &types.CommentOperation{
 		ParentAuthor:   "",
 		ParentPermlink: ptag,
 		Author:         authorname,
@@ -36,9 +45,9 @@ func (c *Client) Post(authorname, title, body, permlink, ptag, postImage string,
 		Body:           body,
 		JsonMetadata:   jsonMeta,
 	}
+}
 
-	_, err := c.SendTrx(op)
-
+func (c *Client) BatchPost(ops []types.Operation) (bool, error) {
+	_, err := c.SendTrx(ops...)
 	return err == nil, err
-
 }
