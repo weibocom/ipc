@@ -1,52 +1,48 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"math/rand"
-	"os"
 	"strconv"
+	"time"
 
-	"github.com/kr/pretty"
-	"github.com/weibocom/ipc/steem/client"
+	ipcclient "github.com/weibocom/ipc/client"
+	"github.com/weibocom/ipc/store"
 	"github.com/weibocom/ipc/transports/websocket"
 )
 
 func main() {
 	tran, err := websocket.NewTransport([]string{"ws://52.80.76.2:8090"})
 	if err != nil {
-		fmt.Println("failed to new transport:%s", err.Error())
-		os.Exit(-1)
+		log.Fatalf("failed to new transport:%s", err.Error())
 	}
 	defer tran.Close()
 
-	c, cerr := client.NewClient(tran)
-	if cerr != nil {
-		fmt.Println("failed to new client:%s", cerr.Error())
-		os.Exit(-2)
+	client, err := ipcclient.NewClient(tran, store.NewMemStore("ipc"))
+	if err != nil {
+		log.Fatalf("failed to new client. %v, %v", client, err)
 	}
-	defer c.Close()
+	defer client.Close()
 
-	// wb-8000 a test tital body body body weibo-8000-9000 wb
-	ok, err := c.Post("initminer", "人民日报评论：如何聆听“年轻的声音”？​​​"+strconv.Itoa(rand.Int()), "这几天，一封来自北大学生的公开信传播甚广。信中提到的北大相关学院对这位同学提请信息公开一事的处置，引发舆论关注和思考。", "weibo-8000-9000", "wb", "", []string{"test"})
+	title := "人民日报评论：如何聆听“年轻的声音"
+	content := "这几天，一封来自北大学生的公开信传播甚广。信中提到的北大相关学院对这位同学提请信息公开一事的处置，引发舆论关注和思考。"
+	uri := "http://weibo.com"
 
-	//ok, err := c.Post("initminer", "a test post", "a test text", "", "test", "", []string{"test"})
+	rand.Seed(time.Now().UnixNano())
+	account := "wbuser-" + strconv.Itoa(rand.Intn(10000))
+	a, err := client.CreateAccount(account, `{"meta":"icy data"}`)
+	if err != nil {
+		log.Fatalf("failed to create account. %v, %v", client, err)
+	}
 
-	fmt.Println(ok, err)
+	log.Printf("create account:%v, %v\n", a, err)
 
-	content, err := c.Condenser.GetContent("initminer", "weibo-8000-9000")
+	dna, err := client.Post(account, title, []byte(content), uri, []string{"人民日报", "北大学生", "公开信", "年轻的声音"})
 
 	if err != nil {
-		log.Fatalf("failed to getConent: %v", err)
+		log.Printf("failed to post: %v", err)
+		panic(err)
+	} else {
+		log.Printf("DNA: %s", dna.ID())
 	}
-
-	log.Println("content:", pretty.Sprint(content))
-
-	feedEnties, err := c.Condenser.GetFeedEntries("initminer", 0, 1)
-	if err != nil {
-		log.Fatalf("failed to GetFeedEntries: %v", err)
-	}
-
-	log.Println("feedEnties:", pretty.Sprint(feedEnties))
-
 }

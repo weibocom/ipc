@@ -7,10 +7,10 @@ type Account struct {
 	WIF  *keys.WIF
 }
 
-type DNA struct{}
+type DNA []byte
 
-func (dna *DNA) ID() string {
-	return ""
+func (dna DNA) ID() string {
+	return string(dna)
 }
 
 type Member struct{}
