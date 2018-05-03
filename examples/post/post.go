@@ -44,4 +44,27 @@ func main() {
 	} else {
 		log.Printf("DNA: %s", dna.ID())
 	}
+
+	content2, err := client.LookupContent(dna)
+	if err != nil {
+		log.Fatalf("failed to lookup content: %v", err)
+	}
+
+	log.Printf("got content: %s", content2)
+
+	ok, err := client.Verify(account, dna)
+	if err != nil {
+		log.Fatalf("failed to verify, has one error: %v", err)
+	} else if !ok {
+		log.Fatalf("failed to verify: author of dna is not %s", account)
+	}
+
+	s, err := client.CheckSimilar(dna, dna)
+	if err != nil {
+		log.Fatalf("failed to CheckSimilar, has one error: %v", err)
+	} else if s < 0.9 {
+		log.Fatalf("similar of same content should be greater than 0.9, but got %f", s)
+	}
+
+	log.Printf("similar: %f", s)
 }
