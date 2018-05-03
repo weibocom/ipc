@@ -80,7 +80,7 @@ func (c *client) Post(author string, title string, content []byte, uri string, t
 
 	body := hex.EncodeToString(digest)
 
-	c.steem.Post(author, title, body, dna.ID(), "", "", tags)
+	c.steem.Post(author, title, body, dna.ID(), dna.ID(), "", tags)
 
 	return nil, nil
 }

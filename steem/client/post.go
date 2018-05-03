@@ -30,9 +30,12 @@ func CreateCommentOperation(authorname, title, body, permlink, ptag, postImage s
 		ptag = translit.EncodeTag(ptag)
 	}
 
+	for i, t := range tag {
+		tag[i] = "\"" + t + "\""
+	}
 	jsonMeta := fmt.Sprintf(`{
-		"tags":  [%s],
-		"image": [%s],
+		"tags":  %s,
+		"image": ["%s"],
 		"lib":   "go-steem-rpc"
 	}`, tag, postImage)
 
