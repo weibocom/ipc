@@ -48,7 +48,7 @@ func (c *client) snapshot(account *Account, author string, title string, content
 		return digest, dna, err
 	}
 
-	err = c.store.Save(PostStoreType, string(dna), data)
+	err = c.store.Save(PostStoreType, dna.ID(), data)
 	return digest, dna, err
 }
 
@@ -84,4 +84,23 @@ func (c *client) Post(author string, title string, content []byte, uri string, t
 	c.steem.Post(privateKeys, author, title, body, dna.ID(), dna.ID(), "", tags)
 
 	return dna, nil
+}
+
+func (c *client) LookupContent(dna DNA) (Content, error) {
+	return c.store.Load(PostStoreType, dna.ID())
+}
+
+func (c *client) Verify(author string, dna DNA) (bool, error) {
+	v, err := c.store.Load(PostStoreType, dna.ID())
+	if err != nil {
+		return false, err
+	}
+
+	post := &Post{}
+	err = util.FromJSON(v, post)
+	if err != nil {
+		return false, err
+	}
+
+	return author == post.Author, nil
 }

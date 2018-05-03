@@ -15,4 +15,4 @@ func (dna DNA) ID() string {
 
 type Member struct{}
 
-type Content struct{}
+type Content []byte
