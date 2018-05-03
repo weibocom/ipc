@@ -4,9 +4,12 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"errors"
+	"strings"
 
+	"github.com/rfguri/bowsim"
 	"github.com/weibocom/ipc/signature"
 	"github.com/weibocom/ipc/util"
+	"github.com/yanyiwu/gojieba"
 )
 
 type Post struct {
@@ -103,4 +106,38 @@ func (c *client) Verify(author string, dna DNA) (bool, error) {
 	}
 
 	return author == post.Author, nil
+}
+
+func (c *client) CheckSimilar(a, b DNA) (float64, error) {
+	v1, err := c.store.Load(PostStoreType, a.ID())
+	if err != nil {
+		return 0, err
+	}
+	post1 := &Post{}
+	err = util.FromJSON(v1, post1)
+	if err != nil {
+		return 0, err
+	}
+
+	v2, err := c.store.Load(PostStoreType, b.ID())
+	if err != nil {
+		return 0, err
+	}
+	post2 := &Post{}
+	err = util.FromJSON(v2, post2)
+	if err != nil {
+		return 0, err
+	}
+
+	return similarity(string(post1.Content), string(post2.Content)), nil
+}
+
+func similarity(a, b string) float64 {
+	x := gojieba.NewJieba()
+	defer x.Free()
+
+	words1 := x.Cut(a, true)
+	words2 := x.Cut(b, true)
+
+	return bowsim.Get(strings.Join(words1, " "), strings.Join(words2, " "))
 }

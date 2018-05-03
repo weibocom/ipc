@@ -17,7 +17,7 @@ type Client interface {
 	Post(author string, title string, content []byte, uri string, tags []string) (DNA, error)
 	LookupContent(dna DNA) (Content, error)
 	Verify(author string, dna DNA) (bool, error)
-	// CheckSimilar(a, b DNA) (int, error)
+	CheckSimilar(a, b DNA) (float64, error)
 	// Members() (error, []Member)
 	// AddMember(m Member) error
 	// RemoveMember(m Member) error
