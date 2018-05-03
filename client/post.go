@@ -5,7 +5,7 @@ import "encoding/hex"
 // TODO
 // snapshot 1. 加密存储； 2. 返回存储后的唯一id。通常是snapshot的digest
 func (c *client) snapshot(author string, title string, content []byte, uri string) ([]byte, error) {
-	return "", nil
+	return []byte{}, nil
 }
 
 func (c *client) sign(a *Account, digest []byte) (*DNA, error) {

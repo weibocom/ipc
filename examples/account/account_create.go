@@ -5,6 +5,7 @@ import (
 	"os"
 
 	ipcclient "github.com/weibocom/ipc/client"
+	"github.com/weibocom/ipc/store"
 	"github.com/weibocom/ipc/transports/websocket"
 )
 
@@ -15,7 +16,7 @@ func main() {
 		os.Exit(-1)
 	}
 
-	client, err := ipcclient.NewClient(tran)
+	client, err := ipcclient.NewClient(tran, store.NewMemStore("ipc"))
 	if err != nil {
 		fmt.Printf("failed to new client. %v, %v", client, err)
 		os.Exit(-2)
@@ -23,5 +24,8 @@ func main() {
 	defer client.Close()
 	name := os.Args[1]
 	a, err := client.CreateAccount(name, `{"meta":"icy data"}`)
-	fmt.Printf("create account:%v, %v", a, err)
+	fmt.Printf("create account:%v, %v\n", a, err)
+
+	a, err = client.CreateAccount(name, `{"meta":"icy data"}`)
+	fmt.Printf("create account should failed:%v, %v\n", a, err)
 }

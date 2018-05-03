@@ -38,15 +38,15 @@ func main() {
 }
 
 func create(c *client.Client, account string) {
-	ownerPubKey := "STM719WquU4tYem16qxdRrVnzE7F1Xyd8TrGhmcfLFVcG3nvArAdP"
-	activePubKey := "STM5bdqA1f1RggUMnBBmcd9vvTMguwWQshkadh8KWuHNX38bSPMif"
-	postingPubKey := "STM7zTZCAUvjZZuo9o7FjHsv6irgaAUrWWpR39bWAdpwwpTm8TfbF"
-	memoPubKey := "STM6xBkq3xdpvuMKPq6EW2JPXTwoNNDPt6Vqt1w43qCESvBELcniU"
+	// ownerPubKey := "STM719WquU4tYem16qxdRrVnzE7F1Xyd8TrGhmcfLFVcG3nvArAdP"
+	// activePubKey := "STM5bdqA1f1RggUMnBBmcd9vvTMguwWQshkadh8KWuHNX38bSPMif"
+	// postingPubKey := "STM7zTZCAUvjZZuo9o7FjHsv6irgaAUrWWpR39bWAdpwwpTm8TfbF"
+	// memoPubKey := "STM6xBkq3xdpvuMKPq6EW2JPXTwoNNDPt6Vqt1w43qCESvBELcniU"
 
-	// ownerPubKey := "STM6iqZbzYGBnX8mZkn7xK5Z4i7DxcU7GUFo3yWgXuE8BhcbaZpkz"
-	// activePubKey := "STM6iqZbzYGBnX8mZkn7xK5Z4i7DxcU7GUFo3yWgXuE8BhcbaZpkz"
-	// postingPubKey := "STM6iqZbzYGBnX8mZkn7xK5Z4i7DxcU7GUFo3yWgXuE8BhcbaZpkz"
-	// memoPubKey := "STM6iqZbzYGBnX8mZkn7xK5Z4i7DxcU7GUFo3yWgXuE8BhcbaZpkz"
+	ownerPubKey := "STM6iqZbzYGBnX8mZkn7xK5Z4i7DxcU7GUFo3yWgXuE8BhcbaZpkz"
+	activePubKey := "STM6iqZbzYGBnX8mZkn7xK5Z4i7DxcU7GUFo3yWgXuE8BhcbaZpkz"
+	postingPubKey := "STM6iqZbzYGBnX8mZkn7xK5Z4i7DxcU7GUFo3yWgXuE8BhcbaZpkz"
+	memoPubKey := "STM6iqZbzYGBnX8mZkn7xK5Z4i7DxcU7GUFo3yWgXuE8BhcbaZpkz"
 
 	err := c.CreateAccount("initminer", account, 1, ownerPubKey, activePubKey, postingPubKey, memoPubKey, `{"meta":"test"}`)
 
