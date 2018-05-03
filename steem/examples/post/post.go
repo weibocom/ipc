@@ -7,6 +7,8 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/weibocom/ipc/keys"
+
 	"github.com/kr/pretty"
 	"github.com/weibocom/ipc/steem/client"
 	"github.com/weibocom/ipc/transports/websocket"
@@ -28,7 +30,7 @@ func main() {
 	defer c.Close()
 
 	// wb-8000 a test tital body body body weibo-8000-9000 wb
-	ok, err := c.Post("initminer", "人民日报评论：如何聆听“年轻的声音”？​​​"+strconv.Itoa(rand.Int()), "这几天，一封来自北大学生的公开信传播甚广。信中提到的北大相关学院对这位同学提请信息公开一事的处置，引发舆论关注和思考。", "weibo-8000-9000", "wb", "", []string{"test"})
+	ok, err := c.Post(keys.GetPrivateKeys(), "initminer", "人民日报评论：如何聆听“年轻的声音”？​​​"+strconv.Itoa(rand.Int()), "这几天，一封来自北大学生的公开信传播甚广。信中提到的北大相关学院对这位同学提请信息公开一事的处置，引发舆论关注和思考。", "weibo-8000-9000", "wb", "", []string{"test"})
 
 	//ok, err := c.Post("initminer", "a test post", "a test text", "", "test", "", []string{"test"})
 

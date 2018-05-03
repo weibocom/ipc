@@ -1,6 +1,7 @@
 package client
 
 import (
+	"github.com/weibocom/ipc/keys"
 	"github.com/weibocom/ipc/steem/types"
 )
 
@@ -18,7 +19,7 @@ func (c *Client) CreateAccount(creator string, name string, fee int64, ownerPubK
 		JsonMetadata:   jsonMeta,
 	}
 
-	_, err := c.SendTrx(operation)
+	_, err := c.SendTrx(keys.GetPrivateKeys(), operation)
 
 	return err
 }

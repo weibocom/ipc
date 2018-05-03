@@ -80,7 +80,8 @@ func (c *client) Post(author string, title string, content []byte, uri string, t
 
 	body := hex.EncodeToString(digest)
 
-	c.steem.Post(author, title, body, dna.ID(), dna.ID(), "", tags)
+	privateKeys := [][]byte{account.WIF.PrivateKey().Serialize()}
+	c.steem.Post(privateKeys, author, title, body, dna.ID(), dna.ID(), "", tags)
 
 	return dna, nil
 }

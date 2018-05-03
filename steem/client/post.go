@@ -8,9 +8,9 @@ import (
 )
 
 // Post add a post.
-func (c *Client) Post(authorname, title, body, permlink, ptag, postImage string, tags []string) (bool, error) {
+func (c *Client) Post(privateKeys [][]byte, authorname, title, body, permlink, ptag, postImage string, tags []string) (bool, error) {
 	op := CreateCommentOperation(authorname, title, body, permlink, ptag, postImage, tags)
-	_, err := c.SendTrx(op)
+	_, err := c.SendTrx(privateKeys, op)
 
 	return err == nil, err
 
@@ -50,7 +50,7 @@ func CreateCommentOperation(authorname, title, body, permlink, ptag, postImage s
 	}
 }
 
-func (c *Client) BatchPost(ops []types.Operation) (bool, error) {
-	_, err := c.SendTrx(ops...)
+func (c *Client) BatchPost(privateKeys [][]byte, ops []types.Operation) (bool, error) {
+	_, err := c.SendTrx(privateKeys, ops...)
 	return err == nil, err
 }

@@ -1,6 +1,9 @@
 package client
 
-import "github.com/weibocom/ipc/steem/types"
+import (
+	"github.com/weibocom/ipc/keys"
+	"github.com/weibocom/ipc/steem/types"
+)
 
 func (c *Client) AddWitness(owner string, pubKey string, url string, fee int64) error {
 	operation := &types.WitnessUpdateOperation{
@@ -14,7 +17,7 @@ func (c *Client) AddWitness(owner string, pubKey string, url string, fee int64) 
 			SBDInterestRate:    0,
 		},
 	}
-	_, err := c.SendTrx(operation)
+	_, err := c.SendTrx(keys.GetPrivateKeys(), operation)
 
 	return err
 }

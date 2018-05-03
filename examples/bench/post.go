@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/weibocom/ipc/keys"
+
 	"github.com/juju/ratelimit"
 	"github.com/weibocom/ipc/steem/client"
 	"github.com/weibocom/ipc/steem/types"
@@ -61,7 +63,7 @@ func main() {
 					ops = append(ops, op)
 
 				}
-				_, err = c.BatchPost(ops)
+				_, err = c.BatchPost(keys.GetPrivateKeys(), ops)
 
 				if err == nil {
 					postSuccessMeter.UpdateSince(start)
