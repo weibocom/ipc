@@ -38,6 +38,7 @@ func (m *KeyAuthorityMap) UnmarshalJSON(data []byte) error {
 
 	var invalid bool
 	mp := make(map[PublicKey]int64, len(xs))
+loop:
 	for _, kv := range xs {
 		if len(kv) != 2 {
 			invalid = true
@@ -58,7 +59,7 @@ func (m *KeyAuthorityMap) UnmarshalJSON(data []byte) error {
 			v = t
 		default:
 			invalid = true
-			break
+			break loop
 		}
 
 		mp[PublicKey(k)] = v

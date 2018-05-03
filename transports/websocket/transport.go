@@ -161,7 +161,7 @@ func NewTransport(urls []string, options ...Option) (*Transport, error) {
 // Call implements interfaces.CallCloser.
 func (t *Transport) Call(method string, params, result interface{}) error {
 	// Limit the request context with the tomb context.
-	ctx := t.t.Context(nil)
+	ctx := t.t.Context(context.Background())
 
 Loop:
 	for {
@@ -209,7 +209,7 @@ Loop:
 }
 
 func (t *Transport) dialer() error {
-	ctx := t.t.Context(nil)
+	ctx := t.t.Context(context.Background())
 
 	var conn *jsonrpc2.Conn
 	defer func() {

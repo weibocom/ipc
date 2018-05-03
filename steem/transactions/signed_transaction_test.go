@@ -88,7 +88,7 @@ func init() {
 
 	// decode wif
 	for _, v := range wifs {
-		w, err := wif.DecodeWIF(v)
+		w, err := keys.DecodeWIF(v)
 		if err != nil {
 			panic(err)
 		}

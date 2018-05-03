@@ -28,7 +28,7 @@ func TestSecp256k1WIF(t *testing.T) {
 	// test by witness
 	s := &secp256k1{}
 	wifStr := "5JWHY5DxTF6qN5grTtChDCYBmWHfY9zaSsw4CxEKN5eZpH9iBma"
-	w, err := wif.DecodeWIF(wifStr)
+	w, err := keys.DecodeWIF(wifStr)
 	require.NoError(t, err, "decode wif:%s", wifStr)
 	privKey := w.PrivateKey().Serialize()
 	pubKey := w.PublicKey().Serialize()
