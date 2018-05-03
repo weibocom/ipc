@@ -18,7 +18,6 @@ func (c *client) saveAccount(a *Account) error {
 	if err != nil {
 		return err
 	}
-
 	return c.store.Save(AccountStoreType, a.Name, v)
 }
 

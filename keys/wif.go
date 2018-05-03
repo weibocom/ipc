@@ -1,12 +1,32 @@
 package keys
 
 import (
+	"strings"
+
 	"github.com/btcsuite/btcd/btcec"
 	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/btcsuite/btcutil"
 )
 
 type WIF btcutil.WIF
+
+func (w *WIF) MarshalJSON() ([]byte, error) {
+	return []byte(`"` + w.String() + `"`), nil
+}
+
+func (w *WIF) UnmarshalJSON(data []byte) error {
+	s := string(data)
+	if s == "" {
+		return nil
+	}
+	s = strings.Trim(s, "\"")
+	wif, err := DecodeWIF(s)
+	if err != nil {
+		return err
+	}
+	*w = *wif
+	return nil
+}
 
 func (w *WIF) PrivateKey() *PrivateKey {
 	return (*PrivateKey)(w.PrivKey)
