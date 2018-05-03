@@ -67,7 +67,7 @@ func (c *client) sign(a *Account, digest []byte) (DNA, error) {
 	return DNA(hex.EncodeToString(sigs[0])), nil
 }
 
-func (c *client) Post(author string, title string, content []byte, uri string, tags []string) (*DNA, error) {
+func (c *client) Post(author string, title string, content []byte, uri string, tags []string) (DNA, error) {
 	account, err := c.lookupAccount(author)
 	if err != nil {
 		return nil, err
@@ -82,5 +82,5 @@ func (c *client) Post(author string, title string, content []byte, uri string, t
 
 	c.steem.Post(author, title, body, dna.ID(), dna.ID(), "", tags)
 
-	return nil, nil
+	return dna, nil
 }

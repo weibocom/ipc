@@ -40,8 +40,7 @@ func main() {
 	dna, err := client.Post(account, title, []byte(content), uri, []string{"人民日报", "北大学生", "公开信", "年轻的声音"})
 
 	if err != nil {
-		log.Printf("failed to post: %v", err)
-		panic(err)
+		log.Fatalf("failed to post: %v", err)
 	} else {
 		log.Printf("DNA: %s", dna.ID())
 	}

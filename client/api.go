@@ -14,7 +14,7 @@ const (
 
 type Client interface {
 	CreateAccount(name string, meta string) (*Account, error)
-	Post(author string, title string, content []byte, uri string, tags []string) (*DNA, error)
+	Post(author string, title string, content []byte, uri string, tags []string) (DNA, error)
 	// LookupContent(dna DNA) (*Content, error)
 	// Verify(author string, dna DNA) (error, bool)
 	// CheckSimilar(a, b DNA) (int, error)
