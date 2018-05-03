@@ -3,6 +3,7 @@ package types
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/weibocom/ipc/encoding"
 )
@@ -32,6 +33,43 @@ func (a Asset) Marshal(encoder *encoding.Encoder) error {
 	enc.Encode(symbol)
 
 	return enc.Err()
+}
+
+func (a *Asset) UnmarshalJSON(data []byte) error {
+
+	s := string(data)
+	s = strings.TrimPrefix(s, "[")
+	s = strings.TrimSuffix(s, "]")
+	ss := strings.Split(s, ",")
+
+	// fee returned by GetAccountHistory is like `0.001 STEEM`, not like CreateAccount `["1", 3, "@@000000021"]``
+	if len(ss) == 1 {
+		s = strings.Trim(s, "\"")
+		ss = strings.Split(s, " ")
+		ss[1] = "3"
+		ss = append(ss, "@@000000021")
+	}
+	if len(ss) < 3 {
+		return fmt.Errorf("wrong fee format: %s, %s", s, ss)
+	}
+
+	fee, err := strconv.ParseFloat(strings.Trim(ss[0], "\""), 32)
+	if err != nil {
+		return err
+	}
+
+	sym, err := strconv.Atoi(ss[1])
+	if err != nil {
+		return err
+	}
+
+	*a = Asset{
+		fee,
+		sym,
+		ss[2],
+	}
+
+	return nil
 }
 
 func convertToInt64(n interface{}) (int64, error) {
