@@ -52,3 +52,7 @@ func (s *MemcacheStore) Exist(storeType string, key string) (bool, error) {
 
 	return true, nil
 }
+
+func (s *MemcacheStore) Close() error {
+	return nil
+}

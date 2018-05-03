@@ -38,5 +38,6 @@ type client struct {
 }
 
 func (c *client) Close() error {
+	_ = c.store.Close()
 	return c.steem.Close()
 }

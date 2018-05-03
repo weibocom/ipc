@@ -6,6 +6,7 @@ type Store interface {
 	Save(storeType string, key string, value []byte) error
 	Load(storeType string, key string) ([]byte, error)
 	Exist(storeType string, key string) (bool, error)
+	Close() error
 }
 
 func generateKey(prefix string, storeType string, key string) string {
@@ -46,4 +47,8 @@ func (s *MemStore) Exist(storeType string, key string) (bool, error) {
 	defer s.mu.Unlock()
 	_, exist := s.data[generateKey(s.prefix, storeType, key)]
 	return exist, nil
+}
+
+func (s *MemStore) Close() error {
+	return nil
 }
