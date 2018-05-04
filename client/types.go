@@ -1,6 +1,10 @@
 package client
 
-import "github.com/weibocom/ipc/keys"
+import (
+	"time"
+
+	"github.com/weibocom/ipc/keys"
+)
 
 type Account struct {
 	Name string
@@ -13,6 +17,11 @@ func (dna DNA) ID() string {
 	return string(dna)
 }
 
-type Member struct{}
+type Member struct {
+	ID         int64
+	Name       string
+	SigningKey string
+	CreatedAt  time.Time
+}
 
 type Content []byte

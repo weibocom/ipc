@@ -1,6 +1,14 @@
 package store
 
-import "sync"
+import (
+	"errors"
+	"sync"
+)
+
+var (
+	ErrNonExist = errors.New("not exist")
+	ErrExist    = errors.New("already exist")
+)
 
 type Store interface {
 	Save(storeType string, key string, value []byte) error
@@ -39,7 +47,12 @@ func (s *MemStore) Save(storeType string, key string, value []byte) error {
 func (s *MemStore) Load(storeType string, key string) ([]byte, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	return s.data[generateKey(s.prefix, storeType, key)], nil
+
+	v, ok := s.data[generateKey(s.prefix, storeType, key)]
+	if ok {
+		return v, nil
+	}
+	return nil, ErrNonExist
 }
 
 func (s *MemStore) Exist(storeType string, key string) (bool, error) {

@@ -18,8 +18,8 @@ type Client interface {
 	LookupContent(dna DNA) (Content, error)
 	Verify(author string, dna DNA) (bool, error)
 	CheckSimilar(a, b DNA) (float64, error)
-	// Members() (error, []Member)
-	// AddMember(m Member) error
+	Members() ([]*Member, error)
+	AddMember(name string) (*Member, error)
 	// RemoveMember(m Member) error
 	Close() error
 }

@@ -33,6 +33,9 @@ func (s *MemcacheStore) Load(storeType string, key string) ([]byte, error) {
 	key = generateKey(s.prefix, storeType, key)
 	item, err := s.mc.Get(key)
 	if err != nil {
+		if err == memcache.ErrCacheMiss {
+			return nil, ErrNonExist
+		}
 		return nil, err
 	}
 

@@ -88,6 +88,12 @@ type ChainProperties struct {
 	SBDInterestRate    uint16 `json:"sbd_interest_rate"`
 }
 
+// func (op *ChainProperties) Marshal(encoder *encoding.Encoder) error {
+// 	enc := encoding.NewRollingEncoder(encoder)
+
+// 	return enc.Err()
+// }
+
 // FC_REFLECT( steemit::chain::pow_operation,
 //             (worker_account)
 //             (block_id)
