@@ -27,19 +27,19 @@ func main() {
 	defer client.Close()
 
 	// query
-	memebers, err := client.Members()
+	members, err := client.Members()
 	if err != nil {
-		log.Fatalf("failed to get all memebers: %v", err)
+		log.Fatalf("failed to get all members: %v", err)
 	}
 
-	log.Printf("memebers: %s", pretty.Sprint(memebers))
+	log.Printf("members: %s", pretty.Sprint(members))
 
 	// add witness
 	rand.Seed(time.Now().UnixNano())
 	account := "wbuser-" + strconv.Itoa(rand.Intn(10000))
 	m, err := client.AddMember(account)
 	if err != nil {
-		log.Fatalf("failed to add memeber: %v", err)
+		log.Fatalf("failed to add member: %v", err)
 	}
 
 	log.Printf("added member:%+v", m)

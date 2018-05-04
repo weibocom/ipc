@@ -50,9 +50,10 @@ func (c *client) AddMember(name string) (*Member, error) {
 			return nil, err
 		}
 	}
-
 	privateKeys := [][]byte{acc.WIF.PrivateKey().Serialize()}
-	err = c.steem.AddWitness(privateKeys, name, acc.WIF.PublicKey().String(), config.GetURL(), config.GetCreateAccountFee())
+	//privateKeys = keys.GetPrivateKeys()
+
+	err = c.steem.AddWitness(privateKeys, name, acc.WIF.PrivateKey().Public().String(), config.GetURL(), config.GetCreateAccountFee())
 	if err != nil {
 		return nil, err
 	}
