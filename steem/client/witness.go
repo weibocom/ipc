@@ -11,7 +11,7 @@ func (c *Client) AddWitness(privateKeys [][]byte, owner string, pubKey string, u
 		URL:             url,
 		BlockSigningKey: types.PublicKey(pubKey),
 		Props: &types.ChainProperties{
-			AccountCreationFee: "0 STEEM",
+			AccountCreationFee: types.NewSteemAsset(0),
 			MaximumBlockSize:   13107200,
 			SBDInterestRate:    0,
 		},

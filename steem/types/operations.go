@@ -83,16 +83,16 @@ type POW struct {
 //             (sbd_interest_rate) );
 
 type ChainProperties struct {
-	AccountCreationFee string `json:"account_creation_fee"`
+	AccountCreationFee Asset  `json:"account_creation_fee"`
 	MaximumBlockSize   uint32 `json:"maximum_block_size"`
 	SBDInterestRate    uint16 `json:"sbd_interest_rate"`
 }
 
-// func (op *ChainProperties) Marshal(encoder *encoding.Encoder) error {
-// 	enc := encoding.NewRollingEncoder(encoder)
+func (op *ChainProperties) Marshal(encoder *encoding.Encoder) error {
+	enc := encoding.NewRollingEncoder(encoder)
 
-// 	return enc.Err()
-// }
+	return enc.Err()
+}
 
 // FC_REFLECT( steemit::chain::pow_operation,
 //             (worker_account)
