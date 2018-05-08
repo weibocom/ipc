@@ -79,7 +79,7 @@ func (s *MemStore) ExistMember(name string) (bool, error) {
 func (s *MemStore) SavePost(p *model.Post) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	s.posts[p.DNA.ID()] = p
+	s.posts[p.DNA] = p
 	return nil
 }
 

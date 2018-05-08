@@ -37,33 +37,18 @@ func easyjson6601e8cdDecodeGithubComWeibocomIpcModel(in *jlexer.Lexer, out *Post
 			continue
 		}
 		switch key {
-		case "Author":
+		case "dna":
+			out.DNA = string(in.String())
+		case "author":
 			out.Author = string(in.String())
-		case "Title":
+		case "title":
 			out.Title = string(in.String())
-		case "Content":
-			if in.IsNull() {
-				in.Skip()
-				out.Content = nil
-			} else {
-				out.Content = in.Bytes()
-			}
-		case "URI":
+		case "content":
+			out.Content = string(in.String())
+		case "uri":
 			out.URI = string(in.String())
-		case "Digest":
-			if in.IsNull() {
-				in.Skip()
-				out.Digest = nil
-			} else {
-				out.Digest = in.Bytes()
-			}
-		case "DNA":
-			if in.IsNull() {
-				in.Skip()
-				out.DNA = nil
-			} else {
-				out.DNA = in.Bytes()
-			}
+		case "digest":
+			out.Digest = string(in.String())
 		default:
 			in.SkipRecursive()
 		}
@@ -78,8 +63,18 @@ func easyjson6601e8cdEncodeGithubComWeibocomIpcModel(out *jwriter.Writer, in Pos
 	out.RawByte('{')
 	first := true
 	_ = first
-	{
-		const prefix string = ",\"Author\":"
+	if in.DNA != "" {
+		const prefix string = ",\"dna\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.String(string(in.DNA))
+	}
+	if in.Author != "" {
+		const prefix string = ",\"author\":"
 		if first {
 			first = false
 			out.RawString(prefix[1:])
@@ -88,8 +83,8 @@ func easyjson6601e8cdEncodeGithubComWeibocomIpcModel(out *jwriter.Writer, in Pos
 		}
 		out.String(string(in.Author))
 	}
-	{
-		const prefix string = ",\"Title\":"
+	if in.Title != "" {
+		const prefix string = ",\"title\":"
 		if first {
 			first = false
 			out.RawString(prefix[1:])
@@ -98,18 +93,18 @@ func easyjson6601e8cdEncodeGithubComWeibocomIpcModel(out *jwriter.Writer, in Pos
 		}
 		out.String(string(in.Title))
 	}
-	{
-		const prefix string = ",\"Content\":"
+	if in.Content != "" {
+		const prefix string = ",\"content\":"
 		if first {
 			first = false
 			out.RawString(prefix[1:])
 		} else {
 			out.RawString(prefix)
 		}
-		out.Base64Bytes(in.Content)
+		out.String(string(in.Content))
 	}
-	{
-		const prefix string = ",\"URI\":"
+	if in.URI != "" {
+		const prefix string = ",\"uri\":"
 		if first {
 			first = false
 			out.RawString(prefix[1:])
@@ -118,25 +113,15 @@ func easyjson6601e8cdEncodeGithubComWeibocomIpcModel(out *jwriter.Writer, in Pos
 		}
 		out.String(string(in.URI))
 	}
-	{
-		const prefix string = ",\"Digest\":"
+	if in.Digest != "" {
+		const prefix string = ",\"digest\":"
 		if first {
 			first = false
 			out.RawString(prefix[1:])
 		} else {
 			out.RawString(prefix)
 		}
-		out.Base64Bytes(in.Digest)
-	}
-	{
-		const prefix string = ",\"DNA\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
-		out.Base64Bytes(in.DNA)
+		out.String(string(in.Digest))
 	}
 	out.RawByte('}')
 }
@@ -183,13 +168,13 @@ func easyjson6601e8cdDecodeGithubComWeibocomIpcModel1(in *jlexer.Lexer, out *Mem
 			continue
 		}
 		switch key {
-		case "ID":
-			out.ID = int64(in.Int64())
-		case "Name":
+		case "name":
 			out.Name = string(in.String())
-		case "SigningKey":
+		case "id":
+			out.ID = int64(in.Int64())
+		case "signing_key":
 			out.SigningKey = string(in.String())
-		case "CreatedAt":
+		case "created_at":
 			if data := in.Raw(); in.Ok() {
 				in.AddError((out.CreatedAt).UnmarshalJSON(data))
 			}
@@ -207,18 +192,8 @@ func easyjson6601e8cdEncodeGithubComWeibocomIpcModel1(out *jwriter.Writer, in Me
 	out.RawByte('{')
 	first := true
 	_ = first
-	{
-		const prefix string = ",\"ID\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
-		out.Int64(int64(in.ID))
-	}
-	{
-		const prefix string = ",\"Name\":"
+	if in.Name != "" {
+		const prefix string = ",\"name\":"
 		if first {
 			first = false
 			out.RawString(prefix[1:])
@@ -227,8 +202,18 @@ func easyjson6601e8cdEncodeGithubComWeibocomIpcModel1(out *jwriter.Writer, in Me
 		}
 		out.String(string(in.Name))
 	}
-	{
-		const prefix string = ",\"SigningKey\":"
+	if in.ID != 0 {
+		const prefix string = ",\"id\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.Int64(int64(in.ID))
+	}
+	if in.SigningKey != "" {
+		const prefix string = ",\"signing_key\":"
 		if first {
 			first = false
 			out.RawString(prefix[1:])
@@ -237,8 +222,8 @@ func easyjson6601e8cdEncodeGithubComWeibocomIpcModel1(out *jwriter.Writer, in Me
 		}
 		out.String(string(in.SigningKey))
 	}
-	{
-		const prefix string = ",\"CreatedAt\":"
+	if true {
+		const prefix string = ",\"created_at\":"
 		if first {
 			first = false
 			out.RawString(prefix[1:])
@@ -292,9 +277,9 @@ func easyjson6601e8cdDecodeGithubComWeibocomIpcModel2(in *jlexer.Lexer, out *Acc
 			continue
 		}
 		switch key {
-		case "Name":
+		case "name":
 			out.Name = string(in.String())
-		case "WIF":
+		case "wif":
 			if in.IsNull() {
 				in.Skip()
 				out.WIF = nil
@@ -320,8 +305,8 @@ func easyjson6601e8cdEncodeGithubComWeibocomIpcModel2(out *jwriter.Writer, in Ac
 	out.RawByte('{')
 	first := true
 	_ = first
-	{
-		const prefix string = ",\"Name\":"
+	if in.Name != "" {
+		const prefix string = ",\"name\":"
 		if first {
 			first = false
 			out.RawString(prefix[1:])
@@ -330,19 +315,15 @@ func easyjson6601e8cdEncodeGithubComWeibocomIpcModel2(out *jwriter.Writer, in Ac
 		}
 		out.String(string(in.Name))
 	}
-	{
-		const prefix string = ",\"WIF\":"
+	if in.WIF != nil {
+		const prefix string = ",\"wif\":"
 		if first {
 			first = false
 			out.RawString(prefix[1:])
 		} else {
 			out.RawString(prefix)
 		}
-		if in.WIF == nil {
-			out.RawString("null")
-		} else {
-			out.Raw((*in.WIF).MarshalJSON())
-		}
+		out.Raw((*in.WIF).MarshalJSON())
 	}
 	out.RawByte('}')
 }

@@ -107,7 +107,7 @@ func (s *MemcacheStore) SavePost(p *model.Post) error {
 	if err != nil {
 		return err
 	}
-	key := generateKey(s.prefix, "post", p.DNA.ID())
+	key := generateKey(s.prefix, "post", p.DNA)
 	return s.mc.Set(&memcache.Item{
 		Key:   key,
 		Value: v,

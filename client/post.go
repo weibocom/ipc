@@ -30,10 +30,10 @@ func (c *client) snapshot(account *model.Account, author string, title string, c
 	post := &model.Post{
 		Author:  author,
 		Title:   title,
-		Content: content, // TODO: 加密
+		Content: string(content), // TODO: 加密
 		URI:     uri,
-		Digest:  digest,
-		DNA:     dna,
+		Digest:  hex.EncodeToString(digest),
+		DNA:     dna.ID(),
 	}
 
 	err = c.store.SavePost(post)
@@ -80,7 +80,7 @@ func (c *client) LookupContent(dna model.DNA) (model.Content, error) {
 		return nil, err
 	}
 
-	return post.Content, nil
+	return []byte(post.Content), nil
 }
 
 func (c *client) Verify(author string, dna model.DNA) (bool, error) {
@@ -103,5 +103,5 @@ func (c *client) CheckSimilar(a, b model.DNA) (float64, error) {
 		return 0, err
 	}
 
-	return content.Similarity(string(post1.Content), string(post2.Content)), nil
+	return content.Similarity(post1.Content, post2.Content), nil
 }
