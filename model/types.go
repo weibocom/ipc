@@ -18,8 +18,8 @@ func (dna DNA) ID() string {
 }
 
 type Member struct {
-	ID         int64
 	Name       string
+	ID         int64 // id in blockchain
 	SigningKey string
 	CreatedAt  time.Time
 }
