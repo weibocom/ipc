@@ -7,12 +7,6 @@ import (
 	"github.com/weibocom/ipc/store"
 )
 
-const (
-	AccountStoreType = "account"
-	PostStoreType    = "post"
-	MemberStoreType  = "member"
-)
-
 type Client interface {
 	CreateAccount(name string, meta string) (*model.Account, error)
 	Post(author string, title string, content []byte, uri string, tags []string) (model.DNA, error)
