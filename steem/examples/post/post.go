@@ -17,14 +17,14 @@ import (
 func main() {
 	tran, err := websocket.NewTransport([]string{"ws://52.80.76.2:8090"})
 	if err != nil {
-		fmt.Println("failed to new transport:%s", err.Error())
+		fmt.Printf("failed to new transport:%s\n", err.Error())
 		os.Exit(-1)
 	}
 	defer tran.Close()
 
 	c, cerr := client.NewClient(tran)
 	if cerr != nil {
-		fmt.Println("failed to new client:%s", cerr.Error())
+		fmt.Printf("failed to new client:%s\n", cerr.Error())
 		os.Exit(-2)
 	}
 	defer c.Close()

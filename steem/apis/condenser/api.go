@@ -130,6 +130,13 @@ func (api *API) GetWitnesses(id []uint32) ([]*Witness, error) {
 	return resp, nil
 }
 
+func (api *API) GetLegacyWitnesses(id []uint32) ([]*Witness, error) {
+	var resp []*Witness
+	err := api.caller.Call("get_witnesses", [][]uint32{id}, &resp)
+
+	return resp, err
+}
+
 func (api *API) GetWitnessesByAccount(author string) (*Witness, error) {
 	raw, err := call.Raw(api.caller, APIID+".get_witness_by_account", []string{author})
 	if err != nil {

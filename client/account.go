@@ -5,33 +5,23 @@ import (
 
 	"github.com/weibocom/ipc/config"
 	"github.com/weibocom/ipc/keys"
-	"github.com/weibocom/ipc/util"
+	"github.com/weibocom/ipc/model"
 )
 
 // TODO
 func (c *client) checkAccount(name string) (bool, error) {
-	return c.store.Exist(AccountStoreType, name)
+	return c.store.ExistAccount(name)
 }
 
-func (c *client) saveAccount(a *Account) error {
-	v, err := util.ToJSON(a)
-	if err != nil {
-		return err
-	}
-	return c.store.Save(AccountStoreType, a.Name, v)
+func (c *client) saveAccount(a *model.Account) error {
+	return c.store.SaveAccount(a)
 }
 
-func (c *client) lookupAccount(name string) (*Account, error) {
-	v, err := c.store.Load(AccountStoreType, name)
-	if err != nil {
-		return nil, err
-	}
-	a := &Account{}
-	err = util.FromJSON(v, a)
-	return a, err
+func (c *client) lookupAccount(name string) (*model.Account, error) {
+	return c.store.LoadAccount(name)
 }
 
-func (c *client) CreateAccount(name string, meta string) (*Account, error) {
+func (c *client) CreateAccount(name string, meta string) (*model.Account, error) {
 	exist, err := c.checkAccount(name)
 	if exist {
 		return nil, errors.New("account is already existed")
@@ -53,7 +43,7 @@ func (c *client) CreateAccount(name string, meta string) (*Account, error) {
 		return nil, err
 	}
 
-	account := &Account{
+	account := &model.Account{
 		Name: name,
 		WIF:  wif,
 	}

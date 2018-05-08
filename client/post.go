@@ -6,22 +6,14 @@ import (
 	"errors"
 
 	"github.com/weibocom/ipc/content"
+	"github.com/weibocom/ipc/model"
 	"github.com/weibocom/ipc/signature"
 	"github.com/weibocom/ipc/util"
 )
 
-type Post struct {
-	Author  string
-	Title   string
-	Content []byte
-	URI     string
-	Digest  []byte
-	DNA     DNA
-}
-
 // TODO
 // snapshot 1. 加密存储； 2. 返回存储后的唯一id。通常是snapshot的digest
-func (c *client) snapshot(account *Account, author string, title string, content []byte, uri string) ([]byte, DNA, error) {
+func (c *client) snapshot(account *model.Account, author string, title string, content []byte, uri string) ([]byte, model.DNA, error) {
 	sha := sha256.New()
 	sha.Write(util.String2Bytes(author))
 	sha.Write(util.String2Bytes(title))
@@ -35,7 +27,7 @@ func (c *client) snapshot(account *Account, author string, title string, content
 		return digest, nil, err
 	}
 
-	post := &Post{
+	post := &model.Post{
 		Author:  author,
 		Title:   title,
 		Content: content, // TODO: 加密
@@ -44,16 +36,11 @@ func (c *client) snapshot(account *Account, author string, title string, content
 		DNA:     dna,
 	}
 
-	data, err := util.ToJSON(post)
-	if err != nil {
-		return digest, dna, err
-	}
-
-	err = c.store.Save(PostStoreType, dna.ID(), data)
+	err = c.store.SavePost(post)
 	return digest, dna, err
 }
 
-func (c *client) sign(a *Account, digest []byte) (DNA, error) {
+func (c *client) sign(a *model.Account, digest []byte) (model.DNA, error) {
 	// TODO: reuse signature.Sign but it is for multiple keys
 	privKeys := [][]byte{a.WIF.PrivateKey().Serialize()}
 	s := signature.NewSignature()
@@ -65,10 +52,10 @@ func (c *client) sign(a *Account, digest []byte) (DNA, error) {
 	if len(sigs) != 1 {
 		return nil, errors.New("must be one sigurature")
 	}
-	return DNA(hex.EncodeToString(sigs[0])), nil
+	return model.DNA(hex.EncodeToString(sigs[0])), nil
 }
 
-func (c *client) Post(author string, title string, content []byte, uri string, tags []string) (DNA, error) {
+func (c *client) Post(author string, title string, content []byte, uri string, tags []string) (model.DNA, error) {
 	account, err := c.lookupAccount(author)
 	if err != nil {
 		return nil, err
@@ -87,18 +74,17 @@ func (c *client) Post(author string, title string, content []byte, uri string, t
 	return dna, nil
 }
 
-func (c *client) LookupContent(dna DNA) (Content, error) {
-	return c.store.Load(PostStoreType, dna.ID())
-}
-
-func (c *client) Verify(author string, dna DNA) (bool, error) {
-	v, err := c.store.Load(PostStoreType, dna.ID())
+func (c *client) LookupContent(dna model.DNA) (model.Content, error) {
+	post, err := c.store.LoadPost(dna)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
-	post := &Post{}
-	err = util.FromJSON(v, post)
+	return post.Content, nil
+}
+
+func (c *client) Verify(author string, dna model.DNA) (bool, error) {
+	post, err := c.store.LoadPost(dna)
 	if err != nil {
 		return false, err
 	}
@@ -106,23 +92,12 @@ func (c *client) Verify(author string, dna DNA) (bool, error) {
 	return author == post.Author, nil
 }
 
-func (c *client) CheckSimilar(a, b DNA) (float64, error) {
-	v1, err := c.store.Load(PostStoreType, a.ID())
+func (c *client) CheckSimilar(a, b model.DNA) (float64, error) {
+	post1, err := c.store.LoadPost(a)
 	if err != nil {
 		return 0, err
 	}
-	post1 := &Post{}
-	err = util.FromJSON(v1, post1)
-	if err != nil {
-		return 0, err
-	}
-
-	v2, err := c.store.Load(PostStoreType, b.ID())
-	if err != nil {
-		return 0, err
-	}
-	post2 := &Post{}
-	err = util.FromJSON(v2, post2)
+	post2, err := c.store.LoadPost(b)
 	if err != nil {
 		return 0, err
 	}

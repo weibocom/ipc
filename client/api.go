@@ -2,6 +2,7 @@ package client
 
 import (
 	"github.com/weibocom/ipc/interfaces"
+	"github.com/weibocom/ipc/model"
 	steemclient "github.com/weibocom/ipc/steem/client"
 	"github.com/weibocom/ipc/store"
 )
@@ -13,13 +14,13 @@ const (
 )
 
 type Client interface {
-	CreateAccount(name string, meta string) (*Account, error)
-	Post(author string, title string, content []byte, uri string, tags []string) (DNA, error)
-	LookupContent(dna DNA) (Content, error)
-	Verify(author string, dna DNA) (bool, error)
-	CheckSimilar(a, b DNA) (float64, error)
-	Members() ([]*Member, error)
-	AddMember(name string) (*Member, error)
+	CreateAccount(name string, meta string) (*model.Account, error)
+	Post(author string, title string, content []byte, uri string, tags []string) (model.DNA, error)
+	LookupContent(dna model.DNA) (model.Content, error)
+	Verify(author string, dna model.DNA) (bool, error)
+	CheckSimilar(a, b model.DNA) (float64, error)
+	Members() ([]*model.Member, error)
+	AddMember(name string) (*model.Member, error)
 	// RemoveMember(m Member) error
 	Close() error
 }

@@ -3,21 +3,23 @@ package client
 import (
 	"fmt"
 
+	"github.com/weibocom/ipc/keys"
+	"github.com/weibocom/ipc/model"
+
 	"github.com/weibocom/ipc/config"
 	"github.com/weibocom/ipc/store"
-	"github.com/weibocom/ipc/util"
 )
 
 // Members get all members in chain that contains all accounts.
-func (c *client) Members() ([]*Member, error) {
+func (c *client) Members() ([]*model.Member, error) {
 	witnesses, err := c.steem.Condenser.GetWitnesses([]uint32{0})
 	if err != nil {
 		return nil, err
 	}
 
-	var members = make([]*Member, len(witnesses))
+	var members = make([]*model.Member, len(witnesses))
 	for i, w := range witnesses {
-		m := &Member{}
+		m := &model.Member{}
 		m.ID = w.ID.Int64()
 		m.Name = w.Owner
 		m.SigningKey = w.SigningKey
@@ -28,8 +30,8 @@ func (c *client) Members() ([]*Member, error) {
 }
 
 // AddMember add this member as witness.
-func (c *client) AddMember(name string) (*Member, error) {
-	ok, err := c.store.Exist(MemberStoreType, name)
+func (c *client) AddMember(name string) (*model.Member, error) {
+	ok, err := c.store.ExistMember(name)
 	if err != nil {
 		return nil, err
 	}
@@ -52,6 +54,13 @@ func (c *client) AddMember(name string) (*Member, error) {
 	}
 	privateKeys := [][]byte{acc.WIF.PrivateKey().Serialize()}
 	//privateKeys = keys.GetPrivateKeys()
+	wif := config.GetWIFs()[0]
+	dpk, _ := keys.DecodeWIF(wif)
+	pk := dpk.PrivateKey().Public().String()
+	fmt.Println("initminer private_key: ", wif)
+	fmt.Println("initminer public_key: ", pk)
+	fmt.Println("account wif: ", acc.WIF.String())
+	fmt.Println("account block_sign_key: ", acc.WIF.PrivateKey().Public().String())
 
 	err = c.steem.AddWitness(privateKeys, name, acc.WIF.PrivateKey().Public().String(), config.GetURL(), config.GetCreateAccountFee())
 	if err != nil {
@@ -67,15 +76,11 @@ func (c *client) AddMember(name string) (*Member, error) {
 		return nil, fmt.Errorf("sent update_witness for %s but can't lookup", name)
 	}
 
-	m := &Member{Name: name}
+	m := &model.Member{Name: name}
 	m.ID = w.ID.Int64()
 	m.SigningKey = w.SigningKey
 	m.CreatedAt = *w.Created.Time
 
 	//save to store
-	v, err := util.ToJSON(m)
-	if err != nil {
-		return nil, err
-	}
-	return m, c.store.Save(MemberStoreType, name, v)
+	return m, c.store.SaveMember(m)
 }

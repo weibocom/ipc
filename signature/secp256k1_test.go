@@ -42,3 +42,25 @@ func TestSecp256k1WIF(t *testing.T) {
 	require.NoError(t, err, "verify digest")
 	assert.True(t, pass, "verify signature")
 }
+
+func TestSecp256k1PublicKey(t *testing.T) {
+	// test by witness
+	s := &secp256k1{}
+	wifStr := "5JWHY5DxTF6qN5grTtChDCYBmWHfY9zaSsw4CxEKN5eZpH9iBma"
+	w, err := keys.DecodeWIF(wifStr)
+	require.NoError(t, err, "decode wif:%s", wifStr)
+
+	privKey := w.PrivateKey().Serialize()
+	pubKey := w.PublicKey().Serialize()
+
+	digestArray := sha256.Sum256([]byte(wifStr))
+	digest := digestArray[:]
+	sigs, err := s.Sign([][]byte{privKey}, digest)
+	require.NoError(t, err, "sign digest")
+	require.Len(t, sigs, 1, "only by one private key signed")
+	assert.Len(t, sigs[0], 65, "signature length")
+
+	pass, err := s.Verify([][]byte{pubKey}, digest, sigs)
+	require.NoError(t, err, "verify digest")
+	assert.True(t, pass, "verify signature")
+}

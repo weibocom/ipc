@@ -1,4 +1,4 @@
-package client
+package model
 
 import (
 	"time"
@@ -25,3 +25,12 @@ type Member struct {
 }
 
 type Content []byte
+
+type Post struct {
+	Author  string
+	Title   string
+	Content []byte
+	URI     string
+	Digest  []byte
+	DNA     DNA
+}

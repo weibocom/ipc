@@ -2,6 +2,8 @@ package store
 
 import (
 	"github.com/bradfitz/gomemcache/memcache"
+	"github.com/weibocom/ipc/model"
+	"github.com/weibocom/ipc/util"
 )
 
 // MemcacheStore implements the Store with memcached.
@@ -12,6 +14,10 @@ type MemcacheStore struct {
 
 var _ Store = &MemcacheStore{}
 
+func generateKey(prefix string, storeType string, key string) string {
+	return prefix + "-" + storeType + "-" + key
+}
+
 func NewMemcacheStore(prefix string, server ...string) *MemcacheStore {
 	mc := memcache.New(server...)
 	return &MemcacheStore{prefix: prefix, mc: mc}
@@ -21,16 +27,22 @@ func (s *MemcacheStore) Client() *memcache.Client {
 	return s.mc
 }
 
-func (s *MemcacheStore) Save(storeType string, key string, value []byte) error {
-	key = generateKey(s.prefix, storeType, key)
+func (s *MemcacheStore) SaveAccount(a *model.Account) error {
+	v, err := util.ToJSON(a)
+	if err != nil {
+		return err
+	}
+	key := generateKey(s.prefix, "account", a.Name)
 	return s.mc.Set(&memcache.Item{
 		Key:   key,
-		Value: value,
+		Value: v,
 	})
+
+	return nil
 }
 
-func (s *MemcacheStore) Load(storeType string, key string) ([]byte, error) {
-	key = generateKey(s.prefix, storeType, key)
+func (s *MemcacheStore) LoadAccount(name string) (*model.Account, error) {
+	key := generateKey(s.prefix, "account", name)
 	item, err := s.mc.Get(key)
 	if err != nil {
 		if err == memcache.ErrCacheMiss {
@@ -39,21 +51,82 @@ func (s *MemcacheStore) Load(storeType string, key string) ([]byte, error) {
 		return nil, err
 	}
 
-	return item.Value, nil
+	a := &model.Account{}
+	err = util.FromJSON(item.Value, a)
+	return a, err
 }
 
-func (s *MemcacheStore) Exist(storeType string, key string) (bool, error) {
-	key = generateKey(s.prefix, storeType, key)
-	_, err := s.mc.Get(key)
-	if err == memcache.ErrCacheMiss {
-		return false, nil
-	}
+func (s *MemcacheStore) ExistAccount(name string) (bool, error) {
+	_, err := s.LoadAccount(name)
+	return err != nil, err
+}
 
+func (s *MemcacheStore) SaveMember(m *model.Member) error {
+	v, err := util.ToJSON(m)
 	if err != nil {
-		return false, err
+		return err
+	}
+	key := generateKey(s.prefix, "member", m.Name)
+	return s.mc.Set(&memcache.Item{
+		Key:   key,
+		Value: v,
+	})
+
+	return nil
+}
+
+func (s *MemcacheStore) LoadMember(name string) (*model.Member, error) {
+	key := generateKey(s.prefix, "member", name)
+	item, err := s.mc.Get(key)
+	if err != nil {
+		if err == memcache.ErrCacheMiss {
+			return nil, ErrNonExist
+		}
+		return nil, err
 	}
 
-	return true, nil
+	a := &model.Member{}
+	err = util.FromJSON(item.Value, a)
+	return a, err
+}
+
+func (s *MemcacheStore) ExistMember(name string) (bool, error) {
+	_, err := s.LoadMember(name)
+	return err != nil, err
+}
+
+func (s *MemcacheStore) SavePost(p *model.Post) error {
+	v, err := util.ToJSON(p)
+	if err != nil {
+		return err
+	}
+	key := generateKey(s.prefix, "post", p.DNA.ID())
+	return s.mc.Set(&memcache.Item{
+		Key:   key,
+		Value: v,
+	})
+
+	return nil
+}
+
+func (s *MemcacheStore) LoadPost(dna model.DNA) (*model.Post, error) {
+	key := generateKey(s.prefix, "post", dna.ID())
+	item, err := s.mc.Get(key)
+	if err != nil {
+		if err == memcache.ErrCacheMiss {
+			return nil, ErrNonExist
+		}
+		return nil, err
+	}
+
+	a := &model.Post{}
+	err = util.FromJSON(item.Value, a)
+	return a, err
+}
+
+func (s *MemcacheStore) ExistPost(dna model.DNA) (bool, error) {
+	_, err := s.LoadPost(dna)
+	return err != nil, err
 }
 
 func (s *MemcacheStore) Close() error {
