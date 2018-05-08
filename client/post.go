@@ -84,12 +84,13 @@ func (c *client) LookupContent(dna model.DNA) (model.Content, error) {
 }
 
 func (c *client) Verify(author string, dna model.DNA) (bool, error) {
-	post, err := c.store.LoadPost(dna)
+	// query this post in chain
+	content, err := c.steem.Condenser.GetContent(author, dna.ID())
 	if err != nil {
 		return false, err
 	}
 
-	return author == post.Author, nil
+	return content != nil, nil
 }
 
 func (c *client) CheckSimilar(a, b model.DNA) (float64, error) {
