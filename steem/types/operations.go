@@ -90,7 +90,9 @@ type ChainProperties struct {
 
 func (op *ChainProperties) Marshal(encoder *encoding.Encoder) error {
 	enc := encoding.NewRollingEncoder(encoder)
-
+	enc.Encode(op.AccountCreationFee)
+	enc.Encode(op.MaximumBlockSize)
+	enc.Encode(op.SBDInterestRate)
 	return enc.Err()
 }
 

@@ -57,8 +57,12 @@ func (s *MemcacheStore) LoadAccount(name string) (*model.Account, error) {
 }
 
 func (s *MemcacheStore) ExistAccount(name string) (bool, error) {
-	_, err := s.LoadAccount(name)
-	return err != nil, err
+	a, err := s.LoadAccount(name)
+	if err == ErrNonExist {
+		return false, nil
+	}
+
+	return a != nil, err
 }
 
 func (s *MemcacheStore) SaveMember(m *model.Member) error {
@@ -91,8 +95,11 @@ func (s *MemcacheStore) LoadMember(name string) (*model.Member, error) {
 }
 
 func (s *MemcacheStore) ExistMember(name string) (bool, error) {
-	_, err := s.LoadMember(name)
-	return err != nil, err
+	m, err := s.LoadMember(name)
+	if err == ErrNonExist {
+		return false, nil
+	}
+	return m != nil, err
 }
 
 func (s *MemcacheStore) SavePost(p *model.Post) error {
@@ -125,8 +132,11 @@ func (s *MemcacheStore) LoadPost(dna model.DNA) (*model.Post, error) {
 }
 
 func (s *MemcacheStore) ExistPost(dna model.DNA) (bool, error) {
-	_, err := s.LoadPost(dna)
-	return err != nil, err
+	p, err := s.LoadPost(dna)
+	if err == ErrNonExist {
+		return false, nil
+	}
+	return p != nil, err
 }
 
 func (s *MemcacheStore) Close() error {
