@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	ipcclient "github.com/weibocom/ipc/client"
@@ -22,6 +23,13 @@ func main() {
 		os.Exit(-2)
 	}
 	defer client.Close()
+
+	count, err := client.AccountCount()
+	if err != nil {
+		log.Fatalf("failed to get account count: %v", err)
+	}
+	log.Printf("current accounts: %d\n", count)
+
 	name := os.Args[1]
 	a, err := client.CreateAccount(name, `{"meta":"icy data"}`)
 	fmt.Printf("create account:%v, %v\n", a, err)

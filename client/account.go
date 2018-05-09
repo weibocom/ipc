@@ -21,6 +21,10 @@ func (c *client) lookupAccount(name string) (*model.Account, error) {
 	return c.store.LoadAccount(name)
 }
 
+func (c *client) AccountCount() (uint32, error) {
+	return c.steem.Condenser.GetAccountCount()
+}
+
 func (c *client) CreateAccount(name string, meta string) (*model.Account, error) {
 	exist, err := c.checkAccount(name)
 	if exist {
