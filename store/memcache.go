@@ -139,6 +139,18 @@ func (s *MemcacheStore) ExistPost(dna model.DNA) (bool, error) {
 	return p != nil, err
 }
 
+func (s *MemcacheStore) GetPosts(author string, afterDNA model.DNA, limit int) ([]*model.Post, error) {
+	return nil, ErrNotImplemented
+}
+
+func (s *MemcacheStore) GetLatestPost() (*model.Post, error) {
+	return nil, ErrNotImplemented
+}
+
+func (s *MemcacheStore) GetPostByURI(author string, uri string) (*model.Post, error) {
+	return nil, ErrNotImplemented
+}
+
 func (s *MemcacheStore) Close() error {
 	return nil
 }

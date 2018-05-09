@@ -100,6 +100,19 @@ func (s *MemStore) ExistPost(dna model.DNA) (bool, error) {
 	_, exist := s.posts[dna.ID()]
 	return exist, nil
 }
+
+func (s *MemStore) GetPosts(author string, afterDNA model.DNA, limit int) ([]*model.Post, error) {
+	return nil, ErrNotImplemented
+}
+
+func (s *MemStore) GetLatestPost() (*model.Post, error) {
+	return nil, ErrNotImplemented
+}
+
+func (s *MemStore) GetPostByURI(author string, uri string) (*model.Post, error) {
+	return nil, ErrNotImplemented
+}
+
 func (s *MemStore) Close() error {
 	return nil
 }

@@ -10,10 +10,16 @@ import (
 type Client interface {
 	AccountCount() (uint32, error)
 	CreateAccount(name string, meta string) (*model.Account, error)
+
 	Post(author string, title string, content []byte, uri string, tags []string) (model.DNA, error)
-	LookupContent(dna model.DNA) (model.Content, error)
 	Verify(author string, dna model.DNA) (bool, error)
 	CheckSimilar(a, b model.DNA) (float64, error)
+	LookupContent(dna model.DNA) (model.Content, error)
+	LookupPost(author string, dna model.DNA) (*model.Post, error)
+	LookupPostByURI(author string, uri string) (*model.Post, error)
+	GetPosts(author string, afterDNA model.DNA, limit int) ([]*model.Post, error)
+	GetLatestPost() (*model.Post, error)
+
 	Members() ([]*model.Member, error)
 	AddMember(name string) (*model.Member, error)
 	// RemoveMember(m Member) error

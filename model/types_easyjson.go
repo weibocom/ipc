@@ -4,7 +4,6 @@ package model
 
 import (
 	json "encoding/json"
-
 	easyjson "github.com/mailru/easyjson"
 	jlexer "github.com/mailru/easyjson/jlexer"
 	jwriter "github.com/mailru/easyjson/jwriter"
@@ -37,6 +36,8 @@ func easyjson6601e8cdDecodeGithubComWeibocomIpcModel(in *jlexer.Lexer, out *Post
 			continue
 		}
 		switch key {
+		case "id":
+			out.ID = int64(in.Int64())
 		case "dna":
 			out.DNA = string(in.String())
 		case "author":
@@ -49,6 +50,10 @@ func easyjson6601e8cdDecodeGithubComWeibocomIpcModel(in *jlexer.Lexer, out *Post
 			out.URI = string(in.String())
 		case "digest":
 			out.Digest = string(in.String())
+		case "createdAt":
+			if data := in.Raw(); in.Ok() {
+				in.AddError((out.CreatedAt).UnmarshalJSON(data))
+			}
 		default:
 			in.SkipRecursive()
 		}
@@ -63,6 +68,16 @@ func easyjson6601e8cdEncodeGithubComWeibocomIpcModel(out *jwriter.Writer, in Pos
 	out.RawByte('{')
 	first := true
 	_ = first
+	if in.ID != 0 {
+		const prefix string = ",\"id\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.Int64(int64(in.ID))
+	}
 	if in.DNA != "" {
 		const prefix string = ",\"dna\":"
 		if first {
@@ -122,6 +137,16 @@ func easyjson6601e8cdEncodeGithubComWeibocomIpcModel(out *jwriter.Writer, in Pos
 			out.RawString(prefix)
 		}
 		out.String(string(in.Digest))
+	}
+	if true {
+		const prefix string = ",\"createdAt\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.Raw((in.CreatedAt).MarshalJSON())
 	}
 	out.RawByte('}')
 }

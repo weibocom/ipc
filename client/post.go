@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"errors"
+	"time"
 
 	"github.com/weibocom/ipc/content"
 	"github.com/weibocom/ipc/keys"
@@ -29,12 +30,13 @@ func (c *client) snapshot(account *model.Account, author string, title string, c
 	}
 
 	post := &model.Post{
-		Author:  author,
-		Title:   title,
-		Content: string(content), // TODO: 加密
-		URI:     uri,
-		Digest:  hex.EncodeToString(digest),
-		DNA:     dna.ID(),
+		Author:    author,
+		Title:     title,
+		Content:   string(content), // TODO: 加密
+		URI:       uri,
+		Digest:    hex.EncodeToString(digest),
+		DNA:       dna.ID(),
+		CreatedAt: time.Now(),
 	}
 
 	err = c.store.SavePost(post)
@@ -90,6 +92,37 @@ func (c *client) LookupContent(dna model.DNA) (model.Content, error) {
 	}
 
 	return []byte(post.Content), nil
+}
+
+func (c *client) LookupPost(auther string, dna model.DNA) (*model.Post, error) {
+	content, err := c.steem.Condenser.GetContent(auther, dna.ID())
+	if err != nil {
+		return nil, err
+	}
+
+	cc, err := c.LookupContent(dna)
+
+	return &model.Post{
+		DNA:     dna.ID(),
+		Author:  auther,
+		Title:   content.Title,
+		Content: string(cc), // TODO: 从IPFS获取内容
+		URI:     content.URL,
+		Digest:  content.Body,
+	}, err
+
+}
+
+func (c *client) GetPosts(author string, afterDNA model.DNA, limit int) ([]*model.Post, error) {
+	return c.store.GetPosts(author, afterDNA, limit)
+}
+
+func (c *client) GetLatestPost() (*model.Post, error) {
+	return c.store.GetLatestPost()
+}
+
+func (c *client) LookupPostByURI(author string, uri string) (*model.Post, error) {
+	return c.store.GetPostByURI(author, uri)
 }
 
 func (c *client) Verify(author string, dna model.DNA) (bool, error) {

@@ -25,10 +25,12 @@ type Member struct {
 type Content []byte
 
 type Post struct {
-	DNA     string `gorm:"COLUMN:dna;PRIMARY_KEY;TYPE:VARCHAR(255);NOT NULL" json:"dna,omitempty"`
-	Author  string `gorm:"COLUMN:author;TYPE:VARCHAR(64);NOT NULL;index:idx_author" json:"author,omitempty"`
-	Title   string `gorm:"COLUMN:title;TYPE:VARCHAR(128);NOT NULL" json:"title,omitempty"`
-	Content string `gorm:"COLUMN:content;TYPE:TEXT;NOT NULL" json:"content,omitempty"`
-	URI     string `gorm:"COLUMN:uri;TYPE:VARCHAR(64);index:idx_author" json:"uri,omitempty"`
-	Digest  string `gorm:"COLUMN:digest;TYPE:VARCHAR(64);NOT NULL" json:"digest,omitempty"`
+	ID        int64     `gorm:"COLUMN:id;PRIMARY_KEY;AUTO_INCREMENT;NOT NULL" json:"id,omitempty"`
+	DNA       string    `gorm:"COLUMN:dna;index:idx_dna;TYPE:VARCHAR(255);NOT NULL" json:"dna,omitempty"`
+	Author    string    `gorm:"COLUMN:author;TYPE:VARCHAR(64);NOT NULL;index:idx_author" json:"author,omitempty"`
+	Title     string    `gorm:"COLUMN:title;TYPE:VARCHAR(128);NOT NULL" json:"title,omitempty"`
+	Content   string    `gorm:"COLUMN:content;TYPE:TEXT;NOT NULL" json:"content,omitempty"`
+	URI       string    `gorm:"COLUMN:uri;TYPE:VARCHAR(64);index:idx_author" json:"uri,omitempty"`
+	Digest    string    `gorm:"COLUMN:digest;TYPE:VARCHAR(64);NOT NULL" json:"digest,omitempty"`
+	CreatedAt time.Time `gorm:"COLUMN:createdAt;NOT NULL" json:"createdAt,omitempty"`
 }
