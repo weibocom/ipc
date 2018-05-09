@@ -45,7 +45,7 @@ func (c *client) CreateAccount(name string, meta string) (*model.Account, error)
 
 	account := &model.Account{
 		Name: name,
-		WIF:  wif,
+		WIF:  wif.String(),
 	}
 	err = c.saveAccount(account)
 	return account, err

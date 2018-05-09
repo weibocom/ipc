@@ -6,6 +6,7 @@ import (
 	"errors"
 
 	"github.com/weibocom/ipc/content"
+	"github.com/weibocom/ipc/keys"
 	"github.com/weibocom/ipc/model"
 	"github.com/weibocom/ipc/signature"
 	"github.com/weibocom/ipc/util"
@@ -41,8 +42,12 @@ func (c *client) snapshot(account *model.Account, author string, title string, c
 }
 
 func (c *client) sign(a *model.Account, digest []byte) (model.DNA, error) {
-	// TODO: reuse signature.Sign but it is for multiple keys
-	privKeys := [][]byte{a.WIF.PrivateKey().Serialize()}
+	accWif, err := keys.DecodeWIF(a.WIF)
+	if err != nil {
+		return nil, err
+	}
+
+	privKeys := [][]byte{accWif.PrivateKey().Serialize()}
 	s := signature.NewSignature()
 	sigs, err := s.Sign(privKeys, digest)
 	if err != nil {
@@ -68,7 +73,11 @@ func (c *client) Post(author string, title string, content []byte, uri string, t
 
 	body := hex.EncodeToString(digest)
 
-	privateKeys := [][]byte{account.WIF.PrivateKey().Serialize()}
+	accWif, err := keys.DecodeWIF(account.WIF)
+	if err != nil {
+		return nil, err
+	}
+	privateKeys := [][]byte{accWif.PrivateKey().Serialize()}
 	c.steem.Post(privateKeys, author, title, body, dna.ID(), dna.ID(), "", tags)
 
 	return dna, nil

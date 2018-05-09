@@ -2,13 +2,11 @@ package model
 
 import (
 	"time"
-
-	"github.com/weibocom/ipc/keys"
 )
 
 type Account struct {
-	Name string    `json:"name,omitempty"`
-	WIF  *keys.WIF `json:"wif,omitempty"`
+	Name string `json:"name,omitempty"`
+	WIF  string `json:"wif,omitempty"`
 }
 
 type DNA []byte

@@ -4,10 +4,10 @@ package model
 
 import (
 	json "encoding/json"
+
 	easyjson "github.com/mailru/easyjson"
 	jlexer "github.com/mailru/easyjson/jlexer"
 	jwriter "github.com/mailru/easyjson/jwriter"
-	keys "github.com/weibocom/ipc/keys"
 )
 
 // suppress unused package warning
@@ -280,17 +280,7 @@ func easyjson6601e8cdDecodeGithubComWeibocomIpcModel2(in *jlexer.Lexer, out *Acc
 		case "name":
 			out.Name = string(in.String())
 		case "wif":
-			if in.IsNull() {
-				in.Skip()
-				out.WIF = nil
-			} else {
-				if out.WIF == nil {
-					out.WIF = new(keys.WIF)
-				}
-				if data := in.Raw(); in.Ok() {
-					in.AddError((*out.WIF).UnmarshalJSON(data))
-				}
-			}
+			out.WIF = string(in.String())
 		default:
 			in.SkipRecursive()
 		}
@@ -315,7 +305,7 @@ func easyjson6601e8cdEncodeGithubComWeibocomIpcModel2(out *jwriter.Writer, in Ac
 		}
 		out.String(string(in.Name))
 	}
-	if in.WIF != nil {
+	if in.WIF != "" {
 		const prefix string = ",\"wif\":"
 		if first {
 			first = false
@@ -323,7 +313,7 @@ func easyjson6601e8cdEncodeGithubComWeibocomIpcModel2(out *jwriter.Writer, in Ac
 		} else {
 			out.RawString(prefix)
 		}
-		out.Raw((*in.WIF).MarshalJSON())
+		out.String(string(in.WIF))
 	}
 	out.RawByte('}')
 }

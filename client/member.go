@@ -52,17 +52,14 @@ func (c *client) AddMember(name string) (*model.Member, error) {
 			return nil, err
 		}
 	}
-	privateKeys := [][]byte{acc.WIF.PrivateKey().Serialize()}
-	//privateKeys = keys.GetPrivateKeys()
-	wif := config.GetWIFs()[0]
-	dpk, _ := keys.DecodeWIF(wif)
-	pk := dpk.PrivateKey().Public().String()
-	fmt.Println("initminer private_key: ", wif)
-	fmt.Println("initminer public_key: ", pk)
-	fmt.Println("account wif: ", acc.WIF.String())
-	fmt.Println("account block_sign_key: ", acc.WIF.PrivateKey().Public().String())
 
-	err = c.steem.AddWitness(privateKeys, name, acc.WIF.PrivateKey().Public().String(), config.GetURL(), config.GetCreateAccountFee())
+	accWif, err := keys.DecodeWIF(acc.WIF)
+	if err != nil {
+		return nil, err
+	}
+
+	privateKeys := [][]byte{accWif.PrivateKey().Serialize()}
+	err = c.steem.AddWitness(privateKeys, name, accWif.PrivateKey().Public().String(), config.GetURL(), config.GetCreateAccountFee())
 	if err != nil {
 		return nil, err
 	}
