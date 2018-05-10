@@ -10,6 +10,7 @@ import (
 type Client interface {
 	AccountCount() (uint32, error)
 	CreateAccount(name string, meta string) (*model.Account, error)
+	LookupAccount(name string) (*model.Account, error)
 
 	Post(author string, title string, content []byte, uri string, tags []string) (model.DNA, error)
 	Verify(author string, dna model.DNA) (bool, error)

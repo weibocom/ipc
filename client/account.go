@@ -25,6 +25,21 @@ func (c *client) AccountCount() (uint32, error) {
 	return c.steem.Condenser.GetAccountCount()
 }
 
+func (c *client) LookupAccount(name string) (*model.Account, error) {
+
+	// check whether this account exists in chain
+	accounts, err := c.steem.Condenser.LookupAccountNames([]string{name})
+	if err != nil {
+		return nil, err
+	}
+	if len(accounts) == 0 {
+		return nil, errors.New("account not found in chain")
+	}
+
+	// check store
+	return c.store.LoadAccount(name)
+}
+
 func (c *client) CreateAccount(name string, meta string) (*model.Account, error) {
 	exist, err := c.checkAccount(name)
 	if exist {
