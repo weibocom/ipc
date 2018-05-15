@@ -12,9 +12,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bradfitz/gomemcache/memcache"
 	"github.com/gogo/protobuf/proto"
 	"github.com/juju/ratelimit"
+	"github.com/smallnest/gomemcache/memcache"
 	"github.com/weibocom/ipc/ingest/weibo"
 )
 
