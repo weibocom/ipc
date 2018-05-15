@@ -1,0 +1,235 @@
+syntax = "proto3";
+
+import "user.proto";
+import "postsource.proto";
+import "apistate.proto";
+
+package weibo;
+
+option java_package = "cn.sina.api.data.protobuf";
+option java_outer_classname = "StatusWrap";
+
+message Status {
+	// basic info, 101-120
+	// repost info, 120-129
+	// media info, 130-139
+	// ext info, 140-149
+	// internal info, 150+
+	 
+	// basic info
+    oneof id_present {
+	uint64 id = 101;
+    }
+    oneof text_present {
+	string text = 102;
+    }
+    oneof created_at_present {
+	uint64 created_at = 103;
+    }
+    oneof favorited_present {
+	bool favorited = 108;
+    }
+    oneof mid_present {
+	uint64 mid = 109;
+    }
+
+    oneof post_source_present {
+	PostSource post_source = 110;
+    }
+    oneof author_present {
+	SinaUser author = 111;
+    }
+    oneof edit_at_present {
+  uint64 edit_at = 112;
+    }
+    oneof edit_count_present {
+  uint32 edit_count = 113;
+    }
+    oneof is_history_present {
+   bool is_history = 114;
+   }
+    oneof ad_state_present {
+   uint32 ad_state = 115;
+   }
+   oneof content_auth_present {
+   uint32 content_auth = 116;
+   }
+    oneof rt_present {
+	Status rt = 120;
+    }
+    oneof rt_id_db_present {
+	uint64 rt_id_db = 121;
+    }
+    oneof rt_mid_db_present {
+	uint64 rt_mid_db = 122;
+    }
+    oneof parent_rt_id_db_present {
+	uint64 parent_rt_id_db = 123;
+    }
+	repeated uint64 rt_chain_db = 124 [packed=false];
+	
+	repeated uint64 mention_uid = 126 [packed=false];
+	
+	// media/photo/annotation
+	// from pic_id, we can get thumbnail_pic, bmiddle_pic, original_pic
+    oneof pic_id_present {
+	string pic_id = 131;
+    }
+	
+	// geo tag, optional
+    oneof latitude_present {
+	string latitude = 141;
+    }
+    oneof longitude_present {
+	string longitude = 142;
+    }
+    oneof annotation_present {
+	string annotation = 146;
+    }
+	
+	// tag id, can be public, repeated means 0~n
+	repeated uint64 tagIds = 145 [packed=false];
+	
+	// internal field	
+    oneof ip_present {
+	uint32 ip = 151;
+    }
+    oneof uid_db_present {
+	uint64 uid_db = 152; //only for save db
+    }
+    oneof feature_present {
+	uint64 feature = 153; //only for save db
+    }
+	
+    oneof state_present {
+	uint32 state = 155;
+    }
+    oneof api_state_present {
+	ApiState api_state = 156;
+    }
+    oneof WeiboState_present {
+	uint64 WeiboState = 157; // will use WeiboState replace apiState
+    }
+	
+    oneof mflag_present {
+	int32 mflag = 158;
+    }
+    oneof vflag_present {
+	uint32 vflag = 159;
+    }
+    oneof fflag_present {
+	uint32 fflag = 160;
+    }
+	
+    oneof group_id_present {
+	int64 group_id = 161;
+    }
+    oneof expire_time_present {
+	uint64 expire_time = 162;
+    }
+    oneof sgid_present {
+	int64 sgid = 163;
+    }
+
+	// title structure
+	repeated uint32 share_source = 164 [packed=false];
+	repeated uint64 share_id = 165 [packed=false];
+    oneof fid_present {
+	uint64 fid = 166;
+    }
+    oneof custom_source_present {
+	string custom_source = 167;
+    }
+	//ad tags to push firehose  format: repeat adtype:value1,value2,value3
+	repeated string adtags = 168 [packed=false];
+	// biz info
+	repeated uint32 biz_ids = 169 [packed=false];
+    oneof object_type_present {
+	string object_type = 170;
+    }
+    oneof page_mark_level_present {
+	uint64 page_mark_level = 171;
+    }
+	repeated string object_ids = 172 [packed=false];
+    oneof photoTag_present {
+	string photoTag = 173;
+    }
+    oneof ext_info_present {
+	string ext_info = 174; //use for extention,be aware this is a json format info.every biz use a spesific key for namespace
+    }
+    oneof status_type_present {
+	string status_type = 175;
+    }
+    oneof biz_feature_present {
+	uint64 biz_feature = 176;
+    }
+	repeated string darwinIds_status = 177 [packed=false];
+    oneof page_type_present {
+	uint64 page_type = 178;
+    }
+    oneof isLongText_present {
+	bool isLongText = 179;
+    }
+    oneof longTextFid_present {
+	string longTextFid = 180;
+    }
+    oneof textLength_present {
+	int32 textLength = 181;
+    }
+	
+	//BigInteger 
+    oneof similarity_present {
+	string similarity = 182;
+    }
+	
+    oneof topic_uuid_present {
+	uint64 topic_uuid = 183;
+    }
+    oneof topic_id_present {
+	string topic_id = 184;
+    }
+    oneof sync_mblog_present {
+	bool sync_mblog = 185;
+    }
+	
+    oneof gif_ids_present {
+	string gif_ids = 186;
+    }
+	
+    oneof content_only_type_present {
+	int32 content_only_type = 187;
+    }
+	
+    oneof original_source_present {
+	string original_source = 188;
+    }
+
+    oneof processed_by_v4_present {
+	bool processed_by_v4 = 189;
+    }
+	
+    oneof reposts_count_present {
+	uint32 reposts_count = 190;
+    }
+    oneof comments_count_present {
+	uint32 comments_count = 191;
+    }
+	
+    oneof is_imported_topic_present {
+	bool is_imported_topic = 192;
+    }
+    oneof if_can_flow_in_topic_present {
+	bool if_can_flow_in_topic = 193;
+    }
+    oneof approval_mark_time_present {
+	uint64 approval_mark_time = 194;
+    }
+    oneof withComment_present {
+	int32 withComment = 195;
+    }
+    uint64 manage_flag = 197;
+    
+    oneof mblogVipType_present {
+	uint32 mblogVipType = 198; 
+    }
+}

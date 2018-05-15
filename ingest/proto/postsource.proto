@@ -1,0 +1,21 @@
+syntax = "proto3";
+package weibo;
+
+option java_package = "cn.sina.api.data.protobuf";
+option java_outer_classname = "PostSourceWrap";
+
+message PostSource {
+    oneof id_present {
+	uint32 id = 501;
+    }
+    oneof name_present {
+	string name = 502;
+    }
+    oneof url_present {
+	string url = 503;
+    }
+    oneof appkey_present {
+	string appkey = 504;
+    }
+	// string app_id = 505; same as id?
+}

@@ -1,0 +1,12 @@
+syntax = "proto3";
+package weibo;
+
+option java_package = "cn.sina.api.data.protobuf";
+option java_outer_classname = "ApiStateWrap";
+
+enum ApiState {
+	UNKNOWN = 0;
+	STATE_NOT_SHOW = 1;
+	STATE_SHOW_SELF = 2;
+	STATE_SHOW = 3;
+}

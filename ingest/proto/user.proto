@@ -1,0 +1,348 @@
+syntax = "proto3";
+package weibo;
+
+option java_package = "cn.sina.api.data.protobuf";
+option java_outer_classname = "SinaUserWrap";
+
+message SinaUser {
+	// basic info, 401-439
+	// counter, 440-449
+	// internal info, 450+
+
+	// basic info
+    oneof id_present {
+	uint64 id = 401;
+    }
+    oneof screen_name_present {
+	string screen_name = 402;
+    }
+    oneof domain_present {
+	string domain = 403;
+    }
+    oneof created_at_present {
+	uint64 created_at = 404;
+    }
+    oneof gender_present {
+	Gender gender = 405;
+    }
+	enum Gender {
+		FEMALE = 0;
+		MALE = 1;
+	}
+
+    oneof province_present {
+	string province = 410;//
+    }
+    oneof city_present {
+	string city = 411;//
+    }
+
+
+    oneof description_present {
+	string description = 412;
+    }
+    oneof url_present {
+	string url = 413;
+    }
+	// use avatar version instead of image_url to save space
+	// string profile_image_url = 414;
+    oneof avatar_ver_present {
+	uint64 avatar_ver = 415;
+    }
+    oneof weihao_present {
+	string weihao = 416;
+    }
+
+//    oneof verified_present {
+	//bool verified = 421;
+//    }
+    oneof verified_reason_present {
+	string verified_reason = 424;
+    }
+
+	// allow recv dm from everyone
+//    oneof allow_all_act_msg_present {
+	//bool allow_all_act_msg = 422;
+//    }
+//    oneof allow_all_comment_present {
+	//bool allow_all_comment = 423;
+//    }
+
+//    oneof last_status_id_present {
+	//uint64 last_status_id = 425;
+//    }
+
+    oneof followers_count_present {
+	uint32 followers_count = 441;
+    }
+    oneof friends_count_present {
+	uint32 friends_count = 442;
+    }
+    oneof statuses_count_present {
+	uint32 statuses_count = 443;
+    }
+    oneof favourites_count_present {
+	uint32 favourites_count = 444;
+    }
+    oneof bi_followers_count_present {
+	uint32 bi_followers_count = 445;
+    }
+
+	///////////// private info, not show any more
+    oneof email_present {
+	string email = 450;
+    }
+
+    oneof qq_present {
+	string qq = 451;//
+    }
+	//string msn;
+
+//    oneof geo_enabled_present {
+	//bool geo_enabled = 456;
+//    }
+	// clear geography (map) time,  befor the clear time,
+	// all status not show geography info when load from db
+    oneof clear_geo_time_present {
+	uint64 clear_geo_time = 457;
+    }
+
+    oneof level_present {
+	uint32 level = 458;
+    }
+    oneof user_type_present {
+	uint32 user_type = 459;
+    }
+
+    oneof privacy_present {
+	uint64 privacy = 460;
+    }
+    oneof lang_present {
+	uint32 lang = 461;
+    }
+
+    oneof coverImg_pid_present {
+	string coverImg_pid = 462;
+    }
+    oneof coverImg_coordinates_present {
+	string coverImg_coordinates = 463;
+    }
+
+//    oneof ulevel_present {
+	//uint32 ulevel = 464;
+//    }
+    oneof ulevel_present {
+	uint64 ulevel = 465;
+    }
+    oneof regip_present {
+	uint64 regip = 466;
+    }
+    oneof regsource_present {
+	uint64 regsource = 467;
+    }
+
+    oneof update_time_present {
+	uint64 update_time = 468;
+    }
+	//star param
+    oneof star_present {
+	uint64 star = 469;
+    }
+    oneof sign_present {
+	uint64 sign = 470;
+    }
+    oneof region_present {
+    uint64 region = 471;
+    }
+
+	// member type
+    oneof mbtype_present {
+	uint32 mbtype = 480;
+    }
+	// member level
+    oneof mbrank_present {
+	uint32 mbrank = 481;
+    }
+	// dose it contain member shielding
+    oneof has_mblock_word_present {
+	uint32 has_mblock_word = 482;
+    }
+	// member vip privilege
+	repeated uint64 mb_privileges = 483 [packed=false];
+
+	// hd picture
+    oneof avatar_hd_pid_present {
+	string avatar_hd_pid = 484;
+    }
+    oneof avatar_hd_coordinates_present {
+	string avatar_hd_coordinates = 485;
+    }
+
+    // mobile end like
+    oneof coverImg_pid_mobile_present {
+    string coverImg_pid_mobile = 486;
+    }
+    oneof coverImg_coordinates_iphone_present {
+	string coverImg_coordinates_iphone = 487;
+    }
+	// User's personal page type identifier value
+    oneof ptype_present {
+	uint32 ptype = 488;
+    }
+    oneof mobile_present {
+	string mobile = 489;
+    }
+
+	// Ability to tag
+    oneof ability_tags_present {
+	string ability_tags = 490;
+    }
+
+	// remark fromuid can set remark for the touid
+	// remark SHOULD NOT set to cache
+	// string remark = 418;
+
+	// Shielding keywords expiration time
+    oneof block_word_expire_present {
+	uint64 block_word_expire = 491;
+    }
+
+	// Shielding application expiration time
+    oneof block_app_expire_present {
+	uint64 block_app_expire = 492;
+    }
+
+	// Certification industry
+    oneof verified_trade_present {
+	string verified_trade = 493;
+    }
+	// Certification that link
+    oneof verified_reason_url_present {
+	string verified_reason_url = 494;
+    }
+	// Authentication source document
+    oneof verified_source_present {
+	string verified_source = 495;
+    }
+	// Authentication source link
+    oneof verified_source_url_present {
+	string verified_source_url = 496;
+    }
+	// Unicom member pseudo-code information free flow
+    oneof unicom_free_pc_present {
+	string unicom_free_pc = 497;
+    }
+	// Whether opening report "location" function
+    oneof location_rights_present {
+	uint32 location_rights = 498;
+    }
+	// Whether opening "custom menu" function
+    oneof menu_present {
+	string menu = 499;
+    }
+	// The World Cup contest
+    oneof worldcup_guess_present {
+	uint32 worldcup_guess = 500;
+    }
+	// User comments on group type
+    oneof dianpings_present {
+	string dianpings = 501;
+    }
+	// User Icon to expand, the original sign field is full
+    oneof sign_ext_present {
+	string sign_ext = 502;
+    }
+	// User light badge logo
+    oneof badge_top_present {
+	string badge_top = 503;
+    }
+	// Blue v certification audit status
+    oneof verified_state_present {
+	uint32 verified_state = 504;
+    }
+	// The user's credit value
+    oneof credit_score_present {
+	uint32 credit_score = 505;
+    }
+	// Users concerned about the page count (if it is written in the above will amend the many attributes of SinaUserWrap off)
+    oneof pagefriends_count_present {
+	uint32 pagefriends_count = 446;
+    }
+	// Authentication level
+    oneof verified_level_present {
+	uint32 verified_level = 506;
+    }
+	// Audio details page
+    oneof audio_detail_page_present {
+	string audio_detail_page = 507;
+    }
+	// Audio broadcast address
+    oneof audio_play_addr_present {
+	string audio_play_addr = 508;
+    }
+	// Blue v certification that content
+    oneof verified_reason_modified_present {
+	string verified_reason_modified = 509;
+    }
+	// The contact of blue v
+    oneof verified_contact_name_present {
+	string verified_contact_name = 510;
+    }
+	// Blue v contact email
+    oneof verified_contact_email_present {
+	string verified_contact_email = 511;
+    }
+	// Blue v contact phone
+    oneof verified_contact_mobile_present {
+	string verified_contact_mobile = 512;
+    }
+	// Information user level 0 ~ 48, the default is 0
+    oneof urank_present {
+	uint32 urank = 513;
+    }
+	// Block frozen whether user count. New strategy in January, 2015, sass, users are blocked after freezing, the attention on the number of people kill freeze fans will be + 1, this field to distinguish between old and new block frozen behavior. 0: not included in the block, freeze, fans, 1: the fans have been included in the block and freeze
+    oneof has_frozen_count_present {
+	uint32 has_frozen_count = 514;
+    }
+	// Some state control user or functional properties
+    oneof controller_setting_present {
+	uint64 controller_setting = 515;
+    }
+	// The user capacity decision markers
+    oneof user_ability_present {
+	uint32 user_ability = 516;
+    }
+    // Member template id
+    oneof cardid_present {
+    string cardid = 517;
+    }
+    // Head pendant id
+    oneof avatargj_id_present {
+    string avatargj_id = 518;
+    }
+    // User authentication information extension field, which is used to support paid blue v v information and gold
+    oneof verified_type_ext_present {
+    sint32 verified_type_ext = 519;
+    }
+	//user insecurity label
+    oneof insecurity_present {
+	uint32 insecurity = 520;
+    }
+    //user insecurity label
+    oneof story_segmentid_present {
+    uint64 story_segmentid = 521;
+    }
+    // user attitude_style id
+    oneof attitude_style_present {
+    string attitude_style = 522;
+    }
+    //vclub member flag
+    oneof vclub_member_present {
+    uint32 vclub_member = 523;
+    }
+
+    oneof gender_state_present {
+        uint32 gender_state = 524;
+    }
+
+}

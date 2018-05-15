@@ -1,0 +1,21 @@
+syntax = "proto3";
+import "triggermessage.proto";
+
+package weibo;
+
+option java_package = "com.weibo.trigger.common.bean";
+option java_outer_classname = "MessageBatchProto";
+
+message TriggerMessageBatch {
+
+    oneof topic_present {
+        string topic = 101;
+    }
+
+    oneof fromCache_present {
+        bool fromCache = 102;
+    }
+
+    repeated TriggerMessage messages = 103 [packed = false];
+
+}

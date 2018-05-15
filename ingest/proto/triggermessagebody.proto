@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package weibo;
+
+option java_package = "com.weibo.trigger.common.bean";
+option java_outer_classname = "MessageBody";
+
+message TriggerMessageBody {
+
+    oneof type_present {
+        string type = 601;
+    }
+
+    oneof event_present {
+        string event = 602;
+    }
+
+    oneof body_present {
+        bytes body = 604;
+    }
+
+}
