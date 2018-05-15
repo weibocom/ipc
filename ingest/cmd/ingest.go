@@ -5,6 +5,8 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"net/http"
+	_ "net/http/pprof"
 	"os"
 	"os/signal"
 	"time"
@@ -20,6 +22,10 @@ var (
 
 func main() {
 	flag.Parse()
+
+	go func() {
+		http.ListenAndServe("localhost:9099", nil)
+	}()
 
 	buff, err := ioutil.ReadFile(*cfgFile)
 	if err != nil {

@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/gogo/protobuf/proto"
@@ -47,6 +46,11 @@ type retryPost struct {
 	uid     uint64
 	mid     uint64
 	last    time.Time
+}
+
+type post struct {
+	uid uint64
+	mid uint64
 }
 
 // NewConfigWatcher returns a new ConfigWatcher.
@@ -120,7 +124,7 @@ func NewIngester(ip string, port int, key string, done chan struct{}, limits int
 		key:       key,
 		limits:    limits,
 		done:      done,
-		handlerCh: make(chan *weibo.TriggerMessageBatch, config.ChannelBuffer),
+		handlerCh: make(chan *post, config.ChannelBuffer),
 		retryCh:   make(chan *retryPost, config.ChannelBuffer),
 	}
 }
@@ -132,7 +136,7 @@ type Ingester struct {
 	key    string
 	limits int
 
-	handlerCh chan *weibo.TriggerMessageBatch
+	handlerCh chan *post
 	retryCh   chan *retryPost
 	done      chan struct{}
 }
@@ -170,23 +174,7 @@ func (d *Ingester) readMessage() {
 				continue
 			}
 
-			d.handlerCh <- batch
-		}
-	}
-}
-
-func (d *Ingester) handleMessage() {
-	for {
-		select {
-		case <-d.done:
-			return
-		case batch := <-d.handlerCh:
 			for _, msg := range batch.Messages {
-				// status, grp_status,privacy_status
-				if !strings.HasSuffix(msg.GetType(), "status") {
-					log.Printf("unknown type: %s", msg.GetType())
-					continue
-				}
 
 				body := &weibo.TriggerMessageBody{}
 				err := proto.Unmarshal(msg.GetBodyBytes(), body)
@@ -210,25 +198,37 @@ func (d *Ingester) handleMessage() {
 				if level == 2 {
 					vflag := (sign >> 6) & ((1 << 4) - 1)
 					if vflag >= 1 && vflag <= 7 {
-						err = postLongText(uid, mid)
-						if err != nil {
-							log.Printf("failed to fetch longtext, uid: %d, mid: %d, err: %v", uid, mid, err)
-							select {
-							case d.retryCh <- &retryPost{
-								retries: config.Retries,
-								uid:     uid,
-								mid:     mid,
-								last:    time.Now(),
-							}:
-							default:
-								log.Printf("retry channel if full so {uid: %d, mid: %d} is dropped", uid, mid)
-							}
 
-							continue
-						}
+						d.handlerCh <- &post{uid: uid, mid: mid}
 					}
-
 				}
+			}
+
+		}
+	}
+}
+
+func (d *Ingester) handleMessage() {
+	for {
+		select {
+		case <-d.done:
+			return
+		case p := <-d.handlerCh:
+			err := postLongText(p.uid, p.mid)
+			if err != nil {
+				log.Printf("failed to fetch longtext, uid: %d, mid: %d, err: %v", p.uid, p.mid, err)
+				select {
+				case d.retryCh <- &retryPost{
+					retries: config.Retries,
+					uid:     p.uid,
+					mid:     p.mid,
+					last:    time.Now(),
+				}:
+				default:
+					log.Printf("retry channel if full so {uid: %d, mid: %d} is dropped", p.uid, p.mid)
+				}
+
+				continue
 			}
 		}
 	}
