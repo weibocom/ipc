@@ -80,9 +80,32 @@ func (c *client) Post(author string, title string, content []byte, uri string, t
 		return nil, err
 	}
 	privateKeys := [][]byte{accWif.PrivateKey().Serialize()}
-	c.steem.Post(privateKeys, author, title, body, dna.ID(), dna.ID(), "", tags)
+	_, err = c.steem.Post(privateKeys, author, title, body, dna.ID(), dna.ID(), "", tags)
 
-	return dna, nil
+	return dna, err
+}
+
+func (c *client) PostAsync(author string, title string, content []byte, uri string, tags []string) (model.DNA, error) {
+	account, err := c.lookupAccount(author)
+	if err != nil {
+		return nil, err
+	}
+
+	digest, dna, err := c.snapshot(account, author, title, content, uri)
+	if err != nil {
+		return nil, err
+	}
+
+	body := hex.EncodeToString(digest)
+
+	accWif, err := keys.DecodeWIF(account.WIF)
+	if err != nil {
+		return nil, err
+	}
+	privateKeys := [][]byte{accWif.PrivateKey().Serialize()}
+	err = c.steem.PostAsync(privateKeys, author, title, body, dna.ID(), dna.ID(), "", tags)
+
+	return dna, err
 }
 
 func (c *client) LookupContent(dna model.DNA) (model.Content, error) {

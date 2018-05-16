@@ -16,6 +16,11 @@ func (c *Client) Post(privateKeys [][]byte, authorname, title, body, permlink, p
 
 }
 
+func (c *Client) PostAsync(privateKeys [][]byte, authorname, title, body, permlink, ptag, postImage string, tags []string) error {
+	op := CreateCommentOperation(authorname, title, body, permlink, ptag, postImage, tags)
+	return c.SendTrxAsync(privateKeys, op)
+}
+
 // CreateCommentOperation creates a CommentOeration.
 func CreateCommentOperation(authorname, title, body, permlink, ptag, postImage string, tags []string) *types.CommentOperation {
 	if permlink == "" {

@@ -13,6 +13,7 @@ type Client interface {
 	LookupAccount(name string) (*model.Account, error)
 
 	Post(author string, title string, content []byte, uri string, tags []string) (model.DNA, error)
+	PostAsync(author string, title string, content []byte, uri string, tags []string) (model.DNA, error)
 	Verify(author string, dna model.DNA) (bool, error)
 	CheckSimilar(a, b model.DNA) (float64, error)
 	LookupContent(dna model.DNA) (model.Content, error)

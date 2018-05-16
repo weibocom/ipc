@@ -60,3 +60,27 @@ func (c *Client) SendTrx(privateKeys [][]byte, operations ...types.Operation) (r
 
 	return resp, err
 }
+
+func (c *Client) SendTrxAsync(privateKeys [][]byte, operations ...types.Operation) error {
+	tx, err := c.CreateTransaction()
+	if err != nil {
+		return err
+	}
+	stx := transactions.NewSignedTransaction(tx)
+
+	for _, op := range operations {
+		stx.PushOperation(op)
+	}
+
+	if err := stx.Sign(privateKeys, chain.MainChain); err != nil {
+		log.Printf("transaction sig err:%v\n", err.Error())
+		return err
+	}
+
+	err = c.NetworkBroadcast.BroadcastTransaction(stx.Transaction)
+	if err != nil {
+		log.Printf("broadcast async failed:%v\n", err.Error())
+	}
+
+	return err
+}
