@@ -35,5 +35,5 @@ type Post struct {
 	Content   string    `gorm:"COLUMN:content;TYPE:TEXT;NOT NULL" json:"content,omitempty"`
 	URI       string    `gorm:"COLUMN:uri;TYPE:VARCHAR(64);index:idx_author" json:"uri,omitempty"`
 	Digest    string    `gorm:"COLUMN:digest;TYPE:VARCHAR(64);NOT NULL" json:"digest,omitempty"`
-	CreatedAt time.Time `gorm:"COLUMN:createdAt;NOT NULL" json:"createdAt,omitempty"`
+	CreatedAt time.Time `gorm:"COLUMN:created_at;NOT NULL" json:"created_at,omitempty"`
 }

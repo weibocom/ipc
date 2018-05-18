@@ -50,7 +50,7 @@ func easyjson6601e8cdDecodeGithubComWeibocomIpcModel(in *jlexer.Lexer, out *Post
 			out.URI = string(in.String())
 		case "digest":
 			out.Digest = string(in.String())
-		case "createdAt":
+		case "created_at":
 			if data := in.Raw(); in.Ok() {
 				in.AddError((out.CreatedAt).UnmarshalJSON(data))
 			}
@@ -139,7 +139,7 @@ func easyjson6601e8cdEncodeGithubComWeibocomIpcModel(out *jwriter.Writer, in Pos
 		out.String(string(in.Digest))
 	}
 	if true {
-		const prefix string = ",\"createdAt\":"
+		const prefix string = ",\"created_at\":"
 		if first {
 			first = false
 			out.RawString(prefix[1:])
