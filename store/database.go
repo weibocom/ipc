@@ -5,8 +5,6 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"github.com/weibocom/ipc/model"
-
-	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 type DBStore struct {
@@ -111,22 +109,6 @@ func (s *DBStore) ExistPost(dna model.DNA) (bool, error) {
 	}
 	return p != nil, err
 }
-
-// func (s *DBStore) GetPosts(author string, afterDNA model.DNA, limit int) ([]*model.Post, error) {
-// 	a := &model.Post{DNA: afterDNA.ID()}
-// 	var afterID int64
-
-// 	if s.db.Model(&model.Post{}).First(a).Error == nil {
-// 		afterID = a.ID
-// 	}
-
-// 	var result []*model.Post
-// 	db := s.db.Model(&model.Post{}).Order("id desc").Where("id > ?", afterID).Limit(limit).Find(&result)
-// 	if db.RecordNotFound() {
-// 		return nil, ErrNonExist
-// 	}
-// 	return result, db.Error
-// }
 
 func (s *DBStore) GetLatestPost() (*model.Post, error) {
 	a := &model.Post{}

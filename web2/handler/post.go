@@ -36,21 +36,7 @@ func queryPostByUserPostID(w http.ResponseWriter, r *http.Request, ps httprouter
 	mid := getInt(r, "mid", -1)
 	company := r.FormValue("company")
 
-	if company == "" {
-		resp := NewErrorCodeResponse(40002001)
-		w.Write(resp.ToBytes())
-		return
-	}
-
-	if uid == -1 {
-		resp := NewErrorCodeResponse(40002002)
-		w.Write(resp.ToBytes())
-		return
-	}
-
-	if uid == -1 {
-		resp := NewErrorCodeResponse(40002003)
-		w.Write(resp.ToBytes())
+	if !validateUIDMsgID(w, company, uid, mid) {
 		return
 	}
 
@@ -64,6 +50,28 @@ func queryPostByUserPostID(w http.ResponseWriter, r *http.Request, ps httprouter
 	data := map[string]interface{}{"post": post}
 	resp := NewResponse(200, data)
 	w.Write(resp.ToBytes())
+}
+
+func validateUIDMsgID(w http.ResponseWriter, company string, uid, mid int64) bool {
+	if company == "" {
+		resp := NewErrorCodeResponse(40002001)
+		w.Write(resp.ToBytes())
+		return false
+	}
+
+	if uid == -1 {
+		resp := NewErrorCodeResponse(40002002)
+		w.Write(resp.ToBytes())
+		return false
+	}
+
+	if mid == -1 {
+		resp := NewErrorCodeResponse(40002003)
+		w.Write(resp.ToBytes())
+		return false
+	}
+
+	return true
 }
 
 // 根据DNA查询

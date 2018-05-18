@@ -51,7 +51,6 @@ func GetContentByMsgID(company string, userID int64, id int64) (*model.Post, err
 
 	author := generateSteemAccount(Companies[company], userID)
 
-	// Trick, demo把weibo长文的msgid放在了uri字段中
 	return IPCClient.LookupPostByMsgID(author, id)
 }
 

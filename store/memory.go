@@ -1,6 +1,7 @@
 package store
 
 import (
+	"strconv"
 	"sync"
 
 	"github.com/weibocom/ipc/model"
@@ -14,6 +15,8 @@ type MemStore struct {
 	accounts map[string]*model.Account
 	members  map[string]*model.Member
 	posts    map[string]*model.Post
+	posts2   map[string]*model.Post
+	lastPost *model.Post
 	mu       sync.RWMutex
 }
 
@@ -23,6 +26,7 @@ func NewMemStore(prefix string) *MemStore {
 		accounts: make(map[string]*model.Account),
 		members:  make(map[string]*model.Member),
 		posts:    make(map[string]*model.Post),
+		posts2:   make(map[string]*model.Post),
 	}
 }
 
@@ -84,6 +88,8 @@ func (s *MemStore) SavePost(p *model.Post) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	s.posts[p.DNA] = p
+	s.posts2[p.Author+"-"+strconv.FormatInt(p.MSGID, 10)] = p
+	s.lastPost = p
 	return nil
 }
 
@@ -105,20 +111,16 @@ func (s *MemStore) ExistPost(dna model.DNA) (bool, error) {
 	return exist, nil
 }
 
-func (s *MemStore) GetPosts(author string, afterDNA model.DNA, limit int) ([]*model.Post, error) {
-	return nil, ErrNotImplemented
-}
-
 func (s *MemStore) GetLatestPost() (*model.Post, error) {
-	return nil, ErrNotImplemented
+	return s.lastPost, nil
 }
 
 func (s *MemStore) GetPostByMsgID(author string, mid int64) (*model.Post, error) {
-	return nil, ErrNotImplemented
+	return s.posts2[author+"-"+strconv.FormatInt(mid, 10)], nil
 }
 
 func (s *MemStore) GetPostByDNA(dna model.DNA) (*model.Post, error) {
-	return nil, ErrNotImplemented
+	return s.posts[dna.ID()], nil
 }
 
 func (s *MemStore) Close() error {

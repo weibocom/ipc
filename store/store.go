@@ -37,7 +37,6 @@ type Post interface {
 	ExistPost(dna model.DNA) (bool, error)
 	SavePost(p *model.Post) error
 	LoadPost(dna model.DNA) (*model.Post, error)
-	// GetPosts(author string, afterDNA model.DNA, limit int) ([]*model.Post, error)
 	GetLatestPost() (*model.Post, error)
 	GetPostByMsgID(author string, mid int64) (*model.Post, error)
 	GetPostByDNA(dna model.DNA) (*model.Post, error)

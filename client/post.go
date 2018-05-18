@@ -137,10 +137,6 @@ func (c *client) LookupPost(auther string, dna model.DNA) (*model.Post, error) {
 
 }
 
-// func (c *client) GetPosts(author string, afterDNA model.DNA, limit int) ([]*model.Post, error) {
-// 	return c.store.GetPosts(author, afterDNA, limit)
-// }
-
 func (c *client) GetLatestPost() (*model.Post, error) {
 	return c.store.GetLatestPost()
 }
