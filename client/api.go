@@ -1,10 +1,16 @@
 package client
 
 import (
+	"errors"
+
 	"github.com/weibocom/ipc/interfaces"
 	"github.com/weibocom/ipc/model"
 	steemclient "github.com/weibocom/ipc/steem/client"
 	"github.com/weibocom/ipc/store"
+)
+
+var (
+	ErrAccountAlreadyExist = errors.New("account is already existed")
 )
 
 type Client interface {
@@ -12,6 +18,7 @@ type Client interface {
 	CreateAccount(name string, meta string) (*model.Account, error)
 	LookupAccount(name string) (*model.Account, error)
 	GetAccounts(company string, offset int, limit int) ([]*model.Account, error)
+	GetAccountPostCount(name string) (int, error)
 
 	Post(author string, mid int64, title string, content []byte, uri string, tags []string) (model.DNA, error)
 	PostAsync(author string, mid int64, title string, content []byte, uri string, tags []string) (model.DNA, error)

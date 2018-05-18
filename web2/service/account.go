@@ -52,6 +52,30 @@ func RegisterAccount(company string, user int64) (publicKey string, privateKey s
 	return userWIF.PrivateKey().HexString(), userWIF.PrivateKey().Public().String(), nil
 }
 
+func GetUser(company string, uid int64) (*model.User, error) {
+	author := generateUniqueAccount(company, uid)
+
+	acc, err := ipcClient.LookupAccount(author)
+	if err != nil {
+		return nil, err
+	}
+
+	user := &model.User{
+		ID:        uid,
+		Company:   company,
+		CreatedAt: acc.CreatedAt,
+	}
+	wif := acc.WIF
+	userWIF, err := keys.DecodeWIF(wif)
+	if err == nil {
+		user.PrivateKey = userWIF.PrivateKey().HexString()
+		user.PublicKey = userWIF.PrivateKey().Public().String()
+	}
+
+	user.PostCount, _ = ipcClient.GetAccountPostCount(author)
+	return user, nil
+}
+
 func GetUsers(company string, page int, pagesize int) ([]*model.User, error) {
 	offset := (page - 1) * pagesize
 	accounts, err := ipcClient.GetAccounts(company, offset, pagesize)

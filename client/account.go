@@ -29,7 +29,17 @@ func (c *client) AccountCount() (uint32, error) {
 	return c.steem.Condenser.GetAccountCount()
 }
 
+func (c *client) GetAccountPostCount(name string) (int, error) {
+	accs, err := c.steem.Condenser.GetAccounts([]string{name})
+	if err != nil || len(accs) == 0 {
+		return 0, err
+	}
+
+	return int(accs[0].PostCount.Int64()), nil
+}
+
 func (c *client) LookupAccount(name string) (*model.Account, error) {
+	// exist both local db and chain
 
 	// check whether this account exists in chain
 	accounts, err := c.steem.Condenser.LookupAccountNames([]string{name})
@@ -47,7 +57,7 @@ func (c *client) LookupAccount(name string) (*model.Account, error) {
 func (c *client) CreateAccount(name string, meta string) (*model.Account, error) {
 	exist, err := c.checkAccount(name)
 	if exist {
-		return nil, errors.New("account is already existed")
+		return nil, ErrAccountAlreadyExist
 	}
 	if err != nil {
 		return nil, err
