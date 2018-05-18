@@ -171,7 +171,14 @@ func batchCreateAccounts(w http.ResponseWriter, r *http.Request, ps httprouter.P
 }
 
 func accountDetail(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	uid := getInt(r, "uid", -1)
+	acc := ps.ByName("account")
+	uid, err := strconv.ParseInt(acc, 10, 64)
+	if err != nil || uid < 0 || uid >= 10000000000 {
+		resp := NewErrorCodeResponse(40001000)
+		w.Write(resp.ToBytes())
+		return
+	}
+
 	company := r.FormValue("company")
 
 	if uid < 0 || uid >= 10000000000 {

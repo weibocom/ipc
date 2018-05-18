@@ -49,7 +49,7 @@ func (s *DBStore) LoadAccount(name string) (*model.Account, error) {
 
 func (s *DBStore) GetAccounts(company string, offset int, limit int) ([]*model.Account, error) {
 	var accounts []*model.Account
-	db := s.db.Model(&model.Account{}).Where(&model.Account{Company: company}).Offset(offset).Limit(limit).Find(accounts)
+	db := s.db.Model(&model.Account{}).Where(&model.Account{Company: company}).Offset(offset).Limit(limit).Find(&accounts)
 
 	return accounts, db.Error
 }
@@ -112,7 +112,7 @@ func (s *DBStore) ExistPost(dna model.DNA) (bool, error) {
 
 func (s *DBStore) GetLatestPost() (*model.Post, error) {
 	a := &model.Post{}
-	err := s.db.Model(&model.Post{}).Last(a).Error
+	err := s.db.Model(&model.Post{}).Order("createdAt desc").Last(a).Error
 	return a, err
 }
 

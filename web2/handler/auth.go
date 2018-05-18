@@ -9,17 +9,16 @@ import (
 func auth(fn httprouter.Handle) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 		// TODO: removed this trick later
-		if r.FormValue("auth") == "false" || r.FormValue("auth") == "0" {
-			fn(w, r, params)
-		}
-
-		user := getUserName(r)
-		if user == "" {
-			http.Redirect(w, r, "/", http.StatusFound)
-		}
-
-		w.Header().Set("Content-Type", "application/json")
 		fn(w, r, params)
+
+		// user := getUserName(r)
+		// if user == "" {
+		// 	http.Redirect(w, r, "/", http.StatusFound)
+		// 	return
+		// }
+
+		// w.Header().Set("Content-Type", "application/json")
+		// fn(w, r, params)
 	}
 }
 
