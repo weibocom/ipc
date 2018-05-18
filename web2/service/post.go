@@ -1,88 +1,34 @@
 package service
 
-// import (
-// 	"strconv"
+import (
+	"strconv"
 
-// 	"github.com/weibocom/ipc/model"
-// 	"github.com/weibocom/ipc/store"
-// 	webmodel "github.com/weibocom/ipc/web2/model"
-// )
+	"github.com/weibocom/ipc/model"
+	"github.com/weibocom/ipc/store"
+)
 
-// func SendBlog(userID int64, msgID int64, company string, title string, content string, currentTs int64) (model.DNA, error) {
-// 	if company == "" {
-// 		company = "weibo"
-// 	}
-// 	companyAbbr := Companies[company]
+func AddPost(company string, uid int64, mid int64, title string, content string, currentTs int64) (model.DNA, error) {
+	author := generateUniqueAccount(company, uid)
+	_, err := ipcClient.LookupAccount(author)
+	if err == store.ErrNonExist {
+		_, err = ipcClient.CreateAccount(author, `{"company":"`+company+`"}`)
+		if err != nil {
+			return nil, err
+		}
+	}
 
-// 	if companyAbbr == "" {
-// 		return nil, ErrCompanyIsNotInConsortium
-// 	}
+	return ipcClient.Post(author, mid, title, []byte(content), strconv.FormatInt(mid, 10), []string{"test"})
+}
 
-// 	author := generateSteemAccount(Companies[company], userID)
+func GetContentByMsgID(company string, uid int64, mid int64) (*model.Post, error) {
+	author := generateUniqueAccount(company, uid)
+	return ipcClient.LookupPostByMsgID(author, mid)
+}
 
-// 	_, err := IPCClient.LookupAccount(author)
-// 	if err == store.ErrNonExist {
-// 		_, err = IPCClient.CreateAccount(author, `{"meta":"`+company+`"}`)
-// 		if err != nil {
-// 			return nil, err
-// 		}
-// 	}
+func GetContentByDNA(dna string) (*model.Post, error) {
+	return ipcClient.LookupPostByDNA(model.DNA(dna))
+}
 
-// 	return IPCClient.Post(author, title, []byte(content), strconv.FormatInt(msgID, 10), []string{"test"})
-// }
-
-// func GetContent(company string, userID int64, dna string) (*model.Post, error) {
-// 	companyAbbr := Companies[company]
-
-// 	if companyAbbr == "" {
-// 		return nil, ErrCompanyIsNotInConsortium
-// 	}
-
-// 	author := generateSteemAccount(Companies[company], userID)
-
-// 	return IPCClient.LookupPost(author, model.DNA(dna))
-// }
-
-// func GetContentByMsgID(company string, userID int64, id int64) (*model.Post, error) {
-// 	companyAbbr := Companies[company]
-
-// 	if companyAbbr == "" {
-// 		return nil, ErrCompanyIsNotInConsortium
-// 	}
-
-// 	author := generateSteemAccount(Companies[company], userID)
-
-// 	// Trick, demo把weibo长文的msgid放在了uri字段中
-// 	return IPCClient.LookupPostByURI(author, strconv.FormatInt(id, 10))
-// }
-
-// func GetBlogEntrys(company string, userID int64, dna model.DNA, limit uint16) ([]*webmodel.BlogEntry, error) {
-// 	companyAbbr := Companies[company]
-// 	if companyAbbr == "" {
-// 		return nil, ErrCompanyIsNotInConsortium
-// 	}
-// 	author := generateSteemAccount(Companies[company], userID)
-
-// 	entries, err := IPCClient.GetPosts(author, dna, 20)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	var blogs []*webmodel.BlogEntry
-// 	for _, e := range entries {
-// 		msgid, _ := strconv.ParseInt(e.URI, 10, 64)
-// 		entry := &webmodel.BlogEntry{
-// 			Author:   e.Author,
-// 			Permlink: e.DNA,
-// 			EntryID:  uint32(msgid),
-// 		}
-
-// 		blogs = append(blogs, entry)
-// 	}
-
-// 	return blogs, nil
-// }
-
-// func GetLatestMid() (*model.Post, error) {
-// 	return IPCClient.GetLatestPost()
-// }
+func GetLatestMid() (*model.Post, error) {
+	return ipcClient.GetLatestPost()
+}

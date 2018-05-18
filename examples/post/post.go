@@ -37,7 +37,7 @@ func main() {
 
 	log.Printf("create account:%v, %v\n", a, err)
 
-	dna, err := client.Post(account, title, []byte(content), uri, []string{"人民日报", "北大学生", "公开信", "年轻的声音"})
+	dna, err := client.Post(account, 1000, title, []byte(content), uri, []string{"人民日报", "北大学生", "公开信", "年轻的声音"})
 
 	if err != nil {
 		log.Fatalf("failed to post: %v", err)

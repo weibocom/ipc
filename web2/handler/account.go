@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/julienschmidt/httprouter"
+	"github.com/weibocom/ipc/web2/model"
 	"github.com/weibocom/ipc/web2/service"
 )
 
@@ -48,7 +49,7 @@ func createAccount(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 		return
 	}
 
-	err := service.RegisterAccount(company, uid)
+	priKey, pubKey, err := service.RegisterAccount(company, uid)
 
 	var resp *APIResponse
 	if err != nil {
@@ -58,8 +59,15 @@ func createAccount(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 			resp = NewErrorResponse(500, err.Error())
 		}
 	} else {
-		// TODO: private key and public key
-		data := map[string]interface{}{"uid": uid, "company": company}
+
+		user := &model.User{
+			ID:         uid,
+			Company:    company,
+			PrivateKey: priKey,
+			PublicKey:  pubKey,
+		}
+
+		data := map[string]interface{}{"user": user}
 		resp = NewResponse(200, data)
 
 	}
@@ -67,9 +75,29 @@ func createAccount(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 	w.Write(resp.ToBytes())
 }
 
-// TODO: 分页查询所有的账号
+// 分页查询所有的账号
 func queryAccount(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	company := r.FormValue("company")
+	if company == "" {
+		resp := NewErrorCodeResponse(40001001)
+		w.Write(resp.ToBytes())
+		return
+	}
 
+	page := getInt(r, "page", 1)
+	pagesize := getInt(r, "pagesize", 20)
+
+	users, err := service.GetUsers(company, int(page), int(pagesize))
+
+	var resp *APIResponse
+	if err != nil {
+		resp = NewErrorResponse(500, err.Error())
+	} else {
+		data := map[string]interface{}{"users": users}
+		resp = NewResponse(200, data)
+	}
+
+	w.Write(resp.ToBytes())
 }
 
 // TODO: 批量创建账户

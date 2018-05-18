@@ -14,17 +14,13 @@ import (
 
 var (
 	httpAddress = flag.String("http", ":8972", "http address")
-
-	dbAddress = flag.String("db", "root@/ipc?charset=utf8&parseTime=True&loc=Local&timeout=1s&writeTimeout=3s&readTimeout=3s", "mysql address")
-
-	bcAddress = flag.String("bc", "ws://52.80.76.2:38090", "blockchain rpc server address")
+	dbAddress   = flag.String("db", "root@/ipc?charset=utf8&parseTime=True&loc=Local&timeout=1s&writeTimeout=3s&readTimeout=3s", "mysql address")
+	bcAddress   = flag.String("bc", "ws://52.80.76.2:38090", "blockchain rpc server address")
 )
 
 func main() {
 	flag.Parse()
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-
-	initSteemConfig()
 
 	s := server.New(*httpAddress, *dbAddress, *bcAddress)
 	err := s.Start()
@@ -39,8 +35,4 @@ func main() {
 	<-signalCh
 
 	log.Println("server is closing")
-}
-
-func initSteemConfig() {
-
 }

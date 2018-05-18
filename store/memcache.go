@@ -65,6 +65,10 @@ func (s *MemcacheStore) ExistAccount(name string) (bool, error) {
 	return a != nil, err
 }
 
+func (s *MemcacheStore) GetAccounts(company string, offset int, limit int) ([]*model.Account, error) {
+	return nil, ErrNotImplemented
+}
+
 func (s *MemcacheStore) SaveMember(m *model.Member) error {
 	v, err := util.ToJSON(m)
 	if err != nil {
@@ -139,15 +143,19 @@ func (s *MemcacheStore) ExistPost(dna model.DNA) (bool, error) {
 	return p != nil, err
 }
 
-func (s *MemcacheStore) GetPosts(author string, afterDNA model.DNA, limit int) ([]*model.Post, error) {
-	return nil, ErrNotImplemented
-}
+// func (s *MemcacheStore) GetPosts(author string, afterDNA model.DNA, limit int) ([]*model.Post, error) {
+// 	return nil, ErrNotImplemented
+// }
 
 func (s *MemcacheStore) GetLatestPost() (*model.Post, error) {
 	return nil, ErrNotImplemented
 }
 
-func (s *MemcacheStore) GetPostByURI(author string, uri string) (*model.Post, error) {
+func (s *MemcacheStore) GetPostByMsgID(author string, mid int64) (*model.Post, error) {
+	return nil, ErrNotImplemented
+}
+
+func (s *MemcacheStore) GetPostByDNA(dna model.DNA) (*model.Post, error) {
 	return nil, ErrNotImplemented
 }
 

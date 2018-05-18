@@ -2,6 +2,7 @@ package store
 
 import (
 	"errors"
+	"strings"
 
 	"github.com/weibocom/ipc/model"
 )
@@ -23,6 +24,7 @@ type Account interface {
 	ExistAccount(name string) (bool, error)
 	SaveAccount(a *model.Account) error
 	LoadAccount(name string) (*model.Account, error)
+	GetAccounts(company string, offset int, limit int) ([]*model.Account, error)
 }
 
 type Member interface {
@@ -35,7 +37,17 @@ type Post interface {
 	ExistPost(dna model.DNA) (bool, error)
 	SavePost(p *model.Post) error
 	LoadPost(dna model.DNA) (*model.Post, error)
-	GetPosts(author string, afterDNA model.DNA, limit int) ([]*model.Post, error)
+	// GetPosts(author string, afterDNA model.DNA, limit int) ([]*model.Post, error)
 	GetLatestPost() (*model.Post, error)
-	GetPostByURI(author string, uri string) (*model.Post, error)
+	GetPostByMsgID(author string, mid int64) (*model.Post, error)
+	GetPostByDNA(dna model.DNA) (*model.Post, error)
+}
+
+func getCompany(name string) string {
+	fields := strings.SplitN(name, "-", 2)
+	if len(fields) == 2 {
+		return fields[0]
+	}
+
+	return ""
 }

@@ -1,6 +1,8 @@
 package store
 
 import (
+	"time"
+
 	"github.com/jinzhu/gorm"
 	"github.com/weibocom/ipc/model"
 
@@ -14,7 +16,6 @@ type DBStore struct {
 var _ Store = &DBStore{}
 
 func NewMySQLStore(conn string) *DBStore {
-	//"user:password@/dbname?charset=utf8&parseTime=True&loc=Local"
 	db, err := gorm.Open("mysql", conn)
 	if err != nil {
 		panic(err)
@@ -28,6 +29,9 @@ func NewMySQLStore(conn string) *DBStore {
 	return s
 }
 func (s *DBStore) SaveAccount(a *model.Account) error {
+	company := getCompany(a.Name)
+	a.Company = company
+	a.CreatedAt = time.Now()
 	return s.db.Save(a).Error
 }
 
@@ -43,6 +47,13 @@ func (s *DBStore) LoadAccount(name string) (*model.Account, error) {
 		return nil, db.Error
 	}
 	return a, nil
+}
+
+func (s *DBStore) GetAccounts(company string, offset int, limit int) ([]*model.Account, error) {
+	var accounts []*model.Account
+	db := s.db.Model(&model.Account{}).Where(&model.Account{Company: company}).Offset(offset).Limit(limit).Find(accounts)
+
+	return accounts, db.Error
 }
 
 func (s *DBStore) ExistAccount(name string) (bool, error) {
@@ -101,21 +112,21 @@ func (s *DBStore) ExistPost(dna model.DNA) (bool, error) {
 	return p != nil, err
 }
 
-func (s *DBStore) GetPosts(author string, afterDNA model.DNA, limit int) ([]*model.Post, error) {
-	a := &model.Post{DNA: afterDNA.ID()}
-	var afterID int64
+// func (s *DBStore) GetPosts(author string, afterDNA model.DNA, limit int) ([]*model.Post, error) {
+// 	a := &model.Post{DNA: afterDNA.ID()}
+// 	var afterID int64
 
-	if s.db.Model(&model.Post{}).First(a).Error == nil {
-		afterID = a.ID
-	}
+// 	if s.db.Model(&model.Post{}).First(a).Error == nil {
+// 		afterID = a.ID
+// 	}
 
-	var result []*model.Post
-	db := s.db.Model(&model.Post{}).Order("id desc").Where("id > ?", afterID).Limit(limit).Find(&result)
-	if db.RecordNotFound() {
-		return nil, ErrNonExist
-	}
-	return result, db.Error
-}
+// 	var result []*model.Post
+// 	db := s.db.Model(&model.Post{}).Order("id desc").Where("id > ?", afterID).Limit(limit).Find(&result)
+// 	if db.RecordNotFound() {
+// 		return nil, ErrNonExist
+// 	}
+// 	return result, db.Error
+// }
 
 func (s *DBStore) GetLatestPost() (*model.Post, error) {
 	a := &model.Post{}
@@ -123,9 +134,15 @@ func (s *DBStore) GetLatestPost() (*model.Post, error) {
 	return a, err
 }
 
-func (s *DBStore) GetPostByURI(author string, uri string) (*model.Post, error) {
+func (s *DBStore) GetPostByMsgID(author string, mid int64) (*model.Post, error) {
 	a := &model.Post{}
-	err := s.db.Model(&model.Post{}).Where("author = ? AND uri = ?", author, uri).First(&a).Error
+	err := s.db.Model(&model.Post{}).Where("author = ? AND mid = ?", author, mid).First(&a).Error
+	return a, err
+}
+
+func (s *DBStore) GetPostByDNA(dna model.DNA) (*model.Post, error) {
+	a := &model.Post{}
+	err := s.db.Model(&model.Post{}).Where("dna = ?", dna.ID()).First(&a).Error
 	return a, err
 }
 

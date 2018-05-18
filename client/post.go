@@ -15,7 +15,7 @@ import (
 
 // TODO
 // snapshot 1. 加密存储； 2. 返回存储后的唯一id。通常是snapshot的digest
-func (c *client) snapshot(account *model.Account, author string, title string, content []byte, uri string) ([]byte, model.DNA, error) {
+func (c *client) snapshot(account *model.Account, mid int64, author string, title string, content []byte, uri string) ([]byte, model.DNA, error) {
 	sha := sha256.New()
 	sha.Write(util.String2Bytes(author))
 	sha.Write(util.String2Bytes(title))
@@ -30,6 +30,7 @@ func (c *client) snapshot(account *model.Account, author string, title string, c
 	}
 
 	post := &model.Post{
+		MSGID:     mid,
 		Author:    author,
 		Title:     title,
 		Content:   string(content), // TODO: 加密
@@ -62,13 +63,13 @@ func (c *client) sign(a *model.Account, digest []byte) (model.DNA, error) {
 	return model.DNA(hex.EncodeToString(sigs[0])), nil
 }
 
-func (c *client) Post(author string, title string, content []byte, uri string, tags []string) (model.DNA, error) {
+func (c *client) Post(author string, mid int64, title string, content []byte, uri string, tags []string) (model.DNA, error) {
 	account, err := c.lookupAccount(author)
 	if err != nil {
 		return nil, err
 	}
 
-	digest, dna, err := c.snapshot(account, author, title, content, uri)
+	digest, dna, err := c.snapshot(account, mid, author, title, content, uri)
 	if err != nil {
 		return nil, err
 	}
@@ -85,13 +86,13 @@ func (c *client) Post(author string, title string, content []byte, uri string, t
 	return dna, err
 }
 
-func (c *client) PostAsync(author string, title string, content []byte, uri string, tags []string) (model.DNA, error) {
+func (c *client) PostAsync(author string, mid int64, title string, content []byte, uri string, tags []string) (model.DNA, error) {
 	account, err := c.lookupAccount(author)
 	if err != nil {
 		return nil, err
 	}
 
-	digest, dna, err := c.snapshot(account, author, title, content, uri)
+	digest, dna, err := c.snapshot(account, mid, author, title, content, uri)
 	if err != nil {
 		return nil, err
 	}
@@ -136,16 +137,20 @@ func (c *client) LookupPost(auther string, dna model.DNA) (*model.Post, error) {
 
 }
 
-func (c *client) GetPosts(author string, afterDNA model.DNA, limit int) ([]*model.Post, error) {
-	return c.store.GetPosts(author, afterDNA, limit)
-}
+// func (c *client) GetPosts(author string, afterDNA model.DNA, limit int) ([]*model.Post, error) {
+// 	return c.store.GetPosts(author, afterDNA, limit)
+// }
 
 func (c *client) GetLatestPost() (*model.Post, error) {
 	return c.store.GetLatestPost()
 }
 
-func (c *client) LookupPostByURI(author string, uri string) (*model.Post, error) {
-	return c.store.GetPostByURI(author, uri)
+func (c *client) LookupPostByMsgID(author string, mid int64) (*model.Post, error) {
+	return c.store.GetPostByMsgID(author, mid)
+}
+
+func (c *client) LookupPostByDNA(dna model.DNA) (*model.Post, error) {
+	return c.store.GetPostByDNA(dna)
 }
 
 func (c *client) Verify(author string, dna model.DNA) (bool, error) {

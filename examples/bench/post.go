@@ -83,9 +83,9 @@ func main() {
 				postid := uuid.NewV4().String()
 
 				if *async {
-					_, err = c.PostAsync("wb-"+strconv.Itoa(jj), postid, data, postid, []string{"test"})
+					_, err = c.PostAsync("wb-"+strconv.Itoa(jj), int64(j), postid, data, postid, []string{"test"})
 				} else {
-					_, err = c.Post("wb-"+strconv.Itoa(jj), postid, data, postid, []string{"test"})
+					_, err = c.Post("wb-"+strconv.Itoa(jj), int64(j), postid, data, postid, []string{"test"})
 				}
 
 				if err == nil {

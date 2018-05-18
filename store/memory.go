@@ -51,6 +51,10 @@ func (s *MemStore) ExistAccount(name string) (bool, error) {
 	return exist, nil
 }
 
+func (s *MemStore) GetAccounts(company string, offset int, limit int) ([]*model.Account, error) {
+	return nil, ErrNotImplemented
+}
+
 func (s *MemStore) SaveMember(m *model.Member) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -109,7 +113,11 @@ func (s *MemStore) GetLatestPost() (*model.Post, error) {
 	return nil, ErrNotImplemented
 }
 
-func (s *MemStore) GetPostByURI(author string, uri string) (*model.Post, error) {
+func (s *MemStore) GetPostByMsgID(author string, mid int64) (*model.Post, error) {
+	return nil, ErrNotImplemented
+}
+
+func (s *MemStore) GetPostByDNA(dna model.DNA) (*model.Post, error) {
 	return nil, ErrNotImplemented
 }
 

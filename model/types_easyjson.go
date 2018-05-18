@@ -36,8 +36,8 @@ func easyjson6601e8cdDecodeGithubComWeibocomIpcModel(in *jlexer.Lexer, out *Post
 			continue
 		}
 		switch key {
-		case "id":
-			out.ID = int64(in.Int64())
+		case "mid":
+			out.MSGID = int64(in.Int64())
 		case "dna":
 			out.DNA = string(in.String())
 		case "author":
@@ -68,15 +68,15 @@ func easyjson6601e8cdEncodeGithubComWeibocomIpcModel(out *jwriter.Writer, in Pos
 	out.RawByte('{')
 	first := true
 	_ = first
-	if in.ID != 0 {
-		const prefix string = ",\"id\":"
+	if in.MSGID != 0 {
+		const prefix string = ",\"mid\":"
 		if first {
 			first = false
 			out.RawString(prefix[1:])
 		} else {
 			out.RawString(prefix)
 		}
-		out.Int64(int64(in.ID))
+		out.Int64(int64(in.MSGID))
 	}
 	if in.DNA != "" {
 		const prefix string = ",\"dna\":"
@@ -197,6 +197,8 @@ func easyjson6601e8cdDecodeGithubComWeibocomIpcModel1(in *jlexer.Lexer, out *Mem
 			out.Name = string(in.String())
 		case "id":
 			out.ID = int64(in.Int64())
+		case "company":
+			out.Company = string(in.String())
 		case "signing_key":
 			out.SigningKey = string(in.String())
 		case "created_at":
@@ -236,6 +238,16 @@ func easyjson6601e8cdEncodeGithubComWeibocomIpcModel1(out *jwriter.Writer, in Me
 			out.RawString(prefix)
 		}
 		out.Int64(int64(in.ID))
+	}
+	if in.Company != "" {
+		const prefix string = ",\"company\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.String(string(in.Company))
 	}
 	if in.SigningKey != "" {
 		const prefix string = ",\"signing_key\":"
@@ -304,8 +316,14 @@ func easyjson6601e8cdDecodeGithubComWeibocomIpcModel2(in *jlexer.Lexer, out *Acc
 		switch key {
 		case "name":
 			out.Name = string(in.String())
+		case "company":
+			out.Company = string(in.String())
 		case "wif":
 			out.WIF = string(in.String())
+		case "created_at":
+			if data := in.Raw(); in.Ok() {
+				in.AddError((out.CreatedAt).UnmarshalJSON(data))
+			}
 		default:
 			in.SkipRecursive()
 		}
@@ -330,6 +348,16 @@ func easyjson6601e8cdEncodeGithubComWeibocomIpcModel2(out *jwriter.Writer, in Ac
 		}
 		out.String(string(in.Name))
 	}
+	if in.Company != "" {
+		const prefix string = ",\"company\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.String(string(in.Company))
+	}
 	if in.WIF != "" {
 		const prefix string = ",\"wif\":"
 		if first {
@@ -339,6 +367,16 @@ func easyjson6601e8cdEncodeGithubComWeibocomIpcModel2(out *jwriter.Writer, in Ac
 			out.RawString(prefix)
 		}
 		out.String(string(in.WIF))
+	}
+	if true {
+		const prefix string = ",\"created_at\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.Raw((in.CreatedAt).MarshalJSON())
 	}
 	out.RawByte('}')
 }

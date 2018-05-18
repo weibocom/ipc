@@ -5,8 +5,10 @@ import (
 )
 
 type Account struct {
-	Name string `json:"name,omitempty"`
-	WIF  string `json:"wif,omitempty"`
+	Name      string    `gorm:"COLUMN:name;PRIMARY_KEY;TYPE:VARCHAR(64);NOT NULL" json:"name,omitempty"`
+	Company   string    `gorm:"COLUMN:company;TYPE:VARCHAR(64);NOT NULL" json:"company,omitempty"`
+	WIF       string    `gorm:"COLUMN:wif;TYPE:VARCHAR(128);NOT NULL" json:"wif,omitempty"`
+	CreatedAt time.Time `gorm:"COLUMN:created_at;" json:"created_at,omitempty"`
 }
 
 type DNA []byte
@@ -18,6 +20,7 @@ func (dna DNA) ID() string {
 type Member struct {
 	Name       string    `gorm:"COLUMN:name;PRIMARY_KEY;TYPE:VARCHAR(64);NOT NULL"  json:"name,omitempty"`
 	ID         int64     `gorm:"COLUMN:id;NOT NULL;unique" json:"id,omitempty"`
+	Company    string    `gorm:"COLUMN:company"  json:"company,omitempty"`
 	SigningKey string    `gorm:"COLUMN:signing_key;TYPE:VARCHAR(64);NOT NULL" json:"signing_key,omitempty"`
 	CreatedAt  time.Time `gorm:"COLUMN:created_at;" json:"created_at,omitempty"`
 }
@@ -25,7 +28,7 @@ type Member struct {
 type Content []byte
 
 type Post struct {
-	ID        int64     `gorm:"COLUMN:id;PRIMARY_KEY;AUTO_INCREMENT;NOT NULL" json:"id,omitempty"`
+	MSGID     int64     `gorm:"COLUMN:mid;NOT NULL" json:"mid,omitempty"`
 	DNA       string    `gorm:"COLUMN:dna;index:idx_dna;TYPE:VARCHAR(255);NOT NULL" json:"dna,omitempty"`
 	Author    string    `gorm:"COLUMN:author;TYPE:VARCHAR(64);NOT NULL;index:idx_author" json:"author,omitempty"`
 	Title     string    `gorm:"COLUMN:title;TYPE:VARCHAR(128);NOT NULL" json:"title,omitempty"`

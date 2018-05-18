@@ -50,7 +50,7 @@ func (s *Server) Start() error {
 		return err
 	}
 
-	service.DB = s.DB
+	service.SetDB(s.DB)
 
 	// 3. blockchain
 	tran, err := websocket.NewTransport([]string{s.bcAddress}, websocket.SetAutoReconnectEnabled(true), websocket.SetAutoReconnectMaxDelay(time.Minute), websocket.SetReadTimeout(math.MaxInt64))
@@ -62,7 +62,7 @@ func (s *Server) Start() error {
 	if err != nil {
 		log.Fatalf("failed to new blockchain client: %v", err)
 	}
-	service.IPCClient = s.Client
+	service.SetIPCClient(s.Client)
 
 	return nil
 }

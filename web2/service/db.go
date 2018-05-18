@@ -5,8 +5,15 @@ import (
 	"github.com/weibocom/ipc/client"
 )
 
-var DB *gorm.DB
-
 var (
-	IPCClient client.Client
+	db        *gorm.DB
+	ipcClient client.Client
 )
+
+func SetIPCClient(c client.Client) {
+	ipcClient = c
+}
+
+func SetDB(db *gorm.DB) {
+	db = db
+}

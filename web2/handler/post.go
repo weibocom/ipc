@@ -2,8 +2,10 @@ package handler
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/julienschmidt/httprouter"
+	"github.com/weibocom/ipc/web2/service"
 )
 
 // 为web提供的内存相关的rest api
@@ -30,14 +32,86 @@ func queryPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 // 根据uid和mid查询
 func queryPostByUserPostID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	uid := getInt(r, "uid", -1)
+	mid := getInt(r, "mid", -1)
+	company := r.FormValue("company")
 
+	if company == "" {
+		resp := NewErrorCodeResponse(40002001)
+		w.Write(resp.ToBytes())
+		return
+	}
+
+	if uid == -1 {
+		resp := NewErrorCodeResponse(40002002)
+		w.Write(resp.ToBytes())
+		return
+	}
+
+	if uid == -1 {
+		resp := NewErrorCodeResponse(40002003)
+		w.Write(resp.ToBytes())
+		return
+	}
+
+	post, err := service.GetContentByMsgID(company, uid, mid)
+	if err != nil {
+		resp := NewErrorCodeResponse(40002004)
+		w.Write(resp.ToBytes())
+		return
+	}
+
+	data := map[string]interface{}{"post": post}
+	resp := NewResponse(200, data)
+	w.Write(resp.ToBytes())
 }
 
 // 根据DNA查询
 func queryPostByDNA(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	dna := r.FormValue("dna")
 
+	if dna == "" {
+		resp := NewErrorCodeResponse(40002005)
+		w.Write(resp.ToBytes())
+		return
+	}
+
+	post, err := service.GetContentByDNA(dna)
+	if err != nil {
+		resp := NewErrorCodeResponse(40002004)
+		w.Write(resp.ToBytes())
+		return
+	}
+
+	data := map[string]interface{}{"post": post}
+	resp := NewResponse(200, data)
+	w.Write(resp.ToBytes())
 }
 
 func addPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	uid := getInt(r, "uid", -1)
+	mid := getInt(r, "mid", -1)
+	company := r.FormValue("company")
+	contentType := r.FormValue("contentType")
+	content := r.FormValue("content")
+	title := r.FormValue("title")
 
+	_ = contentType
+	dna, err := service.AddPost(company, uid, mid, title, content, time.Now().UnixNano()/1e6)
+	if err != nil {
+		resp := NewErrorResponse(500, err.Error())
+		w.Write(resp.ToBytes())
+		return
+	}
+
+	post, err := service.GetContentByDNA(dna.ID())
+	if err != nil {
+		resp := NewErrorResponse(500, err.Error())
+		w.Write(resp.ToBytes())
+		return
+	}
+
+	data := map[string]interface{}{"post": post}
+	resp := NewResponse(200, data)
+	w.Write(resp.ToBytes())
 }
