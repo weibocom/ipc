@@ -8,13 +8,6 @@
 
 ## Account
 
-账户(account/user/author)管理。
-
-router.GET("/counts/account", auth(accountCount))
-	router.POST("/accounts", auth(createAccount))
-	router.GET("/accounts", auth(queryAccount))
-	router.GET("/accounts/:account", auth(accountDetail))
-
 ### 获取账号总数
 
 - URL: http://127.0.0.1:8080/counts/account

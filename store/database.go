@@ -112,7 +112,7 @@ func (s *DBStore) ExistPost(dna model.DNA) (bool, error) {
 
 func (s *DBStore) GetLatestPost() (*model.Post, error) {
 	a := &model.Post{}
-	err := s.db.Model(&model.Post{}).Order("createdAt desc").Last(a).Error
+	err := s.db.Model(&model.Post{}).Order("created_at desc").Last(a).Error
 	return a, err
 }
 
