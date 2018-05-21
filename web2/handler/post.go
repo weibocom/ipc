@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -104,7 +105,21 @@ func addPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	content := r.FormValue("content")
 	title := r.FormValue("title")
 
+	if !validateUIDMsgID(w, company, uid, mid) {
+		return
+	}
+
+	if content == "" {
+		resp := NewErrorCodeResponse(40002006)
+		w.Write(resp.ToBytes())
+		return
+	}
+
+	if title == "" {
+		title = fmt.Sprintf("%s-%d-%d", company, uid, mid)
+	}
 	_ = contentType
+
 	dna, err := service.AddPost(company, uid, mid, title, content, time.Now().UnixNano()/1e6)
 	if err != nil {
 		resp := NewErrorResponse(500, err.Error())

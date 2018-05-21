@@ -126,7 +126,7 @@ curl "http://127.0.0.1:8080/accounts?company=weibo&page=1&pagesize=10"
 
 **请求**:
 ```
-curl "http://127.0.0.1:8080/accounts/800801?company=weibo"
+curl "http://127.0.0.1:8080/accounts/800820?company=weibo"
 ```
 
 **返回结果**:
@@ -149,5 +149,122 @@ curl "http://127.0.0.1:8080/accounts/800801?company=weibo"
 
 ## Post
 
+### 内容发布
+
+- URL: http://127.0.0.1:8080/posts
+- HTTP METHOD: POST
+- 参数
+  - uid: 用户id
+  - company: 公司名英文简称
+  - mid: 内容id
+  - content: 内容
+  - contentType: 内容类型，0: 文章, 1: 图片, 2: 视频， 缺省是0
+  - title: 文章标题， optional。
+  
+
+
+示例:
+
+**请求**:
+```
+curl http://127.0.0.1:8080/posts -d "company=weibo&uid=800820&mid=400401&content=北京现在进入了雨季"
+```
+
+**返回结果**:
+
+```
+{
+    "code": 200,
+    "data": {
+        "post": {
+            "author": "weibo-800820",
+            "content": "\u5317\u4eac\u73b0\u5728\u8fdb\u5165\u4e86\u96e8\u5b63",
+            "created_at": "2018-05-21T11:24:45+08:00",
+            "digest": "5fb7d18d6184bdb2e48982e4ee6afd95479516f668ef1b204a230cb5df63c19e",
+            "dna": "201cc923a5df9d8d814ff48382bfbc6f9a8148fe9d20f9ac8c638d46990ec9aaff19086841be78a3eac0bf9056d0ef4c12e612bdb7890955ab414ab7ce7f210be5",
+            "mid": 400401,
+            "title": "weibo-800820-400401",
+            "uri": "400401"
+        }
+    },
+    "msg": "ok"
+}
+```
+
+### 根据uid和mid查询内容
+
+- URL: http://127.0.0.1:8080/posts
+- HTTP METHOD: GET
+- 参数
+  - uid: 用户id
+  - company: 公司名英文简称
+  - mid: 内容id
+  - queryType: user (按照uid和mid进行查询)
+
+
+示例:
+
+**请求**:
+```
+curl "http://127.0.0.1:8080/posts?queryType=user&company=weibo&uid=800820&mid=400401"
+```
+
+**返回结果**:
+
+```
+{
+    "code": 200,
+    "data": {
+        "post": {
+            "author": "weibo-800820",
+            "content": "\u5317\u4eac\u73b0\u5728\u8fdb\u5165\u4e86\u96e8\u5b63",
+            "created_at": "2018-05-21T11:24:45+08:00",
+            "digest": "5fb7d18d6184bdb2e48982e4ee6afd95479516f668ef1b204a230cb5df63c19e",
+            "dna": "201cc923a5df9d8d814ff48382bfbc6f9a8148fe9d20f9ac8c638d46990ec9aaff19086841be78a3eac0bf9056d0ef4c12e612bdb7890955ab414ab7ce7f210be5",
+            "mid": 400401,
+            "title": "weibo-800820-400401",
+            "uri": "400401"
+        }
+    },
+    "msg": "ok"
+}
+```
+
+### 根据dna查询内容
+
+- URL: http://127.0.0.1:8080/posts
+- HTTP METHOD: GET
+- 参数
+  - dna: 内容的唯一签名
+  - queryType: dna (按照uid和mid进行查询)
+
+
+示例:
+
+**请求**:
+```
+curl "http://127.0.0.1:8080/posts?queryType=dna&dna=201cc923a5df9d8d814ff48382bfbc6f9a8148fe9d20f9ac8c638d46990ec9aaff19086841be78a3eac0bf9056d0ef4c12e612bdb7890955ab414ab7ce7f210be5"
+```
+
+**返回结果**:
+
+```
+{
+    "code": 200,
+    "data": {
+        "post": {
+            "author": "weibo-800820",
+            "content": "\u5317\u4eac\u73b0\u5728\u8fdb\u5165\u4e86\u96e8\u5b63",
+            "created_at": "2018-05-21T11:24:45+08:00",
+            "digest": "5fb7d18d6184bdb2e48982e4ee6afd95479516f668ef1b204a230cb5df63c19e",
+            "dna": "201cc923a5df9d8d814ff48382bfbc6f9a8148fe9d20f9ac8c638d46990ec9aaff19086841be78a3eac0bf9056d0ef4c12e612bdb7890955ab414ab7ce7f210be5",
+            "mid": 400401,
+            "title": "weibo-800820-400401",
+            "uri": "400401"
+        }
+    },
+    "msg": "ok"
+}
+```
 
 ## dci
