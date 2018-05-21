@@ -81,7 +81,7 @@ curl http://127.0.0.1:8080/accounts -d "company=weibo&uid=800800"
 
 **请求**:
 ```
-curl "http://127.0.0.1:8080/accounts?batch=true" -F "company=weibo" -F "accounts_file=@users.csv" |python -m json.tool
+curl "http://127.0.0.1:8080/accounts?batch=true" -F "company=weibo" -F "accounts_file=@users.csv"
 ```
 
 **返回结果**:
@@ -107,6 +107,7 @@ curl "http://127.0.0.1:8080/accounts?batch=true" -F "company=weibo" -F "accounts
   - company: 公司名英文简称
   - page: 页码, 从1开始
   - pagesize: 每页账号数
+  - uid: 用户id,如果设置，则只查此用户
   
 
 示例:

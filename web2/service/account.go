@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/weibocom/ipc/keys"
+	ipcmodel "github.com/weibocom/ipc/model"
 	"github.com/weibocom/ipc/web2/model"
 )
 
@@ -76,11 +77,24 @@ func GetUser(company string, uid int64) (*model.User, error) {
 	return user, nil
 }
 
-func GetUsers(company string, page int, pagesize int) ([]*model.User, error) {
+func GetUsers(company string, page int, pagesize int, uid int64) ([]*model.User, error) {
 	offset := (page - 1) * pagesize
-	accounts, err := ipcClient.GetAccounts(company, offset, pagesize)
-	if err != nil {
-		return nil, err
+
+	var accounts []*ipcmodel.Account
+	var err error
+
+	if uid == -1 {
+		accounts, err = ipcClient.GetAccounts(company, offset, pagesize)
+		if err != nil {
+			return nil, err
+		}
+	} else { // 查询单个账号
+		author := generateUniqueAccount(company, uid)
+		acc, err := ipcClient.LookupAccount(author)
+		if err != nil {
+			return nil, err
+		}
+		accounts = append(accounts, acc)
 	}
 
 	var users = make([]*model.User, 0, len(accounts))
