@@ -47,3 +47,8 @@ func GetUserPosts(company string, uid int64, page int, pagesize int) (posts []*m
 
 	return posts, postCount, err
 }
+
+func PostCount() (int64, error) {
+	count, err := ipcClient.PostCount()
+	return int64(count), err
+}

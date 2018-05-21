@@ -12,12 +12,24 @@ import (
 // 为web提供的内存相关的rest api
 
 func configPostRoutes(router *httprouter.Router) {
+	router.GET("/counts/post", auth(postCount))
 	router.GET("/posts", auth(queryPost))
 	router.GET("/account_posts", auth(queryAccountPost))
 	router.POST("/posts", auth(addPost))
 }
 
-// TODO: 根据uid和mid查询或者根据dna查询
+func postCount(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	count, err := service.PostCount()
+	var resp *APIResponse
+	if err != nil {
+		resp = NewErrorResponse(500, err.Error())
+	} else {
+		resp = NewResponse(200, map[string]interface{}{"count": count})
+	}
+	w.Write(resp.ToBytes())
+}
+
+// 根据uid和mid查询或者根据dna查询
 func queryPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	t := r.FormValue("queryType")
 

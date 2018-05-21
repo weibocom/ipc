@@ -181,6 +181,32 @@ curl "http://127.0.0.1:8080/accounts/800820?company=weibo"
 
 ## Post
 
+### 获取内容总数
+
+- URL: http://127.0.0.1:8080/counts/post
+- HTTP METHOD: GET
+- 参数
+  
+
+示例:
+
+**请求**:
+```
+curl http://127.0.0.1:8080/counts/post
+```
+
+**返回结果**:
+
+```
+{
+    "code": 200, 
+    "msg": "ok", 
+    "data": {
+        "count": 9876
+    }
+}
+```
+
 ### 内容发布
 
 - URL: http://127.0.0.1:8080/posts
