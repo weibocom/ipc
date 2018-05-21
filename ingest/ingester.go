@@ -142,6 +142,16 @@ type Ingester struct {
 }
 
 func (d *Ingester) close() {
+	log.Printf("drain buffered messages")
+	done := make(chan struct{})
+	go d.drain(done)
+	select {
+	case <-done:
+		log.Println("finished to drain")
+	case <-time.After(time.Minute):
+		log.Printf("abandoned draining because it took more than one minute")
+	}
+
 	log.Printf("ingester stop reading. ip:%s, port:%d, key:%s\n", d.ip, d.port, d.key)
 }
 
@@ -304,4 +314,15 @@ func (d *Ingester) retry() {
 			}
 		}
 	}
+}
+
+func (d *Ingester) drain(done chan struct{}) {
+	for p := range d.retryCh {
+		err := postLongText(p.uid, p.mid)
+		if err != nil {
+			log.Printf("failed to drain message: {uid: %d, mid: %d}", p.uid, p.mid)
+		}
+	}
+
+	close(done)
 }
