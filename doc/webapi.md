@@ -455,7 +455,7 @@ curl "http://127.0.0.1:8080/dci/text?compareType=user&src_uid=800820&src_mid=400
 - 参数
     - compareType: dna
   - src_dna: 源用户id
-  - dna_dna: 目的用户id
+  - dst_content: 目标文本
   
 
 

@@ -17,10 +17,10 @@ import (
 
 var (
 	httpAddress    = flag.String("http", ":8080", "http address")
-	dbAddress      = flag.String("db", "root@/ipc?charset=utf8&parseTime=True&loc=Local&timeout=1s&writeTimeout=3s&readTimeout=3s", "mysql address")
+	dbAddress      = flag.String("db", "root@/ipc?charset=utf8mb4&parseTime=True&loc=Local&timeout=1s&writeTimeout=3s&readTimeout=3s", "mysql address")
 	bcAddress      = flag.String("bc", "ws://52.80.76.2:38090", "blockchain rpc server address")
 	switcherAddr   = flag.String("switcher", "", "switcher addrress")
-	graphiteAddr   = flag.String("graphiteAddr", "logtailer28.monitor.weibo.com:8125", "graphite addrress")
+	graphiteAddr   = flag.String("graphiteAddr", "", "graphite addrress")
 	ipcServicePool = flag.String("servicePool", "ipc", "monitor service pool")
 )
 

@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"time"
 
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/juju/ratelimit"
 	metrics "github.com/rcrowley/go-metrics"
 	"github.com/satori/go.uuid"
@@ -36,7 +37,7 @@ var (
 func main() {
 	flag.Parse()
 
-	mysqlStore := store.NewMySQLStore("root@/ipc?charset=utf8&parseTime=True&loc=Local&timeout=1s&writeTimeout=3s&readTimeout=3s")
+	mysqlStore := store.NewMySQLStore("root@/ipc2?charset=utf8mb4&parseTime=True&loc=Local&timeout=1s&writeTimeout=3s&readTimeout=3s")
 
 	if *initUser {
 		tran, err := websocket.NewTransport([]string{*rpcServer})
