@@ -111,7 +111,7 @@ func queryAccount(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 	w.Write(resp.ToBytes())
 }
 
-// TODO: 批量创建账户
+// 批量创建账户
 func batchCreateAccounts(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	err := r.ParseMultipartForm(32 << 20)
 	if err != nil {
@@ -149,7 +149,9 @@ func batchCreateAccounts(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	scanner := bufio.NewScanner(accFile)
 	for scanner.Scan() {
 		// 因为只能上传本公司的用户，所以不需要第一列的公司名，
-		uid, err := strconv.ParseInt(scanner.Text(), 10, 64)
+
+		fields := strings.Split(scanner.Text(), ",")
+		uid, err := strconv.ParseInt(fields[len(fields)-1], 10, 64)
 		if err != nil || uid < 0 || uid >= 10000000000 {
 			wrongFormatNum++
 			log.Printf("wrong format for uid: %d", uid)

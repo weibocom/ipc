@@ -68,6 +68,36 @@ curl http://127.0.0.1:8080/accounts -d "company=weibo&uid=800800"
 }
 ```
 
+### 批量创建账号
+
+- URL: http://127.0.0.1:8080/accounts?batch=true
+- HTTP METHOD: POST
+- 参数
+  - company: 公司名英文简称
+  - accounts_file: 包含用户列表的 csv文件
+  
+
+示例:
+
+**请求**:
+```
+curl "http://127.0.0.1:8080/accounts?batch=true" -F "company=weibo" -F "accounts_file=@users.csv" |python -m json.tool
+```
+
+**返回结果**:
+
+```
+{
+    "code": 200,
+    "data": {
+        "existed": 1,
+        "failed": 0,
+        "succeeded": 3,
+        "wrong_format": 0
+    },
+    "msg": "ok"
+}
+```
 
 ### 查询账号
 
