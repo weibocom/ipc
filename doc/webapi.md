@@ -268,3 +268,139 @@ curl "http://127.0.0.1:8080/posts?queryType=dna&dna=201cc923a5df9d8d814ff48382bf
 ```
 
 ## dci
+
+鉴权操作。
+
+### 根据uid和mid进行内容比较
+
+- URL: http://127.0.0.1:8080/dci/content
+- HTTP METHOD: GET
+- 参数
+  - compareType: user
+  - src_uid: 源用户id
+  - src_mid: 源内容id
+  - src_company: 源公司
+  - dst_uid: 目的用户id
+  - dst_mid: 目的内容id
+  - dst_company: 目的公司
+  
+
+
+示例:
+
+**请求**:
+```
+curl "http://127.0.0.1:8080/dci/content?compareType=user&src_uid=800820&src_mid=400401&src_company=weibo&dst_uid=800821&dst_mid=400402&dst_company=weibo"
+```
+
+**返回结果**:
+
+```
+{
+    "code": 200,
+    "data": {
+        "dst": "\u5317\u4eac\u7684\u96e8\u5b63\u5f00\u59cb\u4e86",
+        "similarity": "60.00",
+        "src": "\u5317\u4eac\u73b0\u5728\u8fdb\u5165\u4e86\u96e8\u5b63"
+    },
+    "msg": "ok"
+}
+```
+
+### 根据dna进行内容比较
+
+- URL: http://127.0.0.1:8080/dci/content
+- HTTP METHOD: GET
+- 参数
+    - compareType: dna
+  - src_dna: 源用户id
+  - dna_dna: 目的用户id
+  
+
+
+示例:
+
+**请求**:
+```
+curl "http://127.0.0.1:8080/dci/content?compareType=dna&src_dna=201cc923a5df9d8d814ff48382bfbc6f9a8148fe9d20f9ac8c638d46990ec9aaff19086841be78a3eac0bf9056d0ef4c12e612bdb7890955ab414ab7ce7f210be5&dst_dna=201cc923a5df9d8d814ff48382bfbc6f9a8148fe9d20f9ac8c638d46990ec9aaff19086841be78a3eac0bf9056d0ef4c12e612bdb7890955ab414ab7ce7f210be5"
+```
+
+**返回结果**:
+
+```
+{
+    "code": 200,
+    "data": {
+        "dst": "\u5317\u4eac\u73b0\u5728\u8fdb\u5165\u4e86\u96e8\u5b63",
+        "similarity": "100.00",
+        "src": "\u5317\u4eac\u73b0\u5728\u8fdb\u5165\u4e86\u96e8\u5b63"
+    },
+    "msg": "ok"
+}
+```
+
+### 根据uid和mid进行文本比较
+
+- URL: http://127.0.0.1:8080/dci/text
+- HTTP METHOD: GET
+- 参数
+  - compareType: user
+  - src_uid: 源用户id
+  - src_mid: 源内容id
+  - src_company: 源公司
+  - dst_content: 待比较的文本内容
+  
+
+
+示例:
+
+**请求**:
+```
+curl "http://127.0.0.1:8080/dci/text?compareType=user&src_uid=800820&src_mid=400401&src_company=weibo&dst_content=今天北京下雨了"
+```
+
+**返回结果**:
+
+```
+{
+    "code": 200,
+    "data": {
+        "dst": "\u4eca\u5929\u5317\u4eac\u4e0b\u96e8\u4e86",
+        "similarity": "40.00",
+        "src": "\u5317\u4eac\u73b0\u5728\u8fdb\u5165\u4e86\u96e8\u5b63"
+    },
+    "msg": "ok"
+}
+```
+
+### 根据dna进行文本比较
+
+- URL: http://127.0.0.1:8080/dci/text
+- HTTP METHOD: GET
+- 参数
+    - compareType: dna
+  - src_dna: 源用户id
+  - dna_dna: 目的用户id
+  
+
+
+示例:
+
+**请求**:
+```
+curl "http://127.0.0.1:8080/dci/text?compareType=dna&src_dna=201cc923a5df9d8d814ff48382bfbc6f9a8148fe9d20f9ac8c638d46990ec9aaff19086841be78a3eac0bf9056d0ef4c12e612bdb7890955ab414ab7ce7f210be5&dst_content=今天北京会下雨吗"
+```
+
+**返回结果**:
+
+```
+{
+    "code": 200,
+    "data": {
+        "dst": "\u4eca\u5929\u5317\u4eac\u4f1a\u4e0b\u96e8\u5417",
+        "similarity": "20.00",
+        "src": "\u5317\u4eac\u73b0\u5728\u8fdb\u5165\u4e86\u96e8\u5b63"
+    },
+    "msg": "ok"
+}
+```

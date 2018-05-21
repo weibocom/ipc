@@ -12,11 +12,10 @@ import (
 // 版权鉴定 Digital Copyright Identification
 
 func configDCIRoutes(router *httprouter.Router) {
-	router.GET("/dci/resource", auth(comparePost))
+	router.GET("/dci/content", auth(comparePost))
 	router.GET("/dci/text", auth(compareText))
 }
 
-// TODO:
 func comparePost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	t := r.FormValue("compareType")
 
@@ -114,9 +113,9 @@ func compareText(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	switch t {
 	case "user":
-		comparePostByUserPostID(w, r, ps)
+		compareTextByUserPostID(w, r, ps)
 	case "dna":
-		comparePostByDNA(w, r, ps)
+		compareTextByDNA(w, r, ps)
 	default:
 		resp := NewErrorCodeResponse(40003000)
 		w.Write(resp.ToBytes())
@@ -134,7 +133,7 @@ func compareTextByUserPostID(w http.ResponseWriter, r *http.Request, ps httprout
 	}
 
 	dstContent := r.FormValue("dst_content")
-	if dstContent != "" {
+	if dstContent == "" {
 		resp := NewErrorCodeResponse(40003006)
 		w.Write(resp.ToBytes())
 		return
@@ -167,7 +166,7 @@ func compareTextByDNA(w http.ResponseWriter, r *http.Request, ps httprouter.Para
 	}
 
 	dstContent := r.FormValue("dst_content")
-	if dstContent != "" {
+	if dstContent == "" {
 		resp := NewErrorCodeResponse(40003006)
 		w.Write(resp.ToBytes())
 		return
