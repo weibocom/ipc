@@ -122,6 +122,12 @@ func (s *DBStore) GetPostByMsgID(author string, mid int64) (*model.Post, error) 
 	return a, err
 }
 
+func (s *DBStore) GetPostByAuther(author string, offset int, limit int) ([]*model.Post, error) {
+	var a []*model.Post
+	err := s.db.Model(&model.Post{}).Where("author = ?", author).Order("created_at desc").Offset(offset).Limit(limit).Find(&a).Error
+	return a, err
+}
+
 func (s *DBStore) GetPostByDNA(dna model.DNA) (*model.Post, error) {
 	a := &model.Post{}
 	err := s.db.Model(&model.Post{}).Where("dna = ?", dna.ID()).First(&a).Error

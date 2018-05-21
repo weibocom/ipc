@@ -13,6 +13,7 @@ import (
 
 func configPostRoutes(router *httprouter.Router) {
 	router.GET("/posts", auth(queryPost))
+	router.GET("/account_posts", auth(queryAccountPost))
 	router.POST("/posts", auth(addPost))
 }
 
@@ -93,6 +94,37 @@ func queryPostByDNA(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 	}
 
 	data := map[string]interface{}{"post": post}
+	resp := NewResponse(200, data)
+	w.Write(resp.ToBytes())
+}
+
+func queryAccountPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	uid := getInt(r, "uid", -1)
+	company := r.FormValue("company")
+
+	if company == "" {
+		resp := NewErrorCodeResponse(40002001)
+		w.Write(resp.ToBytes())
+		return
+	}
+
+	if uid == -1 {
+		resp := NewErrorCodeResponse(40002002)
+		w.Write(resp.ToBytes())
+		return
+	}
+
+	page := getInt(r, "page", 1)
+	pagesize := getInt(r, "pagesize", 20)
+
+	posts, postCount, err := service.GetUserPosts(company, uid, int(page), int(pagesize))
+	if err != nil {
+		resp := NewErrorResponse(500, err.Error())
+		w.Write(resp.ToBytes())
+		return
+	}
+
+	data := map[string]interface{}{"post_count": postCount, "posts": posts}
 	resp := NewResponse(200, data)
 	w.Write(resp.ToBytes())
 }

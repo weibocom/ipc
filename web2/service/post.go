@@ -32,3 +32,18 @@ func GetContentByDNA(dna string) (*model.Post, error) {
 func GetLatestMid() (*model.Post, error) {
 	return ipcClient.GetLatestPost()
 }
+
+func GetUserPosts(company string, uid int64, page int, pagesize int) (posts []*model.Post, postCount int, err error) {
+	offset := (page - 1) * pagesize
+
+	author := generateUniqueAccount(company, uid)
+
+	postCount, err = ipcClient.GetAccountPostCount(author)
+	if err != nil {
+		return
+	}
+
+	posts, err = ipcClient.LookupPostByAuther(author, offset, pagesize)
+
+	return posts, postCount, err
+}

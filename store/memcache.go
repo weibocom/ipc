@@ -155,6 +155,10 @@ func (s *MemcacheStore) GetPostByDNA(dna model.DNA) (*model.Post, error) {
 	return nil, ErrNotImplemented
 }
 
+func (s *MemcacheStore) GetPostByAuther(author string, offset int, limit int) ([]*model.Post, error) {
+	return nil, ErrNotImplemented
+}
+
 func (s *MemcacheStore) Close() error {
 	return nil
 }

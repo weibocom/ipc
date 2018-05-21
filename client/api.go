@@ -28,6 +28,7 @@ type Client interface {
 	LookupPost(author string, dna model.DNA) (*model.Post, error)
 	LookupPostByMsgID(author string, mid int64) (*model.Post, error)
 	LookupPostByDNA(dna model.DNA) (*model.Post, error)
+	LookupPostByAuther(auther string, offset int, limit int) ([]*model.Post, error)
 	GetLatestPost() (*model.Post, error)
 
 	Members() ([]*model.Member, error)

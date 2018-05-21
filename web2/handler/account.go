@@ -72,7 +72,13 @@ func createAccount(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 			PublicKey:  pubKey,
 		}
 
-		data := map[string]interface{}{"user": user}
+		count, err := service.UserCount()
+		if err != nil {
+			resp = NewErrorResponse(500, err.Error())
+			w.Write(resp.ToBytes())
+			return
+		}
+		data := map[string]interface{}{"count": count, "user": user}
 		resp = NewResponse(200, data)
 
 	}
