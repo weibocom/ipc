@@ -299,6 +299,8 @@ func (d *Ingester) retry() {
 				default:
 					log.Printf("retry channel if full so {uid: %d, mid: %d} is dropped", p.uid, p.mid)
 				}
+			} else if p.retries == 0 {
+				log.Printf("reach max retry, this message is dropped: {uid: %d, mid: %d}", p.uid, p.mid)
 			}
 		}
 	}
