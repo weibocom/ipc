@@ -92,6 +92,7 @@ curl "http://127.0.0.1:8080/accounts?company=weibo&page=1&pagesize=10"
 {
     "code": 200,
     "data": {
+        "count":1234567,
         "users": [
             {
                 "company": "weibo",
@@ -140,7 +141,8 @@ curl "http://127.0.0.1:8080/accounts/800820?company=weibo"
             "created_at": "2018-05-18T19:40:42+08:00",
             "id": 800801,
             "private_key": "24c55c1ec5809123740fd3ae0160239a56a37e8d7b6786569607060217e55929",
-            "public_key": "STM61K4G3q7aqYcYN1GYvAB686RkCL853Rym4oUHAB3kh1S3uAcc2"
+            "public_key": "STM61K4G3q7aqYcYN1GYvAB686RkCL853Rym4oUHAB3kh1S3uAcc2",
+            "post_count": 3
         }
     },
     "msg": "ok"
