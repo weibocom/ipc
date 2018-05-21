@@ -63,6 +63,10 @@ func (c *client) sign(a *model.Account, digest []byte) (model.DNA, error) {
 	return model.DNA(hex.EncodeToString(sigs[0])), nil
 }
 
+func (c *client) PostCount() (int, error) {
+	return c.store.GetPostCount()
+}
+
 func (c *client) Post(author string, mid int64, title string, content []byte, uri string, tags []string) (model.DNA, error) {
 	account, err := c.lookupAccount(author)
 	if err != nil {

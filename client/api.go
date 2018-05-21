@@ -30,6 +30,7 @@ type Client interface {
 	LookupPostByDNA(dna model.DNA) (*model.Post, error)
 	LookupPostByAuther(auther string, offset int, limit int) ([]*model.Post, error)
 	GetLatestPost() (*model.Post, error)
+	PostCount() (int, error)
 
 	Members() ([]*model.Member, error)
 	AddMember(name string) (*model.Member, error)

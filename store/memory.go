@@ -3,6 +3,7 @@ package store
 import (
 	"strconv"
 	"sync"
+	"sync/atomic"
 
 	"github.com/weibocom/ipc/model"
 )
@@ -11,13 +12,14 @@ var _ Store = &MemStore{}
 
 // MemStore implements the Store in memory for testing purposes.
 type MemStore struct {
-	prefix   string
-	accounts map[string]*model.Account
-	members  map[string]*model.Member
-	posts    map[string]*model.Post
-	posts2   map[string]*model.Post
-	lastPost *model.Post
-	mu       sync.RWMutex
+	prefix    string
+	accounts  map[string]*model.Account
+	members   map[string]*model.Member
+	posts     map[string]*model.Post
+	posts2    map[string]*model.Post
+	lastPost  *model.Post
+	mu        sync.RWMutex
+	postCount uint64
 }
 
 func NewMemStore(prefix string) *MemStore {
@@ -84,12 +86,19 @@ func (s *MemStore) ExistMember(name string) (bool, error) {
 	return exist, nil
 }
 
+func (s *MemStore) GetPostCount() (int, error) {
+	count := atomic.LoadUint64(&s.postCount)
+	return int(count), ErrNotImplemented
+}
+
 func (s *MemStore) SavePost(p *model.Post) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	s.posts[p.DNA] = p
 	s.posts2[p.Author+"-"+strconv.FormatInt(p.MSGID, 10)] = p
 	s.lastPost = p
+
+	atomic.AddUint64(&s.postCount, 1)
 	return nil
 }
 

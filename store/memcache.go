@@ -106,6 +106,10 @@ func (s *MemcacheStore) ExistMember(name string) (bool, error) {
 	return m != nil, err
 }
 
+func (s *MemcacheStore) GetPostCount() (int, error) {
+	return 0, ErrNotImplemented
+}
+
 func (s *MemcacheStore) SavePost(p *model.Post) error {
 	v, err := util.ToJSON(p)
 	if err != nil {

@@ -86,6 +86,13 @@ func (s *DBStore) ExistMember(name string) (bool, error) {
 	return m != nil, err
 }
 
+func (s *DBStore) GetPostCount() (int, error) {
+	var count int
+	db := s.db.Model(&model.Post{}).Count(&count)
+
+	return count, db.Error
+}
+
 func (s *DBStore) SavePost(p *model.Post) error {
 	return s.db.Save(p).Error
 }

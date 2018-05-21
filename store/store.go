@@ -34,6 +34,7 @@ type Member interface {
 }
 
 type Post interface {
+	GetPostCount() (int, error)
 	ExistPost(dna model.DNA) (bool, error)
 	SavePost(p *model.Post) error
 	LoadPost(dna model.DNA) (*model.Post, error)
