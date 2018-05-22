@@ -89,7 +89,7 @@
           </el-col>
         </el-row>
         <div style="margin-top: 20px; text-align: center;">
-          <el-button class="form-item-content" style="width: 600px;" type="primary" @click="submitResourceCompare" :loading="loading">对比</el-button>
+          <el-button class="form-item-content" style="width: 600px;" type="primary" @click="submitResourceCompare" :loading="resloading">对比</el-button>
         </div>
       </el-tab-pane>
       <el-tab-pane label="文本对比" name="textCompare">
@@ -128,7 +128,7 @@
                 <el-input :autosize="{ minRows: 6 }" class="form-item-content" type="textarea" v-model="textCompareForm.compareInfo" placeholder="请输入对比内容"></el-input>
               </el-form-item>
               <el-form-item size="medium">
-                <el-button class="form-item-content" type="primary" @click="submitTextCompare" :loading="loading">对比</el-button>
+                <el-button class="form-item-content" type="primary" @click="submitTextCompare" :loading="textloading">对比</el-button>
               </el-form-item>
             </el-form>
           </div>
@@ -271,7 +271,8 @@ export default {
     }
     return {
       activeTabName: 'resourceCompare',
-      loading: false,
+      resloading: false,
+      textloading: false,
       companys: COMPANYS,
       comparetypes: [
         { label: 'URL查询', value: 'url' },
@@ -376,15 +377,26 @@ export default {
               let leftFormData = Object.assign({}, this.leftCompareForm)
               let rightFormData = Object.assign({}, this.rightCompareForm)
               let params = {
-                srcUid: leftFormData.uid,
-                srcMid: leftFormData.mid,
-                srcCompany: leftFormData.company,
-                dstUid: rightFormData.uid,
-                dstMid: rightFormData.mid,
-                dstCompany: rightFormData.company
+                compareType: this.resourcecomparetype
               }
 
-              this.loading = true
+              switch (params.compareType) {
+                case 'url':
+                  params.src_uid = leftFormData.uid
+                  params.src_mid = leftFormData.mid
+                  params.src_company = leftFormData.company
+                  params.dst_uid = rightFormData.uid
+                  params.dst_mid = rightFormData.mid
+                  params.dst_company = rightFormData.company
+                  break
+                case 'dna':
+                  params.src_dna = leftFormData.dna
+                  params.dst_dna = rightFormData.dna
+                  break
+              }
+              console.log(params)
+
+              this.resloading = true
               API.compare(params).then(
                 res => {
                   if (
@@ -410,7 +422,7 @@ export default {
                     this.leftResultForm.dna = tool.checkData(
                       this.leftCompareForm.dna
                     )
-                    this.leftResultForm.content = tool.checkData(rdd.srcContent)
+                    this.leftResultForm.content = tool.checkData(rdd.src)
                     // right
                     this.rightResultForm.company = tool.checkData(
                       this.rightCompareForm.company
@@ -428,17 +440,17 @@ export default {
                       this.rightCompareForm.dna
                     )
                     this.rightResultForm.content = tool.checkData(
-                      rdd.dstContent
+                      rdd.src
                     )
                     // show
                     this.twoResultDialogVisible = true
                   } else {
                     this.$error(res.data.msg)
                   }
-                  this.loading = false
+                  this.resloading = false
                 },
                 _ => {
-                  this.loading = false
+                  this.resloading = false
                 }
               )
             })
@@ -450,23 +462,30 @@ export default {
       this.validateForm('textCompareForm')
         .then(valid => {
           let formData = Object.assign({}, this.textCompareForm)
-          let params = {}
-          if (this.textcomparetype === 'url') {
-            params.compareType = 'user'
-            params.src_uid = formData.uid
-            params.src_mid = formData.mid
-            params.src_company = formData.company
-            params.dst_content = formData.compareInfo
-          } else if (this.textcomparetype === 'dna') {
-            params.compareType = 'dna'
-            params.src_dna = formData.dna
-            params.dst_content = formData.compareInfo
+          let params = {
+            compareType: this.textcomparetype
+          }
+
+          switch (this.textcomparetype) {
+            case 'url':
+              params.compareType = 'user'
+              params.src_uid = formData.uid
+              params.src_mid = formData.mid
+              params.src_company = formData.company
+              params.dst_content = formData.compareInfo
+              break
+            case 'dna':
+              params.compareType = 'dna'
+              params.src_dna = formData.dna
+              params.dst_content = formData.compareInfo
+              break
           }
           console.log(params)
 
-          this.loading = true
+          this.textloading = true
           API.compareText(params).then(
             res => {
+              console.log(res)
               if (
                 res.data.msg.toUpperCase() === 'OK' &&
                 res.data.data !== undefined
@@ -478,15 +497,15 @@ export default {
                 this.resultForm.compareinfo = tool.checkData(
                   formData.compareInfo
                 )
-                this.resultForm.content = tool.checkData(rdd.dstContent)
+                this.resultForm.content = tool.checkData(rdd.src)
                 this.resultDialogVisible = true
               } else {
                 this.$error(res.data.msg)
               }
-              this.loading = false
+              this.textloading = false
             },
             _ => {
-              this.loading = false
+              this.textloading = false
             }
           )
         })

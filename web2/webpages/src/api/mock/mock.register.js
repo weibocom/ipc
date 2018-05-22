@@ -27,7 +27,8 @@ export const register = [
     data: (req, res) => {
       return {
         code: 200,
-        msg: 'ok'
+        msg: 'ok',
+        data: { existed: 1, failed: 0, succeeded: 0, wrong_format: 0 }
       }
     }
   }

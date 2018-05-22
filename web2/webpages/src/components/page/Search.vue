@@ -9,13 +9,13 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="查询类型" prop="type">
-            <el-select class="form-item-content" v-model="searchForm.type" placeholder="请选择发布平台">
+          <el-form-item label="查询类型" prop="queryType">
+            <el-select class="form-item-content" v-model="searchForm.queryType" placeholder="请选择查询类型">
               <el-option v-for="searchtype in searchtypes" :key="searchtype.value" :label="searchtype.label" :value="searchtype.value">
               </el-option>
             </el-select>
           </el-form-item>
-          <div v-if="searchForm.type === 'url'">
+          <div v-if="searchForm.queryType === 'url'">
             <el-form-item label="内容URL" prop="url">
               <el-input class="form-item-content" v-model="searchForm.url" placeholder="请输入URL" @blur="handleURL(searchForm.url)"></el-input>
             </el-form-item>
@@ -26,7 +26,7 @@
               <el-input class="form-item-content" v-model="searchForm.mid" placeholder="请输入消息ID"></el-input>
             </el-form-item>
           </div>
-          <div v-if="searchForm.type === 'dna'">
+          <div v-if="searchForm.queryType === 'dna'">
             <el-form-item label="哈希值" prop="dna">
               <el-input class="form-item-content" v-model="searchForm.dna" placeholder="请输入哈希值"></el-input>
             </el-form-item>
@@ -109,7 +109,7 @@ export default {
         { label: '哈希值查询', value: 'dna' }
       ],
       searchForm: {
-        type: 'url',
+        queryType: 'url',
         url: '',
         uid: '',
         mid: '',
@@ -147,7 +147,8 @@ export default {
       this.validateForm('searchForm')
         .then(valid => {
           let formData = Object.assign({}, this.searchForm)
-          formData.action = 'search'
+          console.log(formData)
+
           this.loading = true
           API.lookupContent(formData).then(
             res => {

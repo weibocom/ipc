@@ -3,9 +3,7 @@ import * as API from '../urls.js'
 let ts_result = {
   code: 200,
   msg: 'ok',
-  data: {
-    timestamp: '2018-04-03 14:02:25'
-  }
+  data: { timestamp: '2018-05-22T11:47:42+08:00' }
 }
 
 export const ts = [

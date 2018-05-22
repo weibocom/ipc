@@ -49,9 +49,13 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/submit.json': commonProxy,
-      '/register.json': commonProxy,
-      '/compare.json': commonProxy
+      '/accounts': commonProxy,
+      '/counts/account': commonProxy,
+      '/posts': commonProxy,
+      '/account_posts': commonProxy,
+      '/dci/content': commonProxy,
+      '/dci/text': commonProxy,
+      '/last_post': commonProxy
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README

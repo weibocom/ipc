@@ -81,6 +81,7 @@ import storage from '@/utils/storage'
 import { STORAGE_KEY, COMPANYS } from '@/utils/constants'
 import IBYTE from '@/utils/ibyte'
 import validator from 'validator'
+import jtfd from 'json-to-form-data'
 
 export default {
   mixins: [FormMixin],
@@ -162,7 +163,7 @@ export default {
           let formData = Object.assign({}, this.regForm)
           formData = jtfd(formData)
 
-          this.loading = true
+          this.regloading = true
           API.createAccount(formData).then(
             res => {
               if (res.data.msg.toUpperCase() === 'OK') {
@@ -170,10 +171,10 @@ export default {
               } else {
                 this.$error(res.data.msg)
               }
-              this.loading = false
+              this.regloading = false
             },
             _ => {
-              this.loading = false
+              this.regloading = false
             }
           )
         })
@@ -181,6 +182,7 @@ export default {
     },
     submitUpload() {
       this.batchRegData.company = this.batchRegForm.company
+      this.batchloading = true
       this.$refs.upload.submit()
     },
     beforeFileUpload(file) {
@@ -191,10 +193,17 @@ export default {
       return iscsv
     },
     handleFileSuccess(res, file) {
-      this.$success('文件上传成功')
+      console.log(res)
+      if (res.code === 200 && res.msg.toUpperCase() === 'OK') {
+        this.$success('文件上传成功')
+      } else {
+        this.$error(res.msg)
+      }
+      this.batchloading = false
     },
     handleFileError(res, file) {
       this.$error('文件上传失败')
+      this.batchloading = false
     },
     handleFileExceed(files, fileList) {
       this.$warning('当前限制选择 1 个文件')
@@ -210,7 +219,7 @@ export default {
     },
     lookupAccount() {
       let params = {
-        company: '',
+        company: this.filters.company,
         page: this.curpage,
         pagesize: 10
       }

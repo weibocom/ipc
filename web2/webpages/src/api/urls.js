@@ -16,4 +16,4 @@ export const compare = '/dci/content'
 export const compare_text = '/dci/text'
 
 // ts
-export const msgts_fetch = '/ts/fetch.json'
+export const msgts_fetch = '/last_post'

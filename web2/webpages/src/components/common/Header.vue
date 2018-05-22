@@ -20,8 +20,10 @@
 import API from '@/api/api'
 import storage from '@/utils/storage'
 import { STORAGE_KEY } from '@/utils/constants'
+import { FormMixin } from 'components/mixins'
 
 export default {
+  mixins: [FormMixin],
   data() {
     return {
       name: '微博版权追溯',
@@ -76,7 +78,7 @@ export default {
               res.data.data !== undefined &&
               res.data.data.timestamp !== undefined
             ) {
-              this.msgtime = res.data.data.timestamp
+              this.msgtime = new Date(res.data.data.timestamp).Format('yyyy-MM-dd hh:mm:ss')
             }
           },
           _ => {}
