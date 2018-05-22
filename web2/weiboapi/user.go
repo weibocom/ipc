@@ -133,7 +133,7 @@ func GetIDByName(name string) (int64, error) {
 	name = url.QueryEscape(name)
 	resp, err := http.Get("https://api.weibo.com/2/users/show.json?screen_name=" + name + "&access_token=" + t)
 	if err != nil {
-		panic(err)
+		return -1, nil
 	}
 
 	defer resp.Body.Close()
@@ -145,7 +145,7 @@ func GetIDByName(name string) (int64, error) {
 
 	user := User{}
 	json.Unmarshal(buf, &user)
-	if err == nil {
+	if err != nil {
 		return -1, nil
 	}
 
