@@ -62,6 +62,9 @@ func GetUserPosts(company string, uid int64, page int, pagesize int) (posts []*m
 
 	posts, err = ipcClient.LookupPostByAuther(author, offset, pagesize)
 
+	for _, p := range posts {
+		p.Author, _ = splitCompanyAccount(p.Author)
+	}
 	return posts, postCount, err
 }
 
