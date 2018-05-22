@@ -7,6 +7,7 @@ import (
 	"os"
 	"runtime"
 	"strconv"
+	"sync"
 	"time"
 
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -50,7 +51,16 @@ func main() {
 			log.Fatalf("failed to new client:%s", cerr.Error())
 		}
 
-		initAccounts(c, *n)
+		num := *n / *cc
+
+		var wg sync.WaitGroup
+		wg.Add(*cc)
+
+		for i := 0; i < *cc; i++ {
+			go initAccounts(&wg, c, i*num, num)
+		}
+
+		wg.Wait()
 		c.Close()
 	}
 
@@ -103,10 +113,12 @@ func main() {
 	select {}
 }
 
-func initAccounts(c client.Client, n int) {
+func initAccounts(wg *sync.WaitGroup, c client.Client, start, n int) {
+	defer wg.Done()
+
 	fmt.Println("start to init users")
 	var err error
-	for i := 1; i <= n; i++ {
+	for i := start; i <= start+n; i++ {
 		_, err = c.CreateAccount("wb-"+strconv.Itoa(i), `{"meta":"data"}`)
 		if err != nil {
 			fmt.Printf("create account:%v, %v\n", "wb-"+strconv.Itoa(i), err)
@@ -116,4 +128,5 @@ func initAccounts(c client.Client, n int) {
 	}
 
 	fmt.Println("finished to init users")
+
 }

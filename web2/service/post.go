@@ -29,7 +29,7 @@ func GetContentByDNA(dna string) (*model.Post, error) {
 	return ipcClient.LookupPostByDNA(model.DNA(dna))
 }
 
-func GetLatestMid() (*model.Post, error) {
+func GetLatestPost() (*model.Post, error) {
 	return ipcClient.GetLatestPost()
 }
 

@@ -369,6 +369,33 @@ curl "http://127.0.0.1:8080/account_posts?company=weibo&uid=800820&page=1&pagesi
 ```
 
 
+### 最后入联链时间戳
+
+- URL: http://127.0.0.1:8080/last_post
+- HTTP METHOD: GET
+- 参数
+
+
+示例:
+
+**请求**:
+```
+curl "http://127.0.0.1:8080/last_post"
+```
+
+**返回结果**:
+
+```
+{
+    "code": 200,
+    "data": {
+        "timestamp": 214234232342,
+    },
+    "msg": "ok"
+}
+```
+
+
 ## dci
 
 鉴权操作。
