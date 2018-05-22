@@ -10,9 +10,9 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/weibocom/ipc/client"
-	"github.com/weibocom/ipc/web2/caller"
 	"github.com/weibocom/ipc/web2/model"
 	"github.com/weibocom/ipc/web2/service"
+	"github.com/weibocom/ipc/web2/weiboapi"
 )
 
 // 为web提供的账号相关的rest api
@@ -103,7 +103,7 @@ func queryAccount(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 	// TODO: demo 使用将来移除或者使用内部api
 	username := r.FormValue("uid")
 	if username != "" && uid == -1 { //convert name to uid
-		uid, _ = caller.GetIDByName(username)
+		uid, _ = weiboapi.GetIDByName(username)
 	}
 	if username != "" && uid == -1 {
 		resp := NewErrorCodeResponse(40001000)
