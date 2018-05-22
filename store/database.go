@@ -49,7 +49,7 @@ func (s *DBStore) LoadAccount(name string) (*model.Account, error) {
 
 func (s *DBStore) GetAccounts(company string, offset int, limit int) ([]*model.Account, error) {
 	var accounts []*model.Account
-	db := s.db.Model(&model.Account{}).Where(&model.Account{Company: company}).Offset(offset).Limit(limit).Find(&accounts)
+	db := s.db.Model(&model.Account{}).Where(&model.Account{Company: company}).Order("created_at desc").Offset(offset).Limit(limit).Find(&accounts)
 
 	return accounts, db.Error
 }

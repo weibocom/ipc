@@ -1,20 +1,20 @@
-webpackJsonp([2],{
+webpackJsonp([3],{
 
-/***/ 1569:
+/***/ 1564:
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(1706)
-__webpack_require__(1705)
+__webpack_require__(1713)
+__webpack_require__(1712)
 
 var Component = __webpack_require__(150)(
   /* script */
-  __webpack_require__(1666),
+  __webpack_require__(1662),
   /* template */
-  __webpack_require__(1692),
+  __webpack_require__(1698),
   /* scopeId */
-  "data-v-117fc4ab",
+  "data-v-51887faa",
   /* cssModules */
   null
 )
@@ -174,6 +174,115 @@ decimal['pt-BR'] = decimal['pt-PT'];
 /***/ }),
 
 /***/ 1575:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Date.prototype.Format = function (fmt) {
+  var o = {
+    'M+': this.getMonth() + 1,
+    'd+': this.getDate(),
+    'h+': this.getHours(),
+    'm+': this.getMinutes(),
+    's+': this.getSeconds(),
+    'q+': Math.floor((this.getMonth() + 3) / 3),
+    S: this.getMilliseconds() };
+  if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + '').substr(4 - RegExp.$1.length));
+  for (var k in o) {
+    if (new RegExp('(' + k + ')').test(fmt)) fmt = fmt.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length));
+  }return fmt;
+};
+
+/* unused harmony default export */ var _unused_webpack_default_export = ({});
+
+/***/ }),
+
+/***/ 1576:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+function _broadcast(componentName, eventName, params) {
+  this.$children.forEach(function (child) {
+    var name = child.$options.name;
+
+    if (name === componentName) {
+      child.$emit.apply(child, [eventName].concat(params));
+    } else {
+      _broadcast.apply(child, [componentName, eventName].concat([params]));
+    }
+  });
+}
+
+/* unused harmony default export */ var _unused_webpack_default_export = ({
+  methods: {
+    dispatch: function dispatch(componentName, eventName, params) {
+      var parent = this.$parent || this.$root;
+      var name = parent.$options.name;
+
+      while (parent && (!name || name !== componentName)) {
+        parent = parent.$parent;
+
+        if (parent) {
+          name = parent.$options.name;
+        }
+      }
+      if (parent) {
+        parent.$emit.apply(parent, [eventName].concat(params));
+      }
+    },
+    broadcast: function broadcast(componentName, eventName, params) {
+      _broadcast.call(this, componentName, eventName, params);
+    }
+  }
+});
+
+/***/ }),
+
+/***/ 1577:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_promise__ = __webpack_require__(228);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_promise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_promise__);
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+  methods: {
+    validateForm: function validateForm(formName) {
+      var _this = this;
+
+      return new __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_promise___default.a(function (resolve, reject) {
+        _this.$refs[formName].validate(function (valid) {
+          if (valid) {
+            resolve(valid);
+          } else {
+            reject(valid);
+          }
+        });
+      });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ 1578:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__emitter__ = __webpack_require__(1576);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__form__ = __webpack_require__(1577);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__date__ = __webpack_require__(1575);
+/* unused harmony reexport Emitter */
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_1__form__["a"]; });
+/* unused harmony reexport DateTool */
+
+
+
+
+
+
+/***/ }),
+
+/***/ 1579:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -246,7 +355,7 @@ module.exports = exports['default'];
 
 /***/ }),
 
-/***/ 1576:
+/***/ 1580:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -272,7 +381,7 @@ module.exports = exports['default'];
 
 /***/ }),
 
-/***/ 1577:
+/***/ 1581:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -301,115 +410,6 @@ module.exports = exports['default'];
 
 /***/ }),
 
-/***/ 1578:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Date.prototype.Format = function (fmt) {
-  var o = {
-    'M+': this.getMonth() + 1,
-    'd+': this.getDate(),
-    'h+': this.getHours(),
-    'm+': this.getMinutes(),
-    's+': this.getSeconds(),
-    'q+': Math.floor((this.getMonth() + 3) / 3),
-    S: this.getMilliseconds() };
-  if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + '').substr(4 - RegExp.$1.length));
-  for (var k in o) {
-    if (new RegExp('(' + k + ')').test(fmt)) fmt = fmt.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length));
-  }return fmt;
-};
-
-/* unused harmony default export */ var _unused_webpack_default_export = ({});
-
-/***/ }),
-
-/***/ 1579:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-function _broadcast(componentName, eventName, params) {
-  this.$children.forEach(function (child) {
-    var name = child.$options.name;
-
-    if (name === componentName) {
-      child.$emit.apply(child, [eventName].concat(params));
-    } else {
-      _broadcast.apply(child, [componentName, eventName].concat([params]));
-    }
-  });
-}
-
-/* unused harmony default export */ var _unused_webpack_default_export = ({
-  methods: {
-    dispatch: function dispatch(componentName, eventName, params) {
-      var parent = this.$parent || this.$root;
-      var name = parent.$options.name;
-
-      while (parent && (!name || name !== componentName)) {
-        parent = parent.$parent;
-
-        if (parent) {
-          name = parent.$options.name;
-        }
-      }
-      if (parent) {
-        parent.$emit.apply(parent, [eventName].concat(params));
-      }
-    },
-    broadcast: function broadcast(componentName, eventName, params) {
-      _broadcast.call(this, componentName, eventName, params);
-    }
-  }
-});
-
-/***/ }),
-
-/***/ 1580:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_promise__ = __webpack_require__(228);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_promise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_promise__);
-
-/* harmony default export */ __webpack_exports__["a"] = ({
-  methods: {
-    validateForm: function validateForm(formName) {
-      var _this = this;
-
-      return new __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_promise___default.a(function (resolve, reject) {
-        _this.$refs[formName].validate(function (valid) {
-          if (valid) {
-            resolve(valid);
-          } else {
-            reject(valid);
-          }
-        });
-      });
-    }
-  }
-});
-
-/***/ }),
-
-/***/ 1581:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__emitter__ = __webpack_require__(1579);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__form__ = __webpack_require__(1580);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__date__ = __webpack_require__(1578);
-/* unused harmony reexport Emitter */
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_1__form__["a"]; });
-/* unused harmony reexport DateTool */
-
-
-
-
-
-
-/***/ }),
-
 /***/ 1582:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -420,7 +420,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _toDate = __webpack_require__(1576);
+var _toDate = __webpack_require__(1580);
 
 var _toDate2 = _interopRequireDefault(_toDate);
 
@@ -464,7 +464,7 @@ var _isIP = __webpack_require__(1588);
 
 var _isIP2 = _interopRequireDefault(_isIP);
 
-var _isFQDN = __webpack_require__(1575);
+var _isFQDN = __webpack_require__(1579);
 
 var _isFQDN2 = _interopRequireDefault(_isFQDN);
 
@@ -688,7 +688,7 @@ var _normalizeEmail = __webpack_require__(1642);
 
 var _normalizeEmail2 = _interopRequireDefault(_normalizeEmail);
 
-var _toString = __webpack_require__(1577);
+var _toString = __webpack_require__(1581);
 
 var _toString2 = _interopRequireDefault(_toString);
 
@@ -1189,7 +1189,7 @@ var _assertString = __webpack_require__(1572);
 
 var _assertString2 = _interopRequireDefault(_assertString);
 
-var _toString = __webpack_require__(1577);
+var _toString = __webpack_require__(1581);
 
 var _toString2 = _interopRequireDefault(_toString);
 
@@ -1268,7 +1268,7 @@ var _assertString = __webpack_require__(1572);
 
 var _assertString2 = _interopRequireDefault(_assertString);
 
-var _toDate = __webpack_require__(1576);
+var _toDate = __webpack_require__(1580);
 
 var _toDate2 = _interopRequireDefault(_toDate);
 
@@ -1426,7 +1426,7 @@ var _assertString = __webpack_require__(1572);
 
 var _assertString2 = _interopRequireDefault(_assertString);
 
-var _toDate = __webpack_require__(1576);
+var _toDate = __webpack_require__(1580);
 
 var _toDate2 = _interopRequireDefault(_toDate);
 
@@ -1776,7 +1776,7 @@ var _isByteLength = __webpack_require__(1584);
 
 var _isByteLength2 = _interopRequireDefault(_isByteLength);
 
-var _isFQDN = __webpack_require__(1575);
+var _isFQDN = __webpack_require__(1579);
 
 var _isFQDN2 = _interopRequireDefault(_isFQDN);
 
@@ -2272,7 +2272,7 @@ var _assertString = __webpack_require__(1572);
 
 var _assertString2 = _interopRequireDefault(_assertString);
 
-var _toString = __webpack_require__(1577);
+var _toString = __webpack_require__(1581);
 
 var _toString2 = _interopRequireDefault(_toString);
 
@@ -2932,7 +2932,7 @@ var _assertString = __webpack_require__(1572);
 
 var _assertString2 = _interopRequireDefault(_assertString);
 
-var _isFQDN = __webpack_require__(1575);
+var _isFQDN = __webpack_require__(1579);
 
 var _isFQDN2 = _interopRequireDefault(_isFQDN);
 
@@ -3532,7 +3532,24 @@ module.exports = exports['default'];
 
 /***/ }),
 
-/***/ 1666:
+/***/ 1653:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+const EQUAL = "=";
+const AMP = "&";
+module.exports = body => {
+    return Object.keys(body)
+        .map(key => Array.isArray(body[key])
+            ? body[key].map(value => key + EQUAL + encodeURIComponent(value)).join(AMP)
+            : key + EQUAL + encodeURIComponent(body[key])
+        ).join(AMP);
+};
+
+/***/ }),
+
+/***/ 1662:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3540,13 +3557,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_object_assign__ = __webpack_require__(151);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_object_assign___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_object_assign__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__api_api_js__ = __webpack_require__(227);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_components_mixins__ = __webpack_require__(1581);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_components_mixins__ = __webpack_require__(1578);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_storage__ = __webpack_require__(99);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_constants__ = __webpack_require__(98);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__utils_ibyte__ = __webpack_require__(1593);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_validator__ = __webpack_require__(1582);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_validator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_validator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_json_to_form_data__ = __webpack_require__(1687);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_json_to_form_data__ = __webpack_require__(1653);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_json_to_form_data___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_json_to_form_data__);
 
 
@@ -3575,71 +3592,175 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         callback();
       }
     };
-    var validateMID = function validateMID(rules, value, callback) {
-      if (value === '') {
-        callback(new Error('请输入消息ID'));
-      } else if (!__WEBPACK_IMPORTED_MODULE_6_validator___default.a.isInt(value, {
-        allow_leading_zeroes: true,
-        min: 0,
-        max: 9999999999999999
-      })) {
-        callback(new Error('请输入正确的消息ID，数字类型，长度不超过16个字符'));
-      } else {
-        callback();
-      }
-    };
     return {
-      loading: false,
+      activeTabName: 'registerTab',
+      regloading: false,
       companys: __WEBPACK_IMPORTED_MODULE_4__utils_constants__["c" /* COMPANYS */],
-      publishForm: {
+      regForm: {
         uid: '',
-        mid: '',
-        company: '',
-        title: '',
-        content: ''
+        company: ''
       },
-      publishFormRules: {
-        uid: [{ required: true, validator: validateUID, trigger: 'blur' }],
-        mid: [{ required: true, validator: validateMID, trigger: 'blur' }],
-        content: [{ required: true, message: '请输入内容', trigger: 'blur' }]
-      }
+      regFormRules: {
+        company: [{ required: true, message: '请选择发布平台', trigger: 'change' }],
+        uid: [{ required: true, validator: validateUID, trigger: 'blur' }]
+      },
+
+      batchloading: false,
+      batchRegAction: '/accounts?batch=true',
+      batchRegData: {},
+      batchRegForm: {
+        company: '',
+        filelist: []
+      },
+      batchRegFormRules: {
+        company: [{ required: true, message: '请选择发布平台', trigger: 'change' }]
+      },
+
+      searchloading: false,
+      filters: {
+        company: '',
+        id: ''
+      },
+      curpage: 1,
+      total: 0,
+      usertabledata: []
     };
   },
   created: function created() {
     if (this.companys.length > 0) {
-      this.publishForm.company = this.companys[0].value;
+      this.regForm.company = this.companys[0].value;
+      this.batchRegForm.company = this.companys[0].value;
+      this.filters.company = this.companys[0].value;
     }
   },
 
-  computed: {},
+  computed: {
+    userdata: function userdata() {
+      this.usertabledata.forEach(function (n) {
+        n.created_at = new Date(n.created_at).Format('yyyy-MM-dd hh:mm:ss');
+      });
+
+      return this.usertabledata;
+    }
+  },
   methods: {
-    submitPublish: function submitPublish() {
+    submitRegister: function submitRegister() {
       var _this = this;
 
-      this.validateForm('publishForm').then(function (valid) {
-        var formData = __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_object_assign___default()({}, _this.publishForm);
+      this.validateForm('regForm').then(function (valid) {
+        var formData = __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_object_assign___default()({}, _this.regForm);
         formData = __WEBPACK_IMPORTED_MODULE_7_json_to_form_data___default()(formData);
-        console.log(formData);
 
-        _this.loading = true;
-        __WEBPACK_IMPORTED_MODULE_1__api_api_js__["a" /* default */].createContent(formData).then(function (res) {
+        _this.regloading = true;
+        __WEBPACK_IMPORTED_MODULE_1__api_api_js__["a" /* default */].createAccount(formData).then(function (res) {
           if (res.data.msg.toUpperCase() === 'OK') {
-            _this.$success('发布成功');
+            _this.$success('注册成功');
           } else {
             _this.$error(res.data.msg);
           }
-          _this.loading = false;
+          _this.regloading = false;
         }, function (_) {
-          _this.loading = false;
+          _this.regloading = false;
         });
       }).catch(function (valid) {});
+    },
+    submitUpload: function submitUpload() {
+      this.batchRegData.company = this.batchRegForm.company;
+      this.batchloading = true;
+      this.$refs.upload.submit();
+    },
+    beforeFileUpload: function beforeFileUpload(file) {
+      var iscsv = file.type === 'text/csv';
+      if (!iscsv) {
+        this.$error('导入文件只能是 CSV 格式');
+      }
+      return iscsv;
+    },
+    handleFileSuccess: function handleFileSuccess(res, file) {
+      console.log(res);
+      if (res.code === 200 && res.msg.toUpperCase() === 'OK') {
+        this.$success('文件上传成功');
+      } else {
+        this.$error(res.msg);
+      }
+      this.batchloading = false;
+    },
+    handleFileError: function handleFileError(res, file) {
+      this.$error('文件上传失败');
+      this.batchloading = false;
+    },
+    handleFileExceed: function handleFileExceed(files, fileList) {
+      this.$warning('当前限制选择 1 个文件');
+    },
+    handleFileRemove: function handleFileRemove(file, filelist) {
+      console.log(file);
+    },
+    handleFileChange: function handleFileChange(file, filelist) {
+      console.log(file);
+      if (file && file.raw && file.raw.type !== 'text/csv') {
+        this.$error('文件：' + file.name + ' 不是csv文件');
+      }
+    },
+    lookupAccount: function lookupAccount() {
+      var _this2 = this;
+
+      var params = {
+        company: this.filters.company,
+        page: this.curpage,
+        pagesize: 10
+      };
+      if (this.filters.id) {
+        params.uid = this.filters.id;
+      }
+
+      this.searchloading = true;
+      __WEBPACK_IMPORTED_MODULE_1__api_api_js__["a" /* default */].lookupAccount(params).then(function (res) {
+        console.log(res);
+
+        _this2.searchloading = false;
+        _this2.usertabledata = [];
+        _this2.total = 0;
+        var data = res.data;
+
+        if (data === undefined || data.data === undefined) {
+          _this2.$error('未获取到用户数据');
+          return;
+        }
+        data = data.data;
+
+        if (data.count > 10) {
+          _this2.usertabledata = data.users.slice(0, 10);
+        } else {
+          _this2.usertabledata = data.users.slice(0, data.count);
+        }
+        _this2.total = data.count;
+      }, function (_) {
+        _this2.searchloading = false;
+      }).catch(function (_) {
+        _this2.searchloading = false;
+      });
+    },
+    handleCurrentChange: function handleCurrentChange(value) {},
+    handleUserSearch: function handleUserSearch() {
+      this.lookupAccount();
+    },
+    handleUserView: function handleUserView(index, row) {
+      this.$router.push({
+        path: '/userdetail',
+        query: { id: row.id, company: row.company }
+      });
+    },
+    handleTabClick: function handleTabClick(tab, event) {
+      if (tab.paneName === 'searchTab') {
+        this.lookupAccount();
+      }
     }
   }
 });
 
 /***/ }),
 
-/***/ 1672:
+/***/ 1680:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(75)(false);
@@ -3654,7 +3775,7 @@ exports.push([module.i, "", ""]);
 
 /***/ }),
 
-/***/ 1673:
+/***/ 1681:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(75)(false);
@@ -3669,38 +3790,38 @@ exports.push([module.i, "", ""]);
 
 /***/ }),
 
-/***/ 1687:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-const EQUAL = "=";
-const AMP = "&";
-module.exports = body => {
-    return Object.keys(body)
-        .map(key => Array.isArray(body[key])
-            ? body[key].map(value => key + EQUAL + encodeURIComponent(value)).join(AMP)
-            : key + EQUAL + encodeURIComponent(body[key])
-        ).join(AMP);
-};
-
-/***/ }),
-
-/***/ 1692:
+/***/ 1698:
 /***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_c('el-card', {
-    staticClass: "page-card"
+  return _c('div', [_c('el-tabs', {
+    attrs: {
+      "type": "border-card"
+    },
+    on: {
+      "tab-click": _vm.handleTabClick
+    },
+    model: {
+      value: (_vm.activeTabName),
+      callback: function($$v) {
+        _vm.activeTabName = $$v
+      },
+      expression: "activeTabName"
+    }
+  }, [_c('el-tab-pane', {
+    attrs: {
+      "label": "个人ID注册",
+      "name": "registerTab"
+    }
   }, [_c('div', {
     staticClass: "w-form"
   }, [_c('el-form', {
-    ref: "publishForm",
+    ref: "regForm",
     attrs: {
-      "model": _vm.publishForm,
+      "model": _vm.regForm,
       "label-width": "90px",
       "label-position": "left",
-      "rules": _vm.publishFormRules
+      "rules": _vm.regFormRules
     }
   }, [_c('el-form-item', {
     attrs: {
@@ -3713,11 +3834,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "placeholder": "请选择发布平台"
     },
     model: {
-      value: (_vm.publishForm.company),
+      value: (_vm.regForm.company),
       callback: function($$v) {
-        _vm.$set(_vm.publishForm, "company", $$v)
+        _vm.$set(_vm.regForm, "company", $$v)
       },
-      expression: "publishForm.company"
+      expression: "regForm.company"
     }
   }, _vm._l((_vm.companys), function(company) {
     return _c('el-option', {
@@ -3738,66 +3859,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "placeholder": "请输入用户ID"
     },
     model: {
-      value: (_vm.publishForm.uid),
+      value: (_vm.regForm.uid),
       callback: function($$v) {
-        _vm.$set(_vm.publishForm, "uid", $$v)
+        _vm.$set(_vm.regForm, "uid", $$v)
       },
-      expression: "publishForm.uid"
-    }
-  })], 1), _vm._v(" "), _c('el-form-item', {
-    attrs: {
-      "label": "消息ID",
-      "prop": "mid"
-    }
-  }, [_c('el-input', {
-    staticClass: "form-item-content",
-    attrs: {
-      "placeholder": "请输入消息ID"
-    },
-    model: {
-      value: (_vm.publishForm.mid),
-      callback: function($$v) {
-        _vm.$set(_vm.publishForm, "mid", $$v)
-      },
-      expression: "publishForm.mid"
-    }
-  })], 1), _vm._v(" "), _c('el-form-item', {
-    attrs: {
-      "label": "标题",
-      "prop": "title"
-    }
-  }, [_c('el-input', {
-    staticClass: "form-item-content",
-    attrs: {
-      "placeholder": "请输入标题"
-    },
-    model: {
-      value: (_vm.publishForm.title),
-      callback: function($$v) {
-        _vm.$set(_vm.publishForm, "title", $$v)
-      },
-      expression: "publishForm.title"
-    }
-  })], 1), _vm._v(" "), _c('el-form-item', {
-    attrs: {
-      "label": "内容",
-      "prop": "content"
-    }
-  }, [_c('el-input', {
-    staticClass: "form-item-content",
-    attrs: {
-      "autosize": {
-        minRows: 6
-      },
-      "type": "textarea",
-      "placeholder": "请输入内容"
-    },
-    model: {
-      value: (_vm.publishForm.content),
-      callback: function($$v) {
-        _vm.$set(_vm.publishForm, "content", $$v)
-      },
-      expression: "publishForm.content"
+      expression: "regForm.uid"
     }
   })], 1), _vm._v(" "), _c('el-form-item', {
     attrs: {
@@ -3807,41 +3873,270 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "form-item-content",
     attrs: {
       "type": "primary",
-      "loading": _vm.loading
+      "loading": _vm.regloading
     },
     on: {
-      "click": _vm.submitPublish
+      "click": _vm.submitRegister
     }
-  }, [_vm._v("提交")])], 1)], 1)], 1)])], 1)
+  }, [_vm._v("账号注册")])], 1)], 1)], 1)]), _vm._v(" "), _c('el-tab-pane', {
+    attrs: {
+      "label": "批量ID注册",
+      "name": "batchRegisterTab"
+    }
+  }, [_c('div', {
+    staticClass: "w-form"
+  }, [_c('el-form', {
+    ref: "batchRegForm",
+    attrs: {
+      "model": _vm.batchRegForm,
+      "label-width": "90px",
+      "label-position": "left",
+      "rules": _vm.batchRegFormRules
+    }
+  }, [_c('el-form-item', {
+    attrs: {
+      "label": "发布平台",
+      "prop": "company"
+    }
+  }, [_c('el-select', {
+    staticClass: "form-item-content",
+    attrs: {
+      "placeholder": "请选择发布平台"
+    },
+    model: {
+      value: (_vm.batchRegForm.company),
+      callback: function($$v) {
+        _vm.$set(_vm.batchRegForm, "company", $$v)
+      },
+      expression: "batchRegForm.company"
+    }
+  }, _vm._l((_vm.companys), function(company) {
+    return _c('el-option', {
+      key: company.value,
+      attrs: {
+        "label": company.name,
+        "value": company.value
+      }
+    })
+  }))], 1), _vm._v(" "), _c('el-form-item', {
+    attrs: {
+      "label": "导入文件",
+      "prop": "filelist"
+    }
+  }, [_c('el-upload', {
+    ref: "upload",
+    staticClass: "form-item-content",
+    attrs: {
+      "limit": 1,
+      "name": "accounts_file",
+      "data": _vm.batchRegData,
+      "action": _vm.batchRegAction,
+      "before-upload": _vm.beforeFileUpload,
+      "on-exceed": _vm.handleFileExceed,
+      "on-change": _vm.handleFileChange,
+      "on-remove": _vm.handleFileRemove,
+      "file-list": _vm.batchRegForm.filelist,
+      "on-success": _vm.handleFileSuccess,
+      "on-error": _vm.handleFileError,
+      "auto-upload": false
+    }
+  }, [_c('el-button', {
+    attrs: {
+      "slot": "trigger",
+      "size": "medium",
+      "type": "primary"
+    },
+    slot: "trigger"
+  }, [_vm._v("浏览")]), _vm._v(" "), _c('div', {
+    staticClass: "el-upload__tip",
+    attrs: {
+      "slot": "tip"
+    },
+    slot: "tip"
+  }, [_vm._v("文件需为.csv格式，第一列为平台名，第二列为用户ID")])], 1)], 1), _vm._v(" "), _c('el-form-item', {
+    attrs: {
+      "size": "medium"
+    }
+  }, [_c('el-button', {
+    staticClass: "form-item-content",
+    attrs: {
+      "type": "primary",
+      "loading": _vm.batchloading
+    },
+    on: {
+      "click": _vm.submitUpload
+    }
+  }, [_vm._v("账号注册")])], 1)], 1)], 1)]), _vm._v(" "), _c('el-tab-pane', {
+    attrs: {
+      "label": "联盟内用户查询",
+      "name": "searchTab"
+    }
+  }, [_c('el-form', {
+    staticStyle: {
+      "margin-top": "10px"
+    },
+    attrs: {
+      "inline": true,
+      "model": _vm.filters
+    },
+    nativeOn: {
+      "submit": function($event) {
+        $event.preventDefault();
+        _vm.handleUserSearch($event)
+      }
+    }
+  }, [_c('el-form-item', {
+    attrs: {
+      "size": "medium",
+      "prop": "company"
+    }
+  }, [_c('el-select', {
+    staticClass: "form-item-content",
+    staticStyle: {
+      "margin-left": "0px"
+    },
+    attrs: {
+      "placeholder": "请选择发布平台"
+    },
+    model: {
+      value: (_vm.filters.company),
+      callback: function($$v) {
+        _vm.$set(_vm.filters, "company", $$v)
+      },
+      expression: "filters.company"
+    }
+  }, _vm._l((_vm.companys), function(company) {
+    return _c('el-option', {
+      key: company.value,
+      attrs: {
+        "label": company.name,
+        "value": company.value
+      }
+    })
+  }))], 1), _vm._v(" "), _c('el-form-item', {
+    attrs: {
+      "size": "medium"
+    }
+  }, [_c('el-input', {
+    attrs: {
+      "prefix-icon": "el-icon-search",
+      "placeholder": "用户ID"
+    },
+    nativeOn: {
+      "keyup": function($event) {
+        if (!('button' in $event) && _vm._k($event.keyCode, "enter", 13, $event.key)) { return null; }
+        _vm.handleSearch($event)
+      }
+    },
+    model: {
+      value: (_vm.filters.id),
+      callback: function($$v) {
+        _vm.$set(_vm.filters, "id", $$v)
+      },
+      expression: "filters.id"
+    }
+  })], 1), _vm._v(" "), _c('el-form-item', {
+    attrs: {
+      "size": "medium"
+    }
+  }, [_c('el-button', {
+    attrs: {
+      "type": "primary",
+      "icon": "el-icon-search"
+    },
+    on: {
+      "click": _vm.handleUserSearch
+    }
+  }, [_vm._v("查询")])], 1)], 1), _vm._v(" "), _c('el-table', {
+    directives: [{
+      name: "loading",
+      rawName: "v-loading",
+      value: (_vm.searchloading),
+      expression: "searchloading"
+    }],
+    ref: "userTable",
+    staticStyle: {
+      "width": "100%"
+    },
+    attrs: {
+      "data": _vm.userdata
+    }
+  }, [_c('el-table-column', {
+    attrs: {
+      "prop": "id",
+      "label": "用户ID"
+    }
+  }), _vm._v(" "), _c('el-table-column', {
+    attrs: {
+      "prop": "created_at",
+      "label": "入链时间"
+    }
+  }), _vm._v(" "), _c('el-table-column', {
+    attrs: {
+      "align": "center",
+      "label": "详情",
+      "width": "120",
+      "fixed": "right"
+    },
+    scopedSlots: _vm._u([{
+      key: "default",
+      fn: function(scope) {
+        return [_c('el-button', {
+          attrs: {
+            "size": "mini",
+            "icon": "el-icon-view",
+            "type": "primary"
+          },
+          on: {
+            "click": function($event) {
+              _vm.handleUserView(scope.$index, scope.row)
+            }
+          }
+        }, [_vm._v("查看")])]
+      }
+    }])
+  })], 1), _vm._v(" "), _c('div', {
+    staticClass: "pagination"
+  }, [_c('el-pagination', {
+    attrs: {
+      "current-page": _vm.curpage,
+      "layout": "prev, pager, next",
+      "page-size": 10,
+      "total": _vm.total
+    },
+    on: {
+      "current-change": _vm.handleCurrentChange
+    }
+  })], 1)], 1)], 1)], 1)
 },staticRenderFns: []}
 
 /***/ }),
 
-/***/ 1705:
+/***/ 1712:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1672);
+var content = __webpack_require__(1680);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(149)("76c0d87f", content, true);
+var update = __webpack_require__(149)("170d66da", content, true);
 
 /***/ }),
 
-/***/ 1706:
+/***/ 1713:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1673);
+var content = __webpack_require__(1681);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(149)("61f1e5f2", content, true);
+var update = __webpack_require__(149)("4c81cb04", content, true);
 
 /***/ })
 
