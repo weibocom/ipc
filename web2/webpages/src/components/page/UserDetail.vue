@@ -12,7 +12,7 @@
           <el-form-item size="medium" label="创建时间" prop="created_at">
             <el-input class="form-item-content" v-model="userForm.created_at" :readonly="true"></el-input>
           </el-form-item>
-          <el-form-item size="medium" label="发布内容" prop="post_count">
+          <el-form-item size="medium" label="发布条数" prop="post_count">
             <el-input class="form-item-content" v-model="userForm.post_count" :readonly="true"></el-input>
           </el-form-item>
           <el-form-item size="medium" label="私钥" prop="private_key">

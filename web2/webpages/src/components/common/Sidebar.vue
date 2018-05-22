@@ -28,7 +28,7 @@ export default {
         {
           icon: 'user-plus',
           index: 'account',
-          title: '账号申请'
+          title: '账号管理'
         },
         {
           icon: 'search',
