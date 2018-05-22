@@ -72,13 +72,12 @@ func createAccount(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 			PublicKey:  pubKey,
 		}
 
-		count, err := service.UserCount()
 		if err != nil {
 			resp = NewErrorResponse(500, err.Error())
 			w.Write(resp.ToBytes())
 			return
 		}
-		data := map[string]interface{}{"count": count, "user": user}
+		data := map[string]interface{}{"user": user}
 		resp = NewResponse(200, data)
 
 	}
@@ -102,11 +101,12 @@ func queryAccount(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 
 	users, err := service.GetUsers(company, int(page), int(pagesize), uid)
 
+	count, err := service.UserCount()
 	var resp *APIResponse
 	if err != nil {
 		resp = NewErrorResponse(500, err.Error())
 	} else {
-		data := map[string]interface{}{"users": users}
+		data := map[string]interface{}{"count": count, "users": users}
 		resp = NewResponse(200, data)
 	}
 
