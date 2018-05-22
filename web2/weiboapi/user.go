@@ -140,7 +140,7 @@ func GetIDByName(name string) (int64, error) {
 
 	buf, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		panic(err)
+		return -1, nil
 	}
 
 	user := User{}
