@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-card style="margin-bottom: 10px;" :body-style="{ padding: '20px 20px 0px 20px' }">
-      <div class="w-form" style="margin-left: 0px;">
+      <div class="w-form" style="margin-left: 0px; width: 650px;">
         <el-form :model="userForm" label-width="80px">
           <el-form-item size="medium" label="用户ID" prop="uid">
             <el-input class="form-item-content" v-model="userForm.uid" :readonly="true"></el-input>
@@ -14,6 +14,12 @@
           </el-form-item>
           <el-form-item size="medium" label="发布内容" prop="post_count">
             <el-input class="form-item-content" v-model="userForm.post_count" :readonly="true"></el-input>
+          </el-form-item>
+          <el-form-item size="medium" label="私钥" prop="private_key">
+            <el-input class="form-item-content" v-model="userForm.private_key" :readonly="true"></el-input>
+          </el-form-item>
+          <el-form-item size="medium" label="公钥" prop="public_key">
+            <el-input class="form-item-content" v-model="userForm.public_key" :readonly="true"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -66,7 +72,9 @@ export default {
         uid: '',
         company: '',
         post_count: 0,
-        created_at: ''
+        created_at: '',
+        private_key: '',
+        public_key: ''
       },
 
       contentDialogVisible: false,
@@ -115,6 +123,8 @@ export default {
             }
           })
           this.userForm.post_count = rdd.user.post_count
+          this.userForm.private_key = rdd.user.private_key
+          this.userForm.public_key = rdd.user.public_key
         },
         _ => {}
       )
