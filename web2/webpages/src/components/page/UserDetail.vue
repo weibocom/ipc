@@ -144,6 +144,7 @@ export default {
     },
     handleCurrentChange(val) {
       this.curpage = val
+      this.lookupUserContent()
     }
   }
 }

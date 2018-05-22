@@ -22,7 +22,7 @@
                       </el-option>
                     </el-select>
                   </el-form-item>
-                  <div v-if="resourcecomparetype === 'url'">
+                  <div v-if="resourcecomparetype === 'user'">
                     <el-form-item label="内容URL" prop="url">
                       <el-input class="form-item-content" v-model="leftCompareForm.url" placeholder="请输入URL" @blur="handleLeftURL(leftCompareForm.url)"></el-input>
                     </el-form-item>
@@ -64,7 +64,7 @@
                       </el-option>
                     </el-select>
                   </el-form-item>
-                  <div v-if="resourcecomparetype === 'url'">
+                  <div v-if="resourcecomparetype === 'user'">
                     <el-form-item label="内容URL" prop="url">
                       <el-input class="form-item-content" v-model="rightCompareForm.url" placeholder="请输入URL" @blur="handleRightURL(rightCompareForm.url)"></el-input>
                     </el-form-item>
@@ -108,7 +108,7 @@
                   </el-option>
                 </el-select>
               </el-form-item>
-              <div v-if="textcomparetype === 'url'">
+              <div v-if="textcomparetype === 'user'">
                 <el-form-item label="内容URL" prop="url">
                   <el-input class="form-item-content" v-model="textCompareForm.url" placeholder="请输入URL" @blur="handleURL(textCompareForm.url)"></el-input>
                 </el-form-item>
@@ -146,7 +146,7 @@
               <el-form-item label="发布平台" prop="company">
                 <el-input class="form-item-content" v-model="leftResultForm.company" :readonly="true"></el-input>
               </el-form-item>
-              <div v-if="resourcecomparetype === 'url'">
+              <div v-if="resourcecomparetype === 'user'">
                 <el-form-item label="URL" prop="url">
                   <el-input class="form-item-content" v-model="leftResultForm.url" :readonly="true"></el-input>
                 </el-form-item>
@@ -177,7 +177,7 @@
               <el-form-item label="发布平台" prop="company">
                 <el-input class="form-item-content" v-model="rightResultForm.company" :readonly="true"></el-input>
               </el-form-item>
-              <div v-if="resourcecomparetype === 'url'">
+              <div v-if="resourcecomparetype === 'user'">
                 <el-form-item label="URL" prop="url">
                   <el-input class="form-item-content" v-model="rightResultForm.url" :readonly="true"></el-input>
                 </el-form-item>
@@ -207,7 +207,7 @@
     </el-dialog>
     <el-dialog title="对比结果" width="680px" class="q-form-dialog" :visible.sync="resultDialogVisible">
       <el-form :model="resultForm" label-width="90px" label-position="left">
-        <el-form-item label="URL" prop="url" v-if="textcomparetype === 'url'">
+        <el-form-item label="URL" prop="url" v-if="textcomparetype === 'user'">
           <el-input class="form-item-content" v-model="resultForm.url" :readonly="true"></el-input>
         </el-form-item>
         <el-form-item label="哈希值" prop="dna" v-if="textcomparetype === 'dna'">
@@ -275,7 +275,7 @@ export default {
       textloading: false,
       companys: COMPANYS,
       comparetypes: [
-        { label: 'URL查询', value: 'url' },
+        { label: 'URL查询', value: 'user' },
         { label: '哈希值查询', value: 'dna' }
       ],
       textCompareForm: {
@@ -297,8 +297,8 @@ export default {
           { required: true, message: '请输入对比内容', trigger: 'blur' }
         ]
       },
-      resourcecomparetype: 'url',
-      textcomparetype: 'url',
+      resourcecomparetype: 'user',
+      textcomparetype: 'user',
       leftCompareForm: {
         dna: '',
         url: '',
@@ -381,7 +381,7 @@ export default {
               }
 
               switch (params.compareType) {
-                case 'url':
+                case 'user':
                   params.src_uid = leftFormData.uid
                   params.src_mid = leftFormData.mid
                   params.src_company = leftFormData.company
@@ -467,7 +467,7 @@ export default {
           }
 
           switch (this.textcomparetype) {
-            case 'url':
+            case 'user':
               params.compareType = 'user'
               params.src_uid = formData.uid
               params.src_mid = formData.mid

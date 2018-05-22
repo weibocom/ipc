@@ -259,7 +259,10 @@ export default {
           this.searchloading = false
         })
     },
-    handleCurrentChange(value) {},
+    handleCurrentChange(value) {
+      this.curpage = value
+      this.lookupAccount()
+    },
     handleUserSearch() {
       this.lookupAccount()
     },

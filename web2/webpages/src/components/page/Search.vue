@@ -15,7 +15,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <div v-if="searchForm.queryType === 'url'">
+          <div v-if="searchForm.queryType === 'user'">
             <el-form-item label="内容URL" prop="url">
               <el-input class="form-item-content" v-model="searchForm.url" placeholder="请输入URL" @blur="handleURL(searchForm.url)"></el-input>
             </el-form-item>
@@ -105,11 +105,11 @@ export default {
       loading: false,
       companys: COMPANYS,
       searchtypes: [
-        { label: 'URL查询', value: 'url' },
+        { label: 'URL查询', value: 'user' },
         { label: '哈希值查询', value: 'dna' }
       ],
       searchForm: {
-        queryType: 'url',
+        queryType: 'user',
         url: '',
         uid: '',
         mid: '',
