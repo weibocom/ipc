@@ -16,16 +16,23 @@ var (
 	ErrUserNotExist             = errors.New("user does not exist")
 	ErrUserAlreadyExist         = errors.New("user has already existed")
 )
-var (
-	Companies = map[string]string{
-		"weibo":    "wb",
-		"zhihu":    "zh",
-		"facebook": "fb",
-	}
-)
 
 func generateUniqueAccount(company string, user int64) string {
 	return fmt.Sprintf("%s-%d", company, user)
+}
+
+func splitCompanyAccount(author string) (company string, uidStr string) {
+	// must
+	fields := strings.SplitN(author, "-", 2)
+
+	if len(fields) == 2 {
+		company = fields[0]
+		uidStr = fields[1]
+	} else {
+		uidStr = author
+	}
+
+	return
 }
 
 func getUserID(name string) int64 {
