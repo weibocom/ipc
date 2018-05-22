@@ -272,9 +272,17 @@ func postLongText(uid, mid uint64) error {
 			return nil
 		}
 
-		u = config.PostURL + fmt.Sprintf(`?action=write&company=weibo&uid=%d&mid=%d&title=title%d&content=%s`,
-			uid, mid, mid, url.QueryEscape(v.LongTextContent))
-		resp, err := client.Get(u)
+		// u = config.PostURL + fmt.Sprintf(`?action=write&company=wb&uid=%d&mid=%d&title=title%d&content=%s`,
+		// uid, mid, mid, url.QueryEscape(v.LongTextContent))
+
+		var data = url.Values(make(map[string][]string))
+		data.Add("company", "wb")
+		data.Add("uid", strconv.FormatUint(uid, 10))
+		data.Add("mid", strconv.FormatUint(mid, 10))
+		data.Add("title", strconv.FormatUint(mid, 10))
+		data.Add("content", v.LongTextContent)
+
+		resp, err := client.PostForm(config.PostURL, data)
 		if err != nil {
 			return err
 		}
