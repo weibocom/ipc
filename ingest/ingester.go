@@ -269,6 +269,7 @@ func postLongText(uid, mid uint64) error {
 		v := m[strconv.FormatUint(mid, 10)]
 
 		if v.LongTextContent == "" {
+			log.Printf("content is empty for {uid: %d, mid: %d}", uid, mid)
 			return nil
 		}
 
@@ -293,7 +294,7 @@ func postLongText(uid, mid uint64) error {
 			return fmt.Errorf("failed to add post: status code: %d", resp.StatusCode)
 		}
 
-		log.Printf("succeed to post uid: %d, mid: %d", uid, mid)
+		log.Printf("succeed to post {uid: %d, mid: %d}", uid, mid)
 	}
 	return err
 }
