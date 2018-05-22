@@ -57,7 +57,11 @@
         </el-form>
         <!--user table-->
         <el-table :data="userdata" style="width: 100%" ref="userTable" v-loading="searchloading">
-          <el-table-column prop="id" label="用户ID"></el-table-column>
+          <el-table-column prop="id" label="用户ID">
+            <template slot-scope="scope">
+              <span class="span-button" @click="handleViewUserHome(scope.row.id)">{{scope.row.id}}</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="created_at" label="入链时间"></el-table-column>
           <el-table-column align="center" label="详情" width="120" fixed="right">
             <template slot-scope="scope">
@@ -276,12 +280,19 @@ export default {
       if (tab.paneName === 'searchTab') {
         this.lookupAccount()
       }
+    },
+    handleViewUserHome(id) {
+      window.open('https://weibo.com/' + id)
     }
   }
 }
 </script>
 
 <style scoped>
+.span-button {
+  cursor: pointer;
+  color: #409eff;
+}
 </style>
 
 <style>

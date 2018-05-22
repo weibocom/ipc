@@ -21,16 +21,28 @@
     <el-card :body-style="{ padding: '20px 20px 0px 20px' }">
       <!--user table-->
       <el-table :data="posts" style="width: 100%" ref="multipleTable" v-loading="loading">
-        <el-table-column prop="mid" label="编号"></el-table-column>
-        <el-table-column prop="created_at" label="上链时间"></el-table-column>
+        <el-table-column prop="mid" label="编号" width="180"></el-table-column>
+        <el-table-column prop="created_at" label="上链时间" width="180"></el-table-column>
         <el-table-column prop="dna" label="哈希值"></el-table-column>
         <el-table-column prop="title" label="标题"></el-table-column>
+        <el-table-column prop="content" label="内容">
+          <template slot-scope="scope">
+            <span class="content-span-button" @click="handleViewDetail(scope.row)">{{ scope.row.content }}</span>
+          </template>
+        </el-table-column>
       </el-table>
       <div class="pagination">
         <el-pagination :current-page="curpage" @current-change="handleCurrentChange" layout="prev, pager, next" :page-size="10" :total="total">
         </el-pagination>
       </div>
     </el-card>
+     <el-dialog title="详情" width="680px" class="q-form-dialog" :visible.sync="contentDialogVisible">
+      <el-form :model="contentForm" label-width="90px" label-position="left">
+        <el-form-item label="内容" prop="content">
+          <el-input class="form-item-content" :autosize="{ minRows: 12 }" type="textarea" v-model="contentForm.content" :readonly="true"></el-input>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -55,6 +67,11 @@ export default {
         company: '',
         post_count: 0,
         created_at: ''
+      },
+
+      contentDialogVisible: false,
+      contentForm: {
+        content: ''
       }
     }
   },
@@ -145,10 +162,24 @@ export default {
     handleCurrentChange(val) {
       this.curpage = val
       this.lookupUserContent()
+    },
+    handleViewDetail(row) {
+      this.contentForm.content = row.content
+      this.contentDialogVisible = true
     }
   }
 }
 </script>
+
+<style scoped>
+.content-span-button {
+  cursor: pointer;
+  color: #409eff;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+</style>
 
 <style>
 </style>

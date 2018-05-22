@@ -440,7 +440,7 @@ export default {
                       this.rightCompareForm.dna
                     )
                     this.rightResultForm.content = tool.checkData(
-                      rdd.src
+                      rdd.dst
                     )
                     // show
                     this.twoResultDialogVisible = true
