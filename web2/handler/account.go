@@ -103,7 +103,7 @@ func queryAccount(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 
 	var count int64
 
-	if uid == -1 {
+	if uid != -1 {
 		count = int64(len(users))
 	} else {
 		count, err = service.UserCount()

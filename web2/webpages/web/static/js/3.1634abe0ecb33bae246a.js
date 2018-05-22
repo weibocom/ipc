@@ -3740,7 +3740,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         _this2.searchloading = false;
       });
     },
-    handleCurrentChange: function handleCurrentChange(value) {},
+    handleCurrentChange: function handleCurrentChange(value) {
+      this.curpage = value;
+      this.lookupAccount();
+    },
     handleUserSearch: function handleUserSearch() {
       this.lookupAccount();
     },
