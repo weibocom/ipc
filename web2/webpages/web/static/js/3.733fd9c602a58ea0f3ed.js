@@ -5,14 +5,14 @@ webpackJsonp([3],{
 
 
 /* styles */
-__webpack_require__(1713)
-__webpack_require__(1712)
+__webpack_require__(1715)
+__webpack_require__(1714)
 
 var Component = __webpack_require__(150)(
   /* script */
   __webpack_require__(1662),
   /* template */
-  __webpack_require__(1698),
+  __webpack_require__(1699),
   /* scopeId */
   "data-v-51887faa",
   /* cssModules */
@@ -3757,24 +3757,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       if (tab.paneName === 'searchTab') {
         this.lookupAccount();
       }
+    },
+    handleViewUserHome: function handleViewUserHome(id) {
+      window.open('https://weibo.com/' + id);
     }
   }
 });
-
-/***/ }),
-
-/***/ 1680:
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(75)(false);
-// imports
-
-
-// module
-exports.push([module.i, "", ""]);
-
-// exports
-
 
 /***/ }),
 
@@ -3793,7 +3781,22 @@ exports.push([module.i, "", ""]);
 
 /***/ }),
 
-/***/ 1698:
+/***/ 1682:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(75)(false);
+// imports
+
+
+// module
+exports.push([module.i, ".span-button[data-v-51887faa]{cursor:pointer;color:#409eff}", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ 1699:
 /***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -4068,7 +4071,20 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "prop": "id",
       "label": "用户ID"
-    }
+    },
+    scopedSlots: _vm._u([{
+      key: "default",
+      fn: function(scope) {
+        return [_c('span', {
+          staticClass: "span-button",
+          on: {
+            "click": function($event) {
+              _vm.handleViewUserHome(scope.row.id)
+            }
+          }
+        }, [_vm._v(_vm._s(scope.row.id))])]
+      }
+    }])
   }), _vm._v(" "), _c('el-table-column', {
     attrs: {
       "prop": "created_at",
@@ -4115,13 +4131,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 
 /***/ }),
 
-/***/ 1712:
+/***/ 1714:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1680);
+var content = __webpack_require__(1681);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -4129,13 +4145,13 @@ var update = __webpack_require__(149)("170d66da", content, true);
 
 /***/ }),
 
-/***/ 1713:
+/***/ 1715:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(1681);
+var content = __webpack_require__(1682);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM

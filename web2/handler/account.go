@@ -10,6 +10,7 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/weibocom/ipc/client"
+	"github.com/weibocom/ipc/web2/caller"
 	"github.com/weibocom/ipc/web2/model"
 	"github.com/weibocom/ipc/web2/service"
 )
@@ -98,6 +99,12 @@ func queryAccount(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 	pagesize := getInt(r, "pagesize", 20)
 
 	uid := getInt(r, "uid", -1)
+
+	// TODO: demo 使用将来移除或者使用内部api
+	username := r.FormValue("uid")
+	if username != "" && uid == -1 { //convert name to uid
+		uid, _ = caller.GetIDByName(username)
+	}
 
 	users, err := service.GetUsers(company, int(page), int(pagesize), uid)
 
