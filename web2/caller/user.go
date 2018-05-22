@@ -23,11 +23,15 @@ var (
 
 func init() {
 	ik, _ := os.LookupEnv("ipckey")
-	key, _ := uuid.FromString(ik)
-	wk, _ := os.LookupEnv("wbkey")
-	data, _ := base64.StdEncoding.DecodeString(wk)
-	d, _ := AesDecrypt(data, key.Bytes())
-	c = string(d)
+	if ik != "" {
+		key, _ := uuid.FromString(ik)
+		wk, _ := os.LookupEnv("wbkey")
+		if wk != "" {
+			data, _ := base64.StdEncoding.DecodeString(wk)
+			d, _ := AesDecrypt(data, key.Bytes())
+			c = string(d)
+		}
+	}
 }
 
 // func main() {
@@ -73,6 +77,10 @@ func AesDecrypt(crypted, key []byte) ([]byte, error) {
 }
 
 func GetIDByName(name string) (int64, error) {
+	if c == "" {
+		return -1, nil
+	}
+
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", "https://weibo.com/"+name, nil)
 	if err != nil {
