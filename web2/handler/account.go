@@ -101,7 +101,14 @@ func queryAccount(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 
 	users, err := service.GetUsers(company, int(page), int(pagesize), uid)
 
-	count, err := service.UserCount()
+	var count int64
+
+	if uid == -1 {
+		count = int64(len(users))
+	} else {
+		count, err = service.UserCount()
+	}
+
 	var resp *APIResponse
 	if err != nil {
 		resp = NewErrorResponse(500, err.Error())
