@@ -25,6 +25,7 @@ type Account interface {
 	SaveAccount(a *model.Account) error
 	LoadAccount(name string) (*model.Account, error)
 	GetAccounts(company string, offset int, limit int) ([]*model.Account, error)
+	GetAccountCount() (int, error)
 }
 
 type Member interface {

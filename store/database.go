@@ -62,6 +62,13 @@ func (s *DBStore) ExistAccount(name string) (bool, error) {
 	return a != nil, err
 }
 
+func (s *DBStore) GetAccountCount() (int, error) {
+	var count int
+	db := s.db.Model(&model.Account{}).Count(&count)
+
+	return count, db.Error
+}
+
 func (s *DBStore) SaveMember(m *model.Member) error {
 	return s.db.Save(m).Error
 }

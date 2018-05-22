@@ -26,7 +26,9 @@ func (c *client) GetAccounts(company string, offset int, limit int) ([]*model.Ac
 }
 
 func (c *client) AccountCount() (uint32, error) {
-	return c.steem.Condenser.GetAccountCount()
+	//return c.steem.Condenser.GetAccountCount()
+	count, err := c.store.GetAccountCount()
+	return uint32(count), err
 }
 
 func (c *client) GetAccountPostCount(name string) (int, error) {

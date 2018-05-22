@@ -61,6 +61,10 @@ func (s *MemStore) GetAccounts(company string, offset int, limit int) ([]*model.
 	return nil, ErrNotImplemented
 }
 
+func (s *MemStore) GetAccountCount() (int, error) {
+	return 0, ErrNotImplemented
+}
+
 func (s *MemStore) SaveMember(m *model.Member) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()

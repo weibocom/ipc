@@ -69,6 +69,10 @@ func (s *MemcacheStore) GetAccounts(company string, offset int, limit int) ([]*m
 	return nil, ErrNotImplemented
 }
 
+func (s *MemcacheStore) GetAccountCount() (int, error) {
+	return 0, ErrNotImplemented
+}
+
 func (s *MemcacheStore) SaveMember(m *model.Member) error {
 	v, err := util.ToJSON(m)
 	if err != nil {
