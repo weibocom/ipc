@@ -31,9 +31,9 @@
         <el-table-column prop="created_at" label="上链时间" width="180"></el-table-column>
         <el-table-column prop="dna" label="哈希值"></el-table-column>
         <el-table-column prop="title" label="标题"></el-table-column>
-        <el-table-column prop="content" label="内容">
+        <el-table-column prop="show_content" label="内容">
           <template slot-scope="scope">
-            <span class="content-span-button" @click="handleViewDetail(scope.row)">{{ scope.row.content }}</span>
+            <span class="content-span-button" @click="handleViewDetail(scope.row)">{{ scope.row.show_content }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -42,7 +42,7 @@
         </el-pagination>
       </div>
     </el-card>
-     <el-dialog title="详情" width="680px" class="q-form-dialog" :visible.sync="contentDialogVisible">
+    <el-dialog title="详情" width="680px" class="q-form-dialog" :visible.sync="contentDialogVisible">
       <el-form :model="contentForm" label-width="90px" label-position="left">
         <el-form-item label="内容" prop="content">
           <el-input class="form-item-content" :autosize="{ minRows: 12 }" type="textarea" v-model="contentForm.content" :readonly="true"></el-input>
@@ -92,6 +92,12 @@ export default {
     posts() {
       this.table_data.forEach(n => {
         n.created_at = new Date(n.created_at).Format('yyyy-MM-dd hh:mm:ss')
+
+        if (n.content.length > 25) {
+          n.show_content = n.content.substring(0, 25) + '...'
+        } else {
+          n.show_content = n.content
+        }
       })
       return this.table_data
     }
@@ -185,9 +191,6 @@ export default {
 .content-span-button {
   cursor: pointer;
   color: #409eff;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
 }
 </style>
 
