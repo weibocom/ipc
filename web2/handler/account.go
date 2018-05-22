@@ -105,6 +105,11 @@ func queryAccount(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 	if username != "" && uid == -1 { //convert name to uid
 		uid, _ = caller.GetIDByName(username)
 	}
+	if username != "" && uid == -1 {
+		resp := NewErrorCodeResponse(40001000)
+		w.Write(resp.ToBytes())
+		return
+	}
 
 	users, err := service.GetUsers(company, int(page), int(pagesize), uid)
 
