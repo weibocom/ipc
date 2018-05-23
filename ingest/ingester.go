@@ -54,7 +54,7 @@ type post struct {
 }
 
 // NewConfigWatcher returns a new ConfigWatcher.
-func NewConfigWatcher(url string, port int, key string, done chan struct{}, limits int) *ConfigWatcher {
+func NewConfigWatcher(url string, port int, key string, done chan struct{}, limits int, rate *ratelimit.Bucket) *ConfigWatcher {
 	return &ConfigWatcher{
 		url:       url,
 		port:      port,
@@ -62,6 +62,7 @@ func NewConfigWatcher(url string, port int, key string, done chan struct{}, limi
 		done:      done,
 		ingesters: make(map[string]*Ingester),
 		limits:    limits,
+		rate:      rate,
 	}
 }
 
@@ -72,6 +73,7 @@ type ConfigWatcher struct {
 	key       string
 	done      chan struct{}
 	limits    int
+	rate      *ratelimit.Bucket
 	ingesters map[string]*Ingester
 }
 
@@ -89,7 +91,7 @@ func (u *ConfigWatcher) Watch() {
 				for _, ip := range ips {
 					if _, ok := u.ingesters[ip]; !ok {
 						log.Printf("a new ip %s resolved out of %s\n", ip, u.url)
-						ingester := NewIngester(ip, u.port, u.key, u.done, u.limits)
+						ingester := NewIngester(ip, u.port, u.key, u.done, u.limits, u.rate)
 						ingester.start()
 						u.ingesters[ip] = ingester
 					}
@@ -117,12 +119,13 @@ func (u *ConfigWatcher) Watch() {
 }
 
 // NewIngester returns a neww Ingster.
-func NewIngester(ip string, port int, key string, done chan struct{}, limits int) *Ingester {
+func NewIngester(ip string, port int, key string, done chan struct{}, limits int, rate *ratelimit.Bucket) *Ingester {
 	return &Ingester{
 		ip:        ip,
 		port:      port,
 		key:       key,
 		limits:    limits,
+		rate:      rate,
 		done:      done,
 		handlerCh: make(chan *post, config.ChannelBuffer),
 		retryCh:   make(chan *retryPost, config.ChannelBuffer),
@@ -135,6 +138,7 @@ type Ingester struct {
 	port   int
 	key    string
 	limits int
+	rate   *ratelimit.Bucket
 
 	handlerCh chan *post
 	retryCh   chan *retryPost
@@ -224,6 +228,7 @@ func (d *Ingester) handleMessage() {
 		case <-d.done:
 			return
 		case p := <-d.handlerCh:
+			d.rate.Wait(1)
 			err := postLongText(p.uid, p.mid)
 			if err != nil {
 				log.Printf("failed to fetch longtext, uid: %d, mid: %d, err: %v", p.uid, p.mid, err)

@@ -11,6 +11,7 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/juju/ratelimit"
 	"github.com/weibocom/ipc/ingest"
 )
 
@@ -18,6 +19,7 @@ var (
 	localIP = ingest.ParseLocalIP()
 	cfgFile = flag.String("config", "config.json", "configuration for all url")
 	maxTPS  = flag.Int("max-tps", 1000, "max limit of tps")
+	rate    = flag.Int("rate", 10, "add post rate")
 )
 
 func main() {
@@ -26,6 +28,8 @@ func main() {
 	go func() {
 		http.ListenAndServe("localhost:9099", nil)
 	}()
+
+	rate := ratelimit.NewBucketWithQuantum(time.Second, int64(*rate), int64(*rate))
 
 	buff, err := ioutil.ReadFile(*cfgFile)
 	if err != nil {
@@ -51,7 +55,7 @@ func main() {
 	}()
 
 	key := fmt.Sprintf(config.Consumer, localIP)
-	watcher := ingest.NewConfigWatcher(config.Host, config.Port, key, done, *maxTPS)
+	watcher := ingest.NewConfigWatcher(config.Host, config.Port, key, done, *maxTPS, rate)
 	go watcher.Watch()
 
 	<-done
