@@ -25,7 +25,7 @@ func GetContentByMsgID(company string, uid int64, mid int64) (*model.Post, error
 	post, err := ipcClient.LookupPostByMsgID(author, mid)
 
 	if post != nil {
-		post.Author, _ = splitCompanyAccount(post.Author)
+		_, post.Author = splitCompanyAccount(post.Author)
 	}
 
 	return post, err
@@ -35,7 +35,7 @@ func GetContentByDNA(dna string) (*model.Post, error) {
 	post, err := ipcClient.LookupPostByDNA(model.DNA(dna))
 
 	if post != nil {
-		post.Author, _ = splitCompanyAccount(post.Author)
+		_, post.Author = splitCompanyAccount(post.Author)
 	}
 
 	return post, err
@@ -44,7 +44,7 @@ func GetContentByDNA(dna string) (*model.Post, error) {
 func GetLatestPost() (*model.Post, error) {
 	post, err := ipcClient.GetLatestPost()
 	if post != nil {
-		post.Author, _ = splitCompanyAccount(post.Author)
+		_, post.Author = splitCompanyAccount(post.Author)
 	}
 
 	return post, err
@@ -63,7 +63,7 @@ func GetUserPosts(company string, uid int64, page int, pagesize int) (posts []*m
 	posts, err = ipcClient.LookupPostByAuther(author, offset, pagesize)
 
 	for _, p := range posts {
-		p.Author, _ = splitCompanyAccount(p.Author)
+		_, p.Author = splitCompanyAccount(p.Author)
 	}
 	return posts, postCount, err
 }
