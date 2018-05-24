@@ -73,5 +73,5 @@ func initConfig() {
 	}
 
 	config.SetConfig(conf)
-	keys.ReInitKeys()
+	keys.InitKeys(*wif)
 }
