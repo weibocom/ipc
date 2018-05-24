@@ -196,7 +196,7 @@ func (op *AccountUpdateOperation) Data() interface{} {
 type TransferOperation struct {
 	From   string `json:"from"`
 	To     string `json:"to"`
-	Amount string `json:"amount"`
+	Amount Asset  `json:"amount"`
 	Memo   string `json:"memo"`
 }
 
@@ -206,6 +206,16 @@ func (op *TransferOperation) Type() OpType {
 
 func (op *TransferOperation) Data() interface{} {
 	return op
+}
+
+func (op *TransferOperation) Marshal(encoder *encoding.Encoder) error {
+	enc := encoding.NewRollingEncoder(encoder)
+	enc.Encode(uint8(TypeTransfer.Code()))
+	enc.Encode(op.From)
+	enc.Encode(op.To)
+	enc.Encode(op.Amount)
+	enc.Encode(op.Memo)
+	return enc.Err()
 }
 
 // FC_REFLECT( steemit::chain::transfer_to_vesting_operation,

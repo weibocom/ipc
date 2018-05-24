@@ -1,6 +1,7 @@
 package client
 
 import (
+	"github.com/weibocom/ipc/config"
 	"github.com/weibocom/ipc/keys"
 	"github.com/weibocom/ipc/steem/types"
 )
@@ -29,4 +30,17 @@ func pubKey2Auth(key string) *types.Authority {
 		KeyAuths:        types.KeyAuthorityMap{types.PublicKey(key): 1},
 		WeightThreshold: 1,
 	}
+}
+
+func (c *Client) Transfer(to string, amount int64) error {
+	operation := &types.TransferOperation{
+		From:   config.GetCreator(),
+		To:     to,
+		Amount: types.NewSteemAsset(amount),
+		Memo:   "",
+	}
+
+	_, err := c.SendTrx(keys.GetPrivateKeys(), operation)
+
+	return err
 }
