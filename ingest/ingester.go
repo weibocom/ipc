@@ -21,10 +21,10 @@ var (
 	config *Config
 
 	client = &http.Client{
-		Timeout: time.Second * 10,
+		Timeout: time.Second * 30,
 		Transport: &http.Transport{
 			Dial: (&net.Dialer{
-				Timeout: 5 * time.Second,
+				Timeout: 10 * time.Second,
 			}).Dial,
 			MaxIdleConns:        100,
 			MaxIdleConnsPerHost: 100,
