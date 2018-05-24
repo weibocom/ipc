@@ -1,6 +1,8 @@
 package keys
 
-import "github.com/weibocom/ipc/config"
+import (
+	"github.com/weibocom/ipc/config"
+)
 
 var privateKeys = make([][]byte, 0, len(config.GetWIFs()))
 var publicKeys = make([][]byte, 0, len(config.GetWIFs()))
@@ -27,12 +29,14 @@ func InitKeys(wifs ...string) {
 		if err != nil {
 			panic(err)
 		}
-		priKeys = append(privateKeys, w.Serialize())
-		pubKeys = append(publicKeys, w.PublicKey().Serialize())
+		priKeys = append(priKeys, w.Serialize())
+
+		pubKeys = append(pubKeys, w.PublicKey().Serialize())
 	}
 
 	privateKeys = priKeys
 	publicKeys = pubKeys
+
 }
 
 func GetPrivateKeys() [][]byte {
