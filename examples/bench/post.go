@@ -20,7 +20,7 @@ import (
 )
 
 var (
-	rpcServer = flag.String("rpc", "ws://52.80.76.2:48090", "steem rpc server")
+	rpcServer = flag.String("rpc", "ws://52.80.3.150:48090", "steem rpc server")
 	n         = flag.Int("n", 2000, "user count")
 	initUser  = flag.Bool("user", false, "init users")
 	async     = flag.Bool("async", false, "post async or sync")
@@ -61,7 +61,6 @@ func main() {
 		}
 
 		wg.Wait()
-		c.Close()
 	}
 
 	go metrics.Log(reg, 10*time.Second, log.New(os.Stdout, "metrics: ", log.Lmicroseconds))
@@ -83,7 +82,6 @@ func main() {
 			if cerr != nil {
 				log.Fatalf("failed to new client:%s", cerr.Error())
 			}
-			defer c.Close()
 
 			for j := 0; ; j++ {
 				postLimter.Wait(1)

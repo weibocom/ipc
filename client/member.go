@@ -76,6 +76,7 @@ func (c *client) AddMember(name string) (*model.Member, error) {
 	m := &model.Member{Name: name}
 	m.ID = w.ID.Int64()
 	m.SigningKey = w.SigningKey
+	m.Wif = accWif.String()
 	m.CreatedAt = *w.Created.Time
 
 	//save to store

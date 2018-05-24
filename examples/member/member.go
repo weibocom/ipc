@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"math/rand"
-	"strconv"
 	"time"
 
 	"github.com/kr/pretty"
@@ -25,7 +24,7 @@ import (
 // }
 func main() {
 
-	tran, err := websocket.NewTransport([]string{"ws://52.80.76.2:8090"})
+	tran, err := websocket.NewTransport([]string{"ws://52.80.76.2:38090"})
 	if err != nil {
 		log.Fatalf("failed to new transport:%s", err.Error())
 	}
@@ -47,7 +46,8 @@ func main() {
 
 	// add witness
 	rand.Seed(time.Now().UnixNano())
-	account := "wbuser-" + strconv.Itoa(rand.Intn(10000))
+	//account := "wbuser-" + strconv.Itoa(rand.Intn(10000))
+	account := "weibo2"
 	m, err := client.AddMember(account)
 	if err != nil {
 		log.Fatalf("failed to add member: %v", err)

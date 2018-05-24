@@ -11,6 +11,7 @@ import (
 	"git.intra.weibo.com/platform/qservice/metrics"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 
+	"github.com/weibocom/ipc/config"
 	"github.com/weibocom/ipc/web2/server"
 	"github.com/weibocom/ipc/web2/service"
 )
@@ -22,6 +23,8 @@ var (
 	switcherAddr   = flag.String("switcher", "", "switcher addrress")
 	graphiteAddr   = flag.String("graphiteAddr", "", "graphite addrress")
 	ipcServicePool = flag.String("servicePool", "ipc", "monitor service pool")
+	creator        = flag.String("creator", "initminer", "init witness")
+	wif            = flag.String("wif", "5JzpcbsNCu6Hpad1TYmudH4rj1A22SW9Zhb1ofBGHRZSp5poqAX", "init wif")
 )
 
 func main() {
@@ -40,6 +43,8 @@ func main() {
 		}
 	}
 
+	initConfig()
+
 	s := server.New(*httpAddress, *dbAddress, *bcAddress)
 	err := s.Start()
 	if err != nil {
@@ -55,4 +60,16 @@ func main() {
 	<-signalCh
 
 	log.Println("server is closing")
+}
+
+func initConfig() {
+	conf := config.GetConfig()
+	if *creator != "" {
+		conf.Creator = *creator
+	}
+	if *wif != "" {
+		conf.Wifs = []string{*wif}
+	}
+
+	config.SetConfig(conf)
 }

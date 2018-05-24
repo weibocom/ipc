@@ -21,7 +21,8 @@ type Member struct {
 	Name       string    `gorm:"COLUMN:name;PRIMARY_KEY;TYPE:VARCHAR(64);NOT NULL"  json:"name,omitempty"`
 	ID         int64     `gorm:"COLUMN:id;NOT NULL;unique" json:"id,omitempty"`
 	Company    string    `gorm:"COLUMN:company"  json:"company,omitempty"`
-	SigningKey string    `gorm:"COLUMN:signing_key;TYPE:VARCHAR(64);NOT NULL" json:"signing_key,omitempty"`
+	SigningKey string    `gorm:"COLUMN:signing_key;TYPE:VARCHAR(128);NOT NULL" json:"signing_key,omitempty"`
+	Wif        string    `gorm:"COLUMN:wif;TYPE:VARCHAR(128);NOT NULL" json:"wif,omitempty"`
 	CreatedAt  time.Time `gorm:"COLUMN:created_at;" json:"created_at,omitempty"`
 }
 

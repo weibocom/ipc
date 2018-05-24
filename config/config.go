@@ -1,6 +1,7 @@
 package config
 
 var defaultConfig = IPCConfig{
+	Creator:       "initminer",
 	Wifs:          []string{"5JzpcbsNCu6Hpad1TYmudH4rj1A22SW9Zhb1ofBGHRZSp5poqAX"},
 	ChainID:       "2ac122bd70a2f74d6f761c331f4c4da1028b783cc185d23bf5449ac5af49e198",
 	AddressPrefix: "STM",
@@ -8,6 +9,7 @@ var defaultConfig = IPCConfig{
 }
 
 type IPCConfig struct {
+	Creator       string
 	Wifs          []string
 	ChainID       string
 	AddressPrefix string
@@ -16,6 +18,10 @@ type IPCConfig struct {
 
 func SetConfig(conf IPCConfig) {
 	defaultConfig = conf
+}
+
+func GetConfig() IPCConfig {
+	return defaultConfig
 }
 
 func GetWIFs() []string {
@@ -31,7 +37,7 @@ func GetAddressPrefix() string {
 }
 
 func GetCreator() string {
-	return "initminer"
+	return defaultConfig.Creator
 }
 
 func GetCreateAccountFee() int64 {
