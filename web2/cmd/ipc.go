@@ -12,6 +12,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 
 	"github.com/weibocom/ipc/config"
+	"github.com/weibocom/ipc/keys"
 	"github.com/weibocom/ipc/web2/server"
 	"github.com/weibocom/ipc/web2/service"
 )
@@ -72,4 +73,5 @@ func initConfig() {
 	}
 
 	config.SetConfig(conf)
+	keys.ReInitKeys()
 }

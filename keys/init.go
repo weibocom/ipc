@@ -16,6 +16,25 @@ func init() {
 	}
 }
 
+// ReInitKeys re-init those keys.
+// It is useful when apps start and use different keys with initminer.
+func ReInitKeys() {
+	var priKeys = make([][]byte, 0, len(config.GetWIFs()))
+	var pubKeys = make([][]byte, 0, len(config.GetWIFs()))
+
+	for _, v := range config.GetWIFs() {
+		w, err := DecodeWIF(v)
+		if err != nil {
+			panic(err)
+		}
+		priKeys = append(privateKeys, w.Serialize())
+		pubKeys = append(publicKeys, w.PublicKey().Serialize())
+	}
+
+	privateKeys = priKeys
+	pubKeys = pubKeys
+}
+
 func GetPrivateKeys() [][]byte {
 	return privateKeys
 }
