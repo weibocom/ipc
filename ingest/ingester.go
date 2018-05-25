@@ -7,7 +7,6 @@ import (
 	"log"
 	"net"
 	"net/http"
-	"net/url"
 	"strconv"
 	"time"
 
@@ -42,15 +41,19 @@ type LongText struct {
 }
 
 type retryPost struct {
-	retries int
-	uid     uint64
-	mid     uint64
-	last    time.Time
+	retries    int
+	uid        uint64
+	mid        uint64
+	isLongtext bool
+	text       string
+	last       time.Time
 }
 
 type post struct {
-	uid uint64
-	mid uint64
+	uid        uint64
+	mid        uint64
+	isLongtext bool
+	text       string
 }
 
 // NewConfigWatcher returns a new ConfigWatcher.
@@ -204,22 +207,27 @@ func (d *Ingester) readMessage() {
 					continue
 				}
 
-				if !status.GetIsLongText() {
+				if status.GetRtIdDb() != 0 {
 					continue
 				}
 
 				uid := status.GetAuthor().GetId()
 				mid := status.GetMid()
-				level := status.GetAuthor().GetLevel()
-				sign := status.GetAuthor().GetSign()
+				// level := status.GetAuthor().GetLevel()
+				// sign := status.GetAuthor().GetSign()
 
-				if level == 2 {
-					vflag := (sign >> 6) & ((1 << 4) - 1)
-					if vflag >= 1 && vflag <= 7 {
-
-						d.handlerCh <- &post{uid: uid, mid: mid}
-					}
+				var text string
+				if !status.GetIsLongText() {
+					text = status.GetText()
 				}
+				d.handlerCh <- &post{uid: uid, mid: mid, isLongtext: status.GetIsLongText(), text: text}
+
+				// if level == 2 {
+				// 	vflag := (sign >> 6) & ((1 << 4) - 1)
+				// 	if vflag >= 1 && vflag <= 7 {
+				// 		d.handlerCh <- &post{uid: uid, mid: mid, longtext: status.GetIsLongText(), text: text}
+				// 	}
+				// }
 			}
 
 		}
@@ -227,21 +235,30 @@ func (d *Ingester) readMessage() {
 }
 
 func (d *Ingester) handleMessage() {
+	var err error
 	for {
 		select {
 		case <-d.done:
 			return
 		case p := <-d.handlerCh:
 			d.rate.Wait(1)
-			err := postLongText(p.uid, p.mid)
+
+			if p.isLongtext {
+				err = postLongText(p.uid, p.mid)
+			} else {
+				err = postText(p.uid, p.mid, p.text)
+			}
+
 			if err != nil {
 				log.Printf("failed to fetch longtext, uid: %d, mid: %d, err: %v", p.uid, p.mid, err)
 				select {
 				case d.retryCh <- &retryPost{
-					retries: config.Retries,
-					uid:     p.uid,
-					mid:     p.mid,
-					last:    time.Now(),
+					retries:    config.Retries,
+					uid:        p.uid,
+					mid:        p.mid,
+					isLongtext: p.isLongtext,
+					text:       p.text,
+					last:       time.Now(),
 				}:
 				default:
 					log.Printf("retry channel if full so {uid: %d, mid: %d} is dropped", p.uid, p.mid)
@@ -251,6 +268,31 @@ func (d *Ingester) handleMessage() {
 			}
 		}
 	}
+}
+
+func postText(uid, mid uint64, text string) error {
+	fmt.Printf("add post: {uid: %d, mid: %d, text: %s}", uid, mid, text)
+	return nil
+	// var data = url.Values(make(map[string][]string))
+	// data.Add("company", "wb")
+	// data.Add("uid", strconv.FormatUint(uid, 10))
+	// data.Add("mid", strconv.FormatUint(mid, 10))
+	// data.Add("title", strconv.FormatUint(mid, 10))
+	// data.Add("content", text)
+
+	// resp, err := client.PostForm(config.PostURL, data)
+	// if err != nil {
+	// 	return err
+	// }
+	// defer resp.Body.Close()
+	// ioutil.ReadAll(resp.Body)
+
+	// if resp.StatusCode != 200 {
+	// 	return fmt.Errorf("failed to add post: status code: %d", resp.StatusCode)
+	// }
+
+	// log.Printf("succeed to post {uid: %d, mid: %d}", uid, mid)
+	// return nil
 }
 
 func postLongText(uid, mid uint64) error {
@@ -285,25 +327,7 @@ func postLongText(uid, mid uint64) error {
 		// u = config.PostURL + fmt.Sprintf(`?action=write&company=wb&uid=%d&mid=%d&title=title%d&content=%s`,
 		// uid, mid, mid, url.QueryEscape(v.LongTextContent))
 
-		var data = url.Values(make(map[string][]string))
-		data.Add("company", "wb")
-		data.Add("uid", strconv.FormatUint(uid, 10))
-		data.Add("mid", strconv.FormatUint(mid, 10))
-		data.Add("title", strconv.FormatUint(mid, 10))
-		data.Add("content", v.LongTextContent)
-
-		resp, err := client.PostForm(config.PostURL, data)
-		if err != nil {
-			return err
-		}
-		defer resp.Body.Close()
-		ioutil.ReadAll(resp.Body)
-
-		if resp.StatusCode != 200 {
-			return fmt.Errorf("failed to add post: status code: %d", resp.StatusCode)
-		}
-
-		log.Printf("succeed to post {uid: %d, mid: %d}", uid, mid)
+		return postText(uid, mid, v.LongTextContent)
 	}
 	return err
 }
