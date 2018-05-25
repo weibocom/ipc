@@ -204,7 +204,7 @@ func (d *Ingester) readMessage() {
 					continue
 				}
 
-				if !status.GetIsLongText() {
+				if !status.GetIsLongText() || status.GetRt != nil {
 					continue
 				}
 
