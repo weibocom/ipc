@@ -20,7 +20,7 @@ import (
 )
 
 var (
-	rpcServer = flag.String("rpc", "ws://52.80.3.150:48090", "steem rpc server")
+	rpcServer = flag.String("rpc", "ws://52.80.76.2:48090", "steem rpc server")
 	n         = flag.Int("n", 2000, "user count")
 	initUser  = flag.Bool("user", false, "init users")
 	async     = flag.Bool("async", false, "post async or sync")

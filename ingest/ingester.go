@@ -7,6 +7,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"net/url"
 	"strconv"
 	"time"
 
@@ -213,21 +214,21 @@ func (d *Ingester) readMessage() {
 
 				uid := status.GetAuthor().GetId()
 				mid := status.GetMid()
-				// level := status.GetAuthor().GetLevel()
-				// sign := status.GetAuthor().GetSign()
+				level := status.GetAuthor().GetLevel()
+				sign := status.GetAuthor().GetSign()
 
 				var text string
 				if !status.GetIsLongText() {
 					text = status.GetText()
 				}
-				d.handlerCh <- &post{uid: uid, mid: mid, isLongtext: status.GetIsLongText(), text: text}
 
-				// if level == 2 {
-				// 	vflag := (sign >> 6) & ((1 << 4) - 1)
-				// 	if vflag >= 1 && vflag <= 7 {
-				// 		d.handlerCh <- &post{uid: uid, mid: mid, longtext: status.GetIsLongText(), text: text}
-				// 	}
-				// }
+				// d.handlerCh <- &post{uid: uid, mid: mid, isLongtext: status.GetIsLongText(), text: text}
+				if level == 2 {
+					vflag := (sign >> 6) & ((1 << 4) - 1)
+					if vflag >= 1 && vflag <= 7 {
+						d.handlerCh <- &post{uid: uid, mid: mid, isLongtext: status.GetIsLongText(), text: text}
+					}
+				}
 			}
 
 		}
@@ -271,28 +272,26 @@ func (d *Ingester) handleMessage() {
 }
 
 func postText(uid, mid uint64, text string) error {
-	fmt.Printf("add post: {uid: %d, mid: %d, text: %s}", uid, mid, text)
+	var data = url.Values(make(map[string][]string))
+	data.Add("company", "wb")
+	data.Add("uid", strconv.FormatUint(uid, 10))
+	data.Add("mid", strconv.FormatUint(mid, 10))
+	data.Add("title", strconv.FormatUint(mid, 10))
+	data.Add("content", text)
+
+	resp, err := client.PostForm(config.PostURL, data)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	ioutil.ReadAll(resp.Body)
+
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("failed to add post: status code: %d", resp.StatusCode)
+	}
+
+	log.Printf("succeed to post {uid: %d, mid: %d}", uid, mid)
 	return nil
-	// var data = url.Values(make(map[string][]string))
-	// data.Add("company", "wb")
-	// data.Add("uid", strconv.FormatUint(uid, 10))
-	// data.Add("mid", strconv.FormatUint(mid, 10))
-	// data.Add("title", strconv.FormatUint(mid, 10))
-	// data.Add("content", text)
-
-	// resp, err := client.PostForm(config.PostURL, data)
-	// if err != nil {
-	// 	return err
-	// }
-	// defer resp.Body.Close()
-	// ioutil.ReadAll(resp.Body)
-
-	// if resp.StatusCode != 200 {
-	// 	return fmt.Errorf("failed to add post: status code: %d", resp.StatusCode)
-	// }
-
-	// log.Printf("succeed to post {uid: %d, mid: %d}", uid, mid)
-	// return nil
 }
 
 func postLongText(uid, mid uint64) error {
