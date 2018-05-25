@@ -204,6 +204,10 @@ func (d *Ingester) readMessage() {
 					continue
 				}
 
+				if !status.GetIsLongText() {
+					continue
+				}
+
 				uid := status.GetAuthor().GetId()
 				mid := status.GetMid()
 				level := status.GetAuthor().GetLevel()
