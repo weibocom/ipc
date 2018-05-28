@@ -73,6 +73,12 @@ func (c *client) Post(author string, mid int64, title string, content []byte, ur
 		return nil, err
 	}
 
+	post, _ := c.LookupPostByMsgID(author, mid)
+
+	if post != nil {
+		return model.DNA(post.DNA), nil
+	}
+
 	digest, dna, err := c.snapshot(account, mid, author, title, content, uri)
 	if err != nil {
 		return nil, err
