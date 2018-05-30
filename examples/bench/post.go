@@ -61,6 +61,9 @@ func main() {
 		}
 
 		wg.Wait()
+
+		log.Println("finished to create users")
+		return
 	}
 
 	go metrics.Log(reg, 10*time.Second, log.New(os.Stdout, "metrics: ", log.Lmicroseconds))
@@ -89,12 +92,19 @@ func main() {
 
 				jj := startIndex + j%accPerClient
 
-				postid := uuid.NewV4().String()
+				id, _ := uuid.NewV4()
+				postid := id.String()
 
 				if *async {
 					_, err = c.PostAsync("wb-"+strconv.Itoa(jj), int64(j), postid, data, postid, []string{"test"})
 				} else {
-					_, err = c.Post("wb-"+strconv.Itoa(jj), int64(j), postid, data, postid, []string{"test"})
+					dna, err := c.Post("wb-"+strconv.Itoa(jj), int64(j), postid, data, postid, []string{"test"})
+					post, err := c.LookupPost("wb-"+strconv.Itoa(jj), dna)
+					if err != nil || post == nil {
+						fmt.Printf("failed to lookup conetent %s, err : %v\n", post.Content, err)
+					} else {
+						fmt.Printf("")
+					}
 				}
 
 				if err == nil {
