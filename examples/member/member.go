@@ -47,7 +47,7 @@ func main() {
 	// add witness
 	rand.Seed(time.Now().UnixNano())
 	//account := "wbuser-" + strconv.Itoa(rand.Intn(10000))
-	account := "weibo2"
+	account := "weibo3"
 	m, err := client.AddMember(account)
 	if err != nil {
 		log.Fatalf("failed to add member: %v", err)

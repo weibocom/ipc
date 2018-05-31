@@ -8,7 +8,6 @@ import (
 	"github.com/weibocom/ipc/model"
 )
 
-// TODO
 func (c *client) checkAccount(name string) (bool, error) {
 	return c.store.ExistAccount(name)
 }
