@@ -20,7 +20,8 @@ static int sign(
 static bool is_canonical(const unsigned char *signature);
 
 void dump(const unsigned char *array, int len) {
-	for (int i = 0; i < len; i++) {
+	int i;
+	for (i = 0; i < len; i++) {
 		printf("%d ", array[i]);
 	}
 	printf("\n");

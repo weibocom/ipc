@@ -46,6 +46,8 @@ func easyjson6601e8cdDecodeGithubComWeibocomIpcModel(in *jlexer.Lexer, out *Post
 			out.Title = string(in.String())
 		case "content":
 			out.Content = string(in.String())
+		case "keywords":
+			out.Keywords = string(in.String())
 		case "uri":
 			out.URI = string(in.String())
 		case "digest":
@@ -117,6 +119,16 @@ func easyjson6601e8cdEncodeGithubComWeibocomIpcModel(out *jwriter.Writer, in Pos
 			out.RawString(prefix)
 		}
 		out.String(string(in.Content))
+	}
+	if in.Keywords != "" {
+		const prefix string = ",\"keywords\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.String(string(in.Keywords))
 	}
 	if in.URI != "" {
 		const prefix string = ",\"uri\":"
@@ -201,6 +213,8 @@ func easyjson6601e8cdDecodeGithubComWeibocomIpcModel1(in *jlexer.Lexer, out *Mem
 			out.Company = string(in.String())
 		case "signing_key":
 			out.SigningKey = string(in.String())
+		case "wif":
+			out.Wif = string(in.String())
 		case "created_at":
 			if data := in.Raw(); in.Ok() {
 				in.AddError((out.CreatedAt).UnmarshalJSON(data))
@@ -258,6 +272,16 @@ func easyjson6601e8cdEncodeGithubComWeibocomIpcModel1(out *jwriter.Writer, in Me
 			out.RawString(prefix)
 		}
 		out.String(string(in.SigningKey))
+	}
+	if in.Wif != "" {
+		const prefix string = ",\"wif\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.String(string(in.Wif))
 	}
 	if true {
 		const prefix string = ",\"created_at\":"

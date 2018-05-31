@@ -1,9 +1,11 @@
 package store
 
 import (
+	"strings"
 	"time"
 
 	"github.com/jinzhu/gorm"
+	"github.com/weibocom/ipc/content"
 	"github.com/weibocom/ipc/model"
 )
 
@@ -101,6 +103,8 @@ func (s *DBStore) GetPostCount() (int, error) {
 }
 
 func (s *DBStore) SavePost(p *model.Post) error {
+	keywords := content.Extract(p.Content, 6)
+	p.Keywords = strings.Join(keywords, ",")
 	return s.db.Save(p).Error
 }
 
