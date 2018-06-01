@@ -22,7 +22,7 @@ func TestPost(t *testing.T) {
 
 	pp := &Post{}
 	pp.Post = p
-	pp.Similarity = 98.72
+	pp.Similarity = "98.72"
 
 	buf, _ := json.Marshal(pp)
 	t.Logf("post: %s", buf)

@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/weibocom/ipc/content"
@@ -81,7 +82,7 @@ func GetSimilarPostsByDNA(dna string, c string, keywords string, page int, pages
 		pp := &webmodel.Post{}
 		pp.Post = p
 
-		pp.Similarity = content.Similarity(c, p.Content)
+		pp.Similarity = fmt.Sprintf("%.2f", content.Similarity(c, p.Content)*100)
 		webposts = append(webposts, pp)
 	}
 	return webposts, err

@@ -4,6 +4,7 @@ package model
 
 import (
 	json "encoding/json"
+
 	easyjson "github.com/mailru/easyjson"
 	jlexer "github.com/mailru/easyjson/jlexer"
 	jwriter "github.com/mailru/easyjson/jwriter"
@@ -39,7 +40,7 @@ func easyjson5a72dc82DecodeGithubComWeibocomIpcWebModel(in *jlexer.Lexer, out *P
 		}
 		switch key {
 		case "similarity":
-			out.Similarity = float64(in.Float64())
+			out.Similarity = string(in.String())
 		case "mid":
 			out.MSGID = int64(in.Int64())
 		case "dna":
@@ -82,7 +83,7 @@ func easyjson5a72dc82EncodeGithubComWeibocomIpcWebModel(out *jwriter.Writer, in 
 		} else {
 			out.RawString(prefix)
 		}
-		out.Float64(float64(in.Similarity))
+		out.String(string(in.Similarity))
 	}
 	if in.MSGID != 0 {
 		const prefix string = ",\"mid\":"

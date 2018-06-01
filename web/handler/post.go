@@ -17,7 +17,7 @@ func configPostRoutes(router *httprouter.Router) {
 	router.GET("/posts", auth(queryPost))
 	router.GET("/account_posts", auth(queryAccountPost))
 	router.POST("/posts", auth(addPost))
-	router.GET("/similar/post", auth(LookSimilarPostsByUserPostID))
+	router.GET("/similar/post", auth(LookSimilarPosts))
 }
 
 func postCount(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -123,6 +123,19 @@ func queryPostByDNA(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 	w.Write(resp.ToBytes())
 }
 
+func LookSimilarPosts(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	t := r.FormValue("queryType")
+
+	switch t {
+	case "user":
+		LookSimilarPostsByUserPostID(w, r, ps)
+	case "dna":
+		LookSimilarPostsByDNA(w, r, ps)
+	default:
+		resp := NewErrorCodeResponse(40002000)
+		w.Write(resp.ToBytes())
+	}
+}
 func LookSimilarPostsByUserPostID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	uid := getInt(r, "uid", -1)
 	mid := getInt(r, "mid", -1)
@@ -138,6 +151,36 @@ func LookSimilarPostsByUserPostID(w http.ResponseWriter, r *http.Request, ps htt
 	post, err := service.GetContentByMsgID(company, uid, mid)
 	if err != nil {
 		resp := NewErrorCodeResponse(40002004)
+		w.Write(resp.ToBytes())
+		return
+	}
+
+	posts, err := service.GetSimilarPostsByDNA(post.DNA, post.Content, post.Keywords, int(page), int(pagesize))
+	if err != nil {
+		resp := NewErrorResponse(500, err.Error())
+		w.Write(resp.ToBytes())
+		return
+	}
+
+	data := map[string]interface{}{"posts": posts}
+	resp := NewResponse(200, data)
+	w.Write(resp.ToBytes())
+}
+
+func LookSimilarPostsByDNA(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	dna := r.FormValue("dna")
+	if dna == "" {
+		resp := NewErrorCodeResponse(40002005)
+		w.Write(resp.ToBytes())
+		return
+	}
+
+	page := getInt(r, "page", 1)
+	pagesize := getInt(r, "pagesize", 20)
+
+	post, err := service.GetContentByDNA(dna)
+	if err != nil {
+		resp := NewErrorResponse(40002004, err.Error())
 		w.Write(resp.ToBytes())
 		return
 	}

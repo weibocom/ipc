@@ -507,7 +507,7 @@ curl "http://127.0.0.1:8080/dci/text?compareType=user&src_uid=800820&src_mid=400
 - URL: http://127.0.0.1:8080/dci/text
 - HTTP METHOD: GET
 - 参数
-    - compareType: dna
+  - compareType: dna
   - src_dna: 源用户id
   - dst_content: 目标文本
   
@@ -531,5 +531,95 @@ curl "http://127.0.0.1:8080/dci/text?compareType=dna&src_dna=201cc923a5df9d8d814
         "src": "\u5317\u4eac\u73b0\u5728\u8fdb\u5165\u4e86\u96e8\u5b63"
     },
     "msg": "ok"
+}
+```
+
+### 根据uid和mid查找相似内容
+
+- URL: "http://localhost:9090/similar/post"
+- HTTP METHOD: GET
+- 参数
+  - queryType: 查询类型, user
+  - company: 公司名称
+  - uid: 用户id
+  - mid: 内容id
+  - page: 页码
+  - pagesize: 每页记录数
+  
+
+
+示例:
+
+**请求**:
+```
+curl "http://localhost:9090/similar/post?queryType=user&company=wb&uid=5579703430&mid=4246161147963454&page=1&pagesize=10"
+```
+
+**返回结果**:
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": {
+        "posts": [
+            {
+                "similarity": "98.76",
+                "mid": 4246160954700587,
+                "dna": "2031ce9ad9a7898247af5dc08a81b009e7eead0e2e45a148dc5ed021e84078e2e517b69e17a6f5d2a67f9d3c24f42d9d16251725234ba25dcd9708d01a5af5ff8b",
+                "author": "5579703430",
+                "title": "4246160954700587",
+                "content": "午安，六一儿童节，节日快乐哟[爱你][爱你][爱你] ​ 各位宝宝们，六一怎么可以没礼物呢[挤眼]你们的福利来了~\\(≧▽≦)/~\n还是老规矩①转发#怦然心动漫画[超话]#的套装链接到朋友圈并截图②关注、转发本微博在评论留下你的截图 ③ @ 三名有联系的好友\n就可以参与本次的抽奖活动啦。\n \n活动截止到6月11日届时会抽取一名幸运粉丝赠送怦然心动套装哦o(≧v≦)o宝宝们快点行动起来吧！",
+                "keywords": "六一,套装,宝宝,怦然心动,截图,转发",
+                "uri": "4246160954700587",
+                "digest": "051ae08f531a95dea250bdde87b854386ebeb4223a97686b173482b36bb1dd7d",
+                "created_at": "2018-06-01T17:58:48+08:00"
+            }
+        ]
+    }
+}
+```
+
+### 根据uid和mid查找相似内容
+
+- URL: "http://localhost:9090/similar/post"
+- HTTP METHOD: GET
+- 参数
+  - queryType: 查询类型, dna
+  - dna: dna
+  - page: 页码
+  - pagesize: 每页记录数
+  
+
+
+示例:
+
+**请求**:
+```
+curl "http://localhost:9090/similar/post?queryType=dna&dna=2031ce9ad9a7898247af5dc08a81b009e7eead0e2e45a148dc5ed021e84078e2e517b69e17a6f5d2a67f9d3c24f42d9d16251725234ba25dcd9708d01a5af5ff8b&page=1&pagesize=10"
+```
+
+**返回结果**:
+
+```
+{
+    "code": 200,
+    "msg": "ok",
+    "data": {
+        "posts": [
+            {
+                "similarity": "98.76",
+                "mid": 4246160954700587,
+                "dna": "2031ce9ad9a7898247af5dc08a81b009e7eead0e2e45a148dc5ed021e84078e2e517b69e17a6f5d2a67f9d3c24f42d9d16251725234ba25dcd9708d01a5af5ff8b",
+                "author": "5579703430",
+                "title": "4246160954700587",
+                "content": "午安，六一儿童节，节日快乐哟[爱你][爱你][爱你] ​ 各位宝宝们，六一怎么可以没礼物呢[挤眼]你们的福利来了~\\(≧▽≦)/~\n还是老规矩①转发#怦然心动漫画[超话]#的套装链接到朋友圈并截图②关注、转发本微博在评论留下你的截图 ③ @ 三名有联系的好友\n就可以参与本次的抽奖活动啦。\n \n活动截止到6月11日届时会抽取一名幸运粉丝赠送怦然心动套装哦o(≧v≦)o宝宝们快点行动起来吧！",
+                "keywords": "六一,套装,宝宝,怦然心动,截图,转发",
+                "uri": "4246160954700587",
+                "digest": "051ae08f531a95dea250bdde87b854386ebeb4223a97686b173482b36bb1dd7d",
+                "created_at": "2018-06-01T17:58:48+08:00"
+            }
+        ]
+    }
 }
 ```
