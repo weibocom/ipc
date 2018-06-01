@@ -163,6 +163,9 @@ func (c *client) LookupPostByDNA(dna model.DNA) (*model.Post, error) {
 	return c.store.GetPostByDNA(dna)
 }
 
+func (c *client) LookupSimilarPosts(dna string, keywords string, offset int, limit int) ([]*model.Post, error) {
+	return c.store.LookupSimilarPosts(dna, keywords, offset, limit)
+}
 func (c *client) Verify(author string, dna model.DNA) (bool, error) {
 	// query this post in chain
 	content, err := c.steem.Condenser.GetContent(author, dna.ID())

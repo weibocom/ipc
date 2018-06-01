@@ -140,6 +140,10 @@ func (s *MemStore) GetPostByAuther(author string, offset int, limit int) ([]*mod
 	return nil, ErrNotImplemented
 }
 
+func (s *MemStore) LookupSimilarPosts(dna string, keywords string, offset int, limit int) ([]*model.Post, error) {
+	return nil, ErrNotImplemented
+}
+
 func (s *MemStore) Close() error {
 	return nil
 }

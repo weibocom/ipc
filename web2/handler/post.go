@@ -122,6 +122,37 @@ func queryPostByDNA(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 	w.Write(resp.ToBytes())
 }
 
+func LookSimilarPostsByUserPostID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	uid := getInt(r, "uid", -1)
+	mid := getInt(r, "mid", -1)
+	company := r.FormValue("company")
+
+	if !validateUIDMsgID(w, company, uid, mid) {
+		return
+	}
+
+	page := getInt(r, "page", 1)
+	pagesize := getInt(r, "pagesize", 20)
+
+	post, err := service.GetContentByMsgID(company, uid, mid)
+	if err != nil {
+		resp := NewErrorCodeResponse(40002004)
+		w.Write(resp.ToBytes())
+		return
+	}
+
+	posts, err := service.GetSimilarPostsByDNA(post.DNA, post.Keywords, int(page), int(pagesize))
+	if err != nil {
+		resp := NewErrorResponse(500, err.Error())
+		w.Write(resp.ToBytes())
+		return
+	}
+
+	data := map[string]interface{}{"post_count": postCount, "posts": posts}
+	resp := NewResponse(200, data)
+	w.Write(resp.ToBytes())
+}
+
 func queryAccountPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	uid := getInt(r, "uid", -1)
 	company := r.FormValue("company")

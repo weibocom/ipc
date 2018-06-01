@@ -31,6 +31,7 @@ type Client interface {
 	LookupPostByAuther(auther string, offset int, limit int) ([]*model.Post, error)
 	GetLatestPost() (*model.Post, error)
 	PostCount() (int, error)
+	LookupSimilarPosts(dna string, keywords string, offset int, limit int) ([]*model.Post, error)
 
 	Members() ([]*model.Member, error)
 	AddMember(name string) (*model.Member, error)

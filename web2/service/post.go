@@ -68,6 +68,16 @@ func GetUserPosts(company string, uid int64, page int, pagesize int) (posts []*m
 	return posts, postCount, err
 }
 
+func GetSimilarPostsByDNA(dna string, keywords string, page int, pagesize int) (posts []*model.Post, err error) {
+	offset := (page - 1) * pagesize
+	posts, err = ipcClient.LookupSimilarPosts(dna, keywords, offset, pagesize)
+
+	for _, p := range posts {
+		_, p.Author = splitCompanyAccount(p.Author)
+	}
+	return posts, err
+}
+
 func PostCount() (int64, error) {
 	count, err := ipcClient.PostCount()
 	return int64(count), err

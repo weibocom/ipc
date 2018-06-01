@@ -34,7 +34,7 @@ type Post struct {
 	Author    string    `gorm:"COLUMN:author;TYPE:VARCHAR(64);NOT NULL;index:idx_author" json:"author,omitempty"`
 	Title     string    `gorm:"COLUMN:title;TYPE:VARCHAR(128);NOT NULL" json:"title,omitempty"`
 	Content   string    `gorm:"COLUMN:content;TYPE:TEXT;NOT NULL" json:"content,omitempty"`
-	Keywords  string    `gorm:"COLUMN:keywords;TYPE:VARCHAR(256)" json:"keywords,omitempty"`
+	Keywords  string    `gorm:"COLUMN:keywords;TYPE:VARCHAR(256);index:idx_keywords" json:"keywords,omitempty"`
 	URI       string    `gorm:"COLUMN:uri;TYPE:VARCHAR(64);index:idx_author" json:"uri,omitempty"`
 	Digest    string    `gorm:"COLUMN:digest;TYPE:VARCHAR(64);NOT NULL" json:"digest,omitempty"`
 	CreatedAt time.Time `gorm:"COLUMN:created_at;NOT NULL" json:"created_at,omitempty"`

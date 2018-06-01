@@ -1,6 +1,7 @@
 package store
 
 import (
+	"sort"
 	"strings"
 	"time"
 
@@ -104,6 +105,7 @@ func (s *DBStore) GetPostCount() (int, error) {
 
 func (s *DBStore) SavePost(p *model.Post) error {
 	keywords := content.Extract(p.Content, 6)
+	sort.Strings(keywords)
 	p.Keywords = strings.Join(keywords, ",")
 	return s.db.Save(p).Error
 }
@@ -149,6 +151,12 @@ func (s *DBStore) GetPostByAuther(author string, offset int, limit int) ([]*mode
 func (s *DBStore) GetPostByDNA(dna model.DNA) (*model.Post, error) {
 	a := &model.Post{}
 	err := s.db.Model(&model.Post{}).Where("dna = ?", dna.ID()).First(&a).Error
+	return a, err
+}
+
+func (s *DBStore) LookupSimilarPosts(dna string, keywords string, offset int, limit int) ([]*model.Post, error) {
+	var a []*model.Post
+	err := s.db.Model(&model.Post{}).Where("dna != ? AND keywords = ?", dna, keywords).Order("created_at desc").Offset(offset).Limit(limit).Find(&a).Error
 	return a, err
 }
 

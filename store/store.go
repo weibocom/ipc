@@ -43,6 +43,7 @@ type Post interface {
 	GetPostByMsgID(author string, mid int64) (*model.Post, error)
 	GetPostByDNA(dna model.DNA) (*model.Post, error)
 	GetPostByAuther(author string, offset int, limit int) ([]*model.Post, error)
+	LookupSimilarPosts(dna string, keywords string, offset int, limit int) ([]*model.Post, error)
 }
 
 func getCompany(name string) string {
