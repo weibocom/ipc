@@ -17,6 +17,7 @@ func configPostRoutes(router *httprouter.Router) {
 	router.GET("/posts", auth(queryPost))
 	router.GET("/account_posts", auth(queryAccountPost))
 	router.POST("/posts", auth(addPost))
+	router.GET("/similar/post", auth(LookSimilarPostsByUserPostID))
 }
 
 func postCount(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
