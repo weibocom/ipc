@@ -31,6 +31,7 @@ var (
 func main() {
 	flag.Parse()
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	defer content.Clean()
 
 	if *switcherAddr != "" {
 		if err := switcher.Serve("tcp", *switcherAddr); err != nil {
