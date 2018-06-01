@@ -3,8 +3,10 @@ package service
 import (
 	"strconv"
 
+	"github.com/weibocom/ipc/content"
 	"github.com/weibocom/ipc/model"
 	"github.com/weibocom/ipc/store"
+	webmodel "github.com/weibocom/ipc/web/model"
 )
 
 func AddPost(company string, uid int64, mid int64, title string, content string, currentTs int64) (model.DNA, error) {
@@ -68,14 +70,21 @@ func GetUserPosts(company string, uid int64, page int, pagesize int) (posts []*m
 	return posts, postCount, err
 }
 
-func GetSimilarPostsByDNA(dna string, keywords string, page int, pagesize int) (posts []*model.Post, err error) {
+func GetSimilarPostsByDNA(dna string, c string, keywords string, page int, pagesize int) ([]*webmodel.Post, error) {
 	offset := (page - 1) * pagesize
-	posts, err = ipcClient.LookupSimilarPosts(dna, keywords, offset, pagesize)
+	posts, err := ipcClient.LookupSimilarPosts(dna, keywords, offset, pagesize)
+
+	var webposts []*webmodel.Post
 
 	for _, p := range posts {
 		_, p.Author = splitCompanyAccount(p.Author)
+		pp := &webmodel.Post{}
+		pp.Post = p
+
+		pp.Similarity = content.Similarity(c, p.Content)
+		webposts = append(webposts, pp)
 	}
-	return posts, err
+	return webposts, err
 }
 
 func PostCount() (int64, error) {

@@ -142,7 +142,7 @@ func LookSimilarPostsByUserPostID(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
-	posts, err := service.GetSimilarPostsByDNA(post.DNA, post.Keywords, int(page), int(pagesize))
+	posts, err := service.GetSimilarPostsByDNA(post.DNA, post.Content, post.Keywords, int(page), int(pagesize))
 	if err != nil {
 		resp := NewErrorResponse(500, err.Error())
 		w.Write(resp.ToBytes())
