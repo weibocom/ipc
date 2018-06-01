@@ -10,8 +10,8 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/weibocom/ipc/store"
 	"github.com/weibocom/ipc/transports/websocket"
-	"github.com/weibocom/ipc/web2/handler"
-	"github.com/weibocom/ipc/web2/service"
+	"github.com/weibocom/ipc/web/handler"
+	"github.com/weibocom/ipc/web/service"
 
 	client "github.com/weibocom/ipc/client"
 )

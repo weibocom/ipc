@@ -10,9 +10,9 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/weibocom/ipc/client"
-	"github.com/weibocom/ipc/web2/model"
-	"github.com/weibocom/ipc/web2/service"
-	"github.com/weibocom/ipc/web2/weiboapi"
+	"github.com/weibocom/ipc/web/model"
+	"github.com/weibocom/ipc/web/service"
+	"github.com/weibocom/ipc/web/weiboapi"
 )
 
 // 为web提供的账号相关的rest api

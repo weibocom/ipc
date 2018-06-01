@@ -6,7 +6,7 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 	con "github.com/weibocom/ipc/content"
-	"github.com/weibocom/ipc/web2/service"
+	"github.com/weibocom/ipc/web/service"
 )
 
 // 版权鉴定 Digital Copyright Identification

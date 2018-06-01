@@ -8,7 +8,7 @@ import (
 
 	"github.com/weibocom/ipc/keys"
 	ipcmodel "github.com/weibocom/ipc/model"
-	"github.com/weibocom/ipc/web2/model"
+	"github.com/weibocom/ipc/web/model"
 )
 
 var (

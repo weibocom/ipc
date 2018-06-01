@@ -12,9 +12,10 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 
 	"github.com/weibocom/ipc/config"
+	"github.com/weibocom/ipc/content"
 	"github.com/weibocom/ipc/keys"
-	"github.com/weibocom/ipc/web2/server"
-	"github.com/weibocom/ipc/web2/service"
+	"github.com/weibocom/ipc/web/server"
+	"github.com/weibocom/ipc/web/service"
 )
 
 var (

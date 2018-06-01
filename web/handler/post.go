@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/julienschmidt/httprouter"
-	"github.com/weibocom/ipc/web2/service"
+	"github.com/weibocom/ipc/web/service"
 )
 
 // 为web提供的内存相关的rest api
