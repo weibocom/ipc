@@ -73,9 +73,9 @@ func (c *client) Post(author string, mid int64, title string, content []byte, ur
 		return nil, err
 	}
 
-	post, _ := c.LookupPostByMsgID(author, mid)
+	post, err := c.LookupPostByMsgID(author, mid)
 
-	if post != nil {
+	if err == nil {
 		return model.DNA(post.DNA), nil
 	}
 

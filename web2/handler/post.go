@@ -149,7 +149,7 @@ func LookSimilarPostsByUserPostID(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
-	data := map[string]interface{}{"post_count": postCount, "posts": posts}
+	data := map[string]interface{}{"posts": posts}
 	resp := NewResponse(200, data)
 	w.Write(resp.ToBytes())
 }
