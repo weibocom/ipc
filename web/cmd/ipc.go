@@ -27,12 +27,17 @@ var (
 	ipcServicePool = flag.String("servicePool", "ipc", "monitor service pool")
 	creator        = flag.String("creator", "initminer", "init witness")
 	wif            = flag.String("wif", "5JzpcbsNCu6Hpad1TYmudH4rj1A22SW9Zhb1ofBGHRZSp5poqAX", "init wif")
+	jiebaData      = flag.String("jieba", "", "gojieba dict files. can download from https://github.com/yanyiwu/gojieba/tree/master/dict")
 )
 
 func main() {
 	flag.Parse()
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	defer content.Clean()
+
+	if *jiebaData != "" {
+		content.ConfigGojieba("./jieba")
+	}
+	defer content.CleanGojieba()
 
 	if *switcherAddr != "" {
 		if err := switcher.Serve("tcp", *switcherAddr); err != nil {
