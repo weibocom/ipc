@@ -17,3 +17,6 @@ export const compare_text = '/dci/text'
 
 // ts
 export const msgts_fetch = '/last_post'
+
+// similar
+export const similar_lookup = '/similar/post'

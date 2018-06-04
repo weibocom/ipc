@@ -57,6 +57,15 @@ let router = new Router({
             require(['../components/page/Search.vue'], resolve)
         },
         {
+          path: '/similar',
+          name: 'similar',
+          meta: {
+            requireAuth: true
+          },
+          component: resolve =>
+            require(['../components/page/Similar.vue'], resolve)
+        },
+        {
           path: '/compare',
           name: 'compare',
           meta: {

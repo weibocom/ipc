@@ -36,6 +36,11 @@ export default {
           title: '内容查询'
         },
         {
+          icon: 'clone',
+          index: 'similar',
+          title: '相似查询'
+        },
+        {
           icon: 'history',
           index: 'compare',
           title: '版权追溯'

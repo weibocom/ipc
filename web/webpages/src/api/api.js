@@ -111,5 +111,8 @@ export default {
   },
   lookupMsgTs() {
     return ajax(API.msgts_fetch, 'get')
+  },
+  lookupSimilar(params) {
+    return ajax(API.similar_lookup, 'get', params)
   }
 }
