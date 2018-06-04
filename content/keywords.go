@@ -6,10 +6,13 @@ import (
 	"github.com/yanyiwu/gojieba"
 )
 
-var x = gojieba.NewJieba()
+var x *gojieba.Jieba
 
 // Extract extracts keywords from string s.
 func Extract(s string, topk int) []string {
+	if x == nil {
+		x = gojieba.NewJieba()
+	}
 	return x.Extract(s, topk)
 }
 
@@ -28,5 +31,8 @@ func ConfigGojieba(d string) {
 }
 
 func CleanGojieba() {
+	if x == nil {
+		return
+	}
 	x.Free()
 }
