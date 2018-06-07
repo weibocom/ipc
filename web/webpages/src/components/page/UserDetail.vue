@@ -27,7 +27,11 @@
     <el-card :body-style="{ padding: '20px 20px 0px 20px' }">
       <!--user table-->
       <el-table :data="posts" style="width: 100%" ref="multipleTable" v-loading="loading">
-        <el-table-column prop="mid" label="编号" width="180"></el-table-column>
+        <el-table-column prop="mid" label="编号" width="180">
+           <template slot-scope="scope">
+              <span class="span-button" @click="handleViewPost(scope.row.author, scope.row.mid)">{{scope.row.mid}}</span>
+            </template>
+        </el-table-column>
         <el-table-column prop="created_at" label="上链时间" width="180"></el-table-column>
         <el-table-column prop="dna" label="哈希值"></el-table-column>
         <el-table-column prop="title" label="标题"></el-table-column>
@@ -56,6 +60,7 @@
 import API from '@/api/api.js'
 import { FormMixin } from 'components/mixins'
 import { STORAGE_KEY, COMPANYS } from '@/utils/constants'
+import tool from '@/utils/function'
 
 export default {
   mixins: [FormMixin],
@@ -182,6 +187,10 @@ export default {
     handleViewDetail(row) {
       this.contentForm.content = row.content
       this.contentDialogVisible = true
+    },
+    handleViewPost(id, mid) {
+      let obj = tool.encodeBase62(mid + '')
+      window.open('https://weibo.com/' + id + '/' + obj)
     }
   }
 }
@@ -192,7 +201,12 @@ export default {
   cursor: pointer;
   color: #409eff;
 }
+.span-button {
+  cursor: pointer;
+  color: #409eff;
+}
 </style>
+
 
 <style>
 </style>

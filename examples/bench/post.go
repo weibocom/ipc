@@ -15,12 +15,13 @@ import (
 	metrics "github.com/rcrowley/go-metrics"
 	"github.com/satori/go.uuid"
 	"github.com/weibocom/ipc/client"
+	"github.com/weibocom/ipc/model"
 	"github.com/weibocom/ipc/store"
 	"github.com/weibocom/ipc/transports/websocket"
 )
 
 var (
-	rpcServer = flag.String("rpc", "ws://52.80.76.2:48090", "steem rpc server")
+	rpcServer = flag.String("rpc", "ws://10.13.216.128:38090", "steem rpc server")
 	n         = flag.Int("n", 2000, "user count")
 	initUser  = flag.Bool("user", false, "init users")
 	async     = flag.Bool("async", false, "post async or sync")
@@ -41,7 +42,11 @@ func main() {
 	mysqlStore := store.NewMySQLStore("root@/ipc2?charset=utf8mb4&parseTime=True&loc=Local&timeout=1s&writeTimeout=3s&readTimeout=3s")
 
 	if *initUser {
-		tran, err := websocket.NewTransport([]string{*rpcServer})
+		tran, err := websocket.NewTransport([]string{*rpcServer},
+			websocket.SetAutoReconnectEnabled(true),
+			websocket.SetAutoReconnectMaxDelay(1*time.Second),
+			websocket.SetReadWriteTimeout(time.Minute),
+		)
 		if err != nil {
 			log.Fatalf("failed to new transport:%s", err.Error())
 		}
@@ -95,18 +100,20 @@ func main() {
 				id, _ := uuid.NewV4()
 				postid := id.String()
 
+				var dna model.DNA
 				if *async {
 					_, err = c.PostAsync("wb-"+strconv.Itoa(jj), int64(j), postid, data, postid, []string{"test"})
 				} else {
-					dna, err := c.Post("wb-"+strconv.Itoa(jj), int64(j), postid, data, postid, []string{"test"})
-					post, err := c.LookupPost("wb-"+strconv.Itoa(jj), dna)
-					if err != nil || post == nil {
-						fmt.Printf("failed to lookup conetent %s, err : %v\n", post.Content, err)
-					} else {
-						fmt.Printf("")
-					}
+					dna, err = c.Post("wb-"+strconv.Itoa(jj), int64(j), postid, data, postid, []string{"test"})
+					// post, err1 := c.LookupPost("wb-"+strconv.Itoa(jj), dna)
+					// if err1 != nil || post == nil {
+					// 	fmt.Printf("failed to lookup conetent, err : %v\n", err)
+					// } else {
+					// 	//fmt.Println(post.Content[:3])
+					// }
 				}
 
+				_ = dna
 				if err == nil {
 					postSuccessMeter.UpdateSince(start)
 				} else {

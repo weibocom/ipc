@@ -40,11 +40,18 @@
     <el-card style="margin-top: 10px;" :body-style="{ padding: '20px 20px 0px 20px' }">
       <el-table :data="resulttabledata" style="width: 100%" ref="resultTable" :loading="tableloading">
         <el-table-column prop="similarity" label="相似度"></el-table-column>
-        <el-table-column prop="mid" label="MID"></el-table-column>
+        <el-table-column prop="mid" label="MID">
+            <template slot-scope="scope">
+              <span class="span-button" @click="handleViewPost(scope.row.author, scope.row.mid)">{{scope.row.mid}}</span>
+            </template>
+        </el-table-column>
         <el-table-column prop="dna" label="哈希值"></el-table-column>
-        <el-table-column prop="author" label="作者"></el-table-column>
+        <el-table-column prop="author" label="作者">
+          <template slot-scope="scope">
+              <span class="span-button" @click="handleViewUserHome(scope.row.author)">{{scope.row.author}}</span>
+            </template>
+        </el-table-column>
         <el-table-column prop="title" label="标题"></el-table-column>
-        <el-table-column prop="keywords" label="关键字"></el-table-column>
         <el-table-column prop="show_content" label="内容">
           <template slot-scope="scope">
             <span class="content-span-button" @click="handleViewDetail(scope.row)">{{ scope.row.show_content }}</span>
@@ -244,6 +251,13 @@ export default {
     },
     handleNextPage() {
       this.lookupSimilar(this.curpage + 1)
+    },
+    handleViewPost(id, mid) {
+      let obj = tool.encodeBase62(mid + '')
+      window.open('https://weibo.com/' + id + '/' + obj)
+    },
+    handleViewUserHome(id) {
+      window.open('https://weibo.com/' + id)
     }
   }
 }
@@ -251,6 +265,10 @@ export default {
 
 <style scoped>
 .content-span-button {
+  cursor: pointer;
+  color: #409eff;
+}
+.span-button {
   cursor: pointer;
   color: #409eff;
 }

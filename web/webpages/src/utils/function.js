@@ -15,6 +15,20 @@ export default {
     }
     return uid
   },
+  encodeSegment(val) {
+    var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(
+      ''
+    )
+
+    var retr = "";
+    var i;
+    do{
+        i = val % 62
+        retr = chars[i] + retr;
+        val = (val - i) / 62;
+    } while (val > 0)
+    return retr;
+  },
   decodeSegment(str) {
     var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(
       ''
@@ -41,6 +55,25 @@ export default {
       retr = '0' + retr
     }
     return retr
+  },
+  encodeBase62(mid){
+    var encodeBlockSize = 7
+    var decodeBlockSize = 4
+    var str = ''
+    var midlen = mid.length
+    var segments = midlen / encodeBlockSize; // ceil($midlen / $this->encodeBlockSize)
+    var start = midlen;
+    for (var i = 0; i < segments; i++) {
+        start -= encodeBlockSize;
+        var seq = mid.substring(start, start + encodeBlockSize);
+        seq = this.encodeSegment(parseInt(seq, 10));
+        str = this.leftPad(seq, '0', decodeBlockSize) + str;
+    }
+
+    if (start > 0) {
+        str = this.encodeSegment(parseInt(mid.substring(0, start), 10)) + str;
+    }
+    return str;
   },
   decodeBase62(str) {
     //解析base62编码的mid
