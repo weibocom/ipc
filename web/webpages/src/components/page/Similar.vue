@@ -41,15 +41,15 @@
       <el-table :data="resulttabledata" style="width: 100%" ref="resultTable" :loading="tableloading">
         <el-table-column prop="similarity" label="相似度"></el-table-column>
         <el-table-column prop="mid" label="MID">
-            <template slot-scope="scope">
-              <span class="span-button" @click="handleViewPost(scope.row.author, scope.row.mid)">{{scope.row.mid}}</span>
-            </template>
+          <template slot-scope="scope">
+            <span class="span-button" @click="handleViewPost(scope.row.author, scope.row.mid)">{{scope.row.mid}}</span>
+          </template>
         </el-table-column>
         <el-table-column prop="dna" label="哈希值"></el-table-column>
         <el-table-column prop="author" label="作者">
           <template slot-scope="scope">
-              <span class="span-button" @click="handleViewUserHome(scope.row.author)">{{scope.row.author}}</span>
-            </template>
+            <span class="span-button" @click="handleViewUserHome(scope.row.author)">{{scope.row.author}}</span>
+          </template>
         </el-table-column>
         <el-table-column prop="title" label="标题"></el-table-column>
         <el-table-column prop="show_content" label="内容">
@@ -199,7 +199,11 @@ export default {
         res => {
           console.log(res)
           if (res.data.msg.toUpperCase() === 'OK') {
-            this.resultdata = res.data.data.posts
+            if (res.data.data && res.data.data.posts) {
+              this.resultdata = res.data.data.posts
+            } else {
+              this.resultdata = []
+            }
             this.curpage = curpage
           } else {
             this.$error('未找到发布信息')
