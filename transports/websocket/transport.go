@@ -194,7 +194,7 @@ Loop:
 
 		// In case this is a connection error, request a new connection.
 		err = errors.Cause(err)
-		if _, ok := err.(*websocket.CloseError); ok || err == io.ErrUnexpectedEOF {
+		if _, ok := err.(*websocket.CloseError); ok || err == io.ErrUnexpectedEOF || err == jsonrpc2.ErrClosed {
 			select {
 			case t.errCh <- errors.Wrap(err, "WebSocket closed"):
 				continue Loop
