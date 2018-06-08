@@ -136,7 +136,7 @@ func (s *MemStore) GetPostByDNA(dna model.DNA) (*model.Post, error) {
 	return s.posts[dna.ID()], nil
 }
 
-func (s *MemStore) GetPostByAuther(author string, offset int, limit int) ([]*model.Post, error) {
+func (s *MemStore) GetPostByAuthor(author string, offset int, limit int) ([]*model.Post, error) {
 	return nil, ErrNotImplemented
 }
 

@@ -68,6 +68,25 @@ func (c *client) PostCount() (int, error) {
 }
 
 func (c *client) Post(author string, mid int64, title string, content []byte, uri string, tags []string) (model.DNA, error) {
+	dna, err := c.PostAsync(author, mid, title, content, uri, tags)
+	if err != nil {
+		return dna, err
+	}
+
+	call := &AsyncPostCall{
+		Author:      author,
+		DNA:         dna,
+		MaxWaitTime: 30 * time.Second,
+		done:        make(chan struct{}),
+	}
+
+	c.asyncPostCallChan <- call
+	<-call.done
+
+	return dna, call.Error
+}
+
+func (c *client) PostSync(author string, mid int64, title string, content []byte, uri string, tags []string) (model.DNA, error) {
 	account, err := c.lookupAccount(author)
 	if err != nil {
 		return nil, err
@@ -128,8 +147,20 @@ func (c *client) LookupContent(dna model.DNA) (model.Content, error) {
 	return []byte(post.Content), nil
 }
 
-func (c *client) LookupPost(auther string, dna model.DNA) (*model.Post, error) {
-	content, err := c.steem.Condenser.GetContent(auther, dna.ID())
+func (c *client) existPost(author string, dna model.DNA) (bool, error) {
+	content, err := c.steem.Condenser.GetContent(author, dna.ID())
+	if err != nil {
+		return false, err
+	}
+
+	if content == nil {
+		return false, errors.New("content not found")
+	}
+	return true, nil
+}
+
+func (c *client) LookupPost(author string, dna model.DNA) (*model.Post, error) {
+	content, err := c.steem.Condenser.GetContent(author, dna.ID())
 	if err != nil {
 		return nil, err
 	}
@@ -138,7 +169,7 @@ func (c *client) LookupPost(auther string, dna model.DNA) (*model.Post, error) {
 
 	return &model.Post{
 		DNA:     dna.ID(),
-		Author:  auther,
+		Author:  author,
 		Title:   content.Title,
 		Content: string(cc), // TODO: 从IPFS获取内容
 		URI:     content.URL,
@@ -147,8 +178,8 @@ func (c *client) LookupPost(auther string, dna model.DNA) (*model.Post, error) {
 
 }
 
-func (c *client) LookupPostByAuther(author string, offset int, limit int) ([]*model.Post, error) {
-	return c.store.GetPostByAuther(author, offset, limit)
+func (c *client) LookupPostByAuthor(author string, offset int, limit int) ([]*model.Post, error) {
+	return c.store.GetPostByAuthor(author, offset, limit)
 }
 
 func (c *client) GetLatestPost() (*model.Post, error) {

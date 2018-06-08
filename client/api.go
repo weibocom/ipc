@@ -2,6 +2,7 @@ package client
 
 import (
 	"errors"
+	"time"
 
 	"github.com/weibocom/ipc/interfaces"
 	"github.com/weibocom/ipc/model"
@@ -12,6 +13,15 @@ import (
 var (
 	ErrAccountAlreadyExist = errors.New("account is already existed")
 )
+
+type AsyncPostCall struct {
+	Author      string
+	DNA         model.DNA
+	Error       error
+	MaxWaitTime time.Duration
+
+	done chan struct{}
+}
 
 type Client interface {
 	AccountCount() (uint32, error)
@@ -28,7 +38,7 @@ type Client interface {
 	LookupPost(author string, dna model.DNA) (*model.Post, error)
 	LookupPostByMsgID(author string, mid int64) (*model.Post, error)
 	LookupPostByDNA(dna model.DNA) (*model.Post, error)
-	LookupPostByAuther(auther string, offset int, limit int) ([]*model.Post, error)
+	LookupPostByAuthor(author string, offset int, limit int) ([]*model.Post, error)
 	GetLatestPost() (*model.Post, error)
 	PostCount() (int, error)
 	LookupSimilarPosts(dna string, keywords string, offset int, limit int) ([]*model.Post, error)
@@ -44,15 +54,56 @@ func NewClient(cc interfaces.CallCloser, store store.Store) (Client, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &client{steem: steem, store: store}, nil
+	client := &client{
+		steem:             steem,
+		store:             store,
+		asyncPostCallChan: make(chan *AsyncPostCall, 10000),
+		done:              make(chan struct{}),
+	}
+
+	go client.handleAsyncPostCall()
+
+	return client, nil
+}
+
+func (c *client) handleAsyncPostCall() {
+	for {
+		select {
+		case <-c.done:
+			return
+		case call := <-c.asyncPostCallChan:
+
+			start := time.Now()
+			var err error
+			var existed bool
+			for {
+				existed, err = c.existPost(call.Author, call.DNA)
+				if !existed {
+					time.Sleep(200 * time.Millisecond)
+					if time.Since(start) > call.MaxWaitTime {
+						break
+					}
+				} else {
+					break
+				}
+			}
+			call.Error = err
+			close(call.done)
+		}
+	}
 }
 
 type client struct {
 	steem *steemclient.Client
 	store store.Store
+
+	asyncPostCallChan chan *AsyncPostCall
+
+	done chan struct{}
 }
 
 func (c *client) Close() error {
+	close(c.done)
 	_ = c.store.Close()
 	return c.steem.Close()
 }

@@ -125,7 +125,7 @@ func main() {
 					// if err1 != nil || post == nil {
 					// 	fmt.Printf("failed to lookup conetent, err : %v\n", err)
 					// } else {
-					// 	//fmt.Println(post.Content[:3])
+					// 	fmt.Println(post.Content[:3])
 					// }
 				}
 
