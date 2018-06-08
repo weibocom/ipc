@@ -63,7 +63,7 @@ func GetUserPosts(company string, uid int64, page int, pagesize int) (posts []*m
 		return
 	}
 
-	posts, err = ipcClient.LookupPostByAuther(author, offset, pagesize)
+	posts, err = ipcClient.LookupPostByAuthor(author, offset, pagesize)
 
 	for _, p := range posts {
 		_, p.Author = splitCompanyAccount(p.Author)
