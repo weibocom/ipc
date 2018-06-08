@@ -36,6 +36,11 @@ var (
 	postFailureMeter = metrics.NewRegisteredTimer("post.failure", reg)
 )
 
+type Post struct {
+	author string
+	dna    model.DNA
+}
+
 func main() {
 	flag.Parse()
 
@@ -77,6 +82,12 @@ func main() {
 
 	data := []byte("这几天，一封来自北大学生的公开信传播甚广。信中提到的北大相关学院对这位同学提请信息公开一事的处置，引发舆论关注和思考。")
 
+	ch := make(chan *Post, 10000)
+
+	if *async {
+		go asyncAck(ch, mysqlStore)
+	}
+
 	for i := 0; i < *cc; i++ {
 		accPerClient := *n / *cc
 		startIndex := i*accPerClient + 1
@@ -101,8 +112,13 @@ func main() {
 				postid := id.String()
 
 				var dna model.DNA
+				var post *model.Post
+				_ = post
 				if *async {
-					_, err = c.PostAsync("wb-"+strconv.Itoa(jj), int64(j), postid, data, postid, []string{"test"})
+					dna, err = c.PostAsync("wb-"+strconv.Itoa(jj), int64(j), postid, data, postid, []string{"test"})
+					ch <- &Post{"wb-" + strconv.Itoa(jj), dna}
+					continue
+
 				} else {
 					dna, err = c.Post("wb-"+strconv.Itoa(jj), int64(j), postid, data, postid, []string{"test"})
 					// post, err1 := c.LookupPost("wb-"+strconv.Itoa(jj), dna)
@@ -128,6 +144,44 @@ func main() {
 	select {}
 }
 
+func asyncAck(ch chan *Post, mysqlStore *store.DBStore) {
+
+	tran, err := websocket.NewTransport([]string{*rpcServer})
+	if err != nil {
+		log.Fatalf("failed to new transport:%s", err.Error())
+	}
+	defer tran.Close()
+	c, cerr := client.NewClient(tran, mysqlStore)
+	if cerr != nil {
+		log.Fatalf("failed to new client:%s", cerr.Error())
+	}
+
+	for p := range ch {
+		start := time.Now()
+		var err error
+		var po *model.Post
+
+		for {
+			po, err = c.LookupPost(p.author, p.dna)
+			if err != nil || po == nil {
+				time.Sleep(time.Second)
+				if time.Since(start) > time.Minute {
+					break
+				}
+			} else {
+				break
+			}
+		}
+		if err == nil {
+			postSuccessMeter.UpdateSince(start)
+		} else {
+			postFailureMeter.UpdateSince(start)
+			log.Printf("post failed: %v", err)
+		}
+
+	}
+
+}
 func initAccounts(wg *sync.WaitGroup, c client.Client, start, n int) {
 	defer wg.Done()
 
