@@ -95,6 +95,10 @@ func (s *MemStore) GetPostCount() (int, error) {
 	return int(count), ErrNotImplemented
 }
 
+func (s *MemStore) GetAccountPostCount(name string) (int, error) {
+	return 0, ErrNotImplemented
+}
+
 func (s *MemStore) SavePost(p *model.Post) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()

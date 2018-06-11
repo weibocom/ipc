@@ -148,34 +148,12 @@ func (c *client) LookupContent(dna model.DNA) (model.Content, error) {
 }
 
 func (c *client) existPost(author string, dna model.DNA) (bool, error) {
-	content, err := c.steem.Condenser.GetContent(author, dna.ID())
-	if err != nil {
-		return false, err
-	}
-
-	if content == nil {
-		return false, errors.New("content not found")
-	}
-	return true, nil
+	cc, err := c.store.LoadPost(dna)
+	return cc == nil, err
 }
 
 func (c *client) LookupPost(author string, dna model.DNA) (*model.Post, error) {
-	content, err := c.steem.Condenser.GetContent(author, dna.ID())
-	if err != nil {
-		return nil, err
-	}
-
-	cc, err := c.LookupContent(dna)
-
-	return &model.Post{
-		DNA:     dna.ID(),
-		Author:  author,
-		Title:   content.Title,
-		Content: string(cc), // TODO: 从IPFS获取内容
-		URI:     content.URL,
-		Digest:  content.Body,
-	}, err
-
+	return c.store.LoadPost(dna)
 }
 
 func (c *client) LookupPostByAuthor(author string, offset int, limit int) ([]*model.Post, error) {

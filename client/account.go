@@ -1,8 +1,6 @@
 package client
 
 import (
-	"errors"
-
 	"github.com/weibocom/ipc/config"
 	"github.com/weibocom/ipc/keys"
 	"github.com/weibocom/ipc/model"
@@ -31,27 +29,10 @@ func (c *client) AccountCount() (uint32, error) {
 }
 
 func (c *client) GetAccountPostCount(name string) (int, error) {
-	accs, err := c.steem.Condenser.GetAccounts([]string{name})
-	if err != nil || len(accs) == 0 {
-		return 0, err
-	}
-
-	return int(accs[0].PostCount.Int64()), nil
+	return c.store.GetAccountCount()
 }
 
 func (c *client) LookupAccount(name string) (*model.Account, error) {
-	// exist both local db and chain
-
-	// check whether this account exists in chain
-	accounts, err := c.steem.Condenser.LookupAccountNames([]string{name})
-	if err != nil {
-		return nil, err
-	}
-	if len(accounts) == 0 {
-		return nil, errors.New("account not found in chain")
-	}
-
-	// check store
 	return c.store.LoadAccount(name)
 }
 

@@ -103,6 +103,12 @@ func (s *DBStore) GetPostCount() (int, error) {
 	return count, db.Error
 }
 
+func (s *DBStore) GetAccountPostCount(name string) (int, error) {
+	var count int
+	db := s.db.Model(&model.Post{}).Where("author = ?", name).Count(&count)
+
+	return count, db.Error
+}
 func (s *DBStore) SavePost(p *model.Post) error {
 	keywords := content.Extract(p.Content, 6)
 	sort.Strings(keywords)

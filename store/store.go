@@ -44,6 +44,7 @@ type Post interface {
 	GetPostByDNA(dna model.DNA) (*model.Post, error)
 	GetPostByAuthor(author string, offset int, limit int) ([]*model.Post, error)
 	LookupSimilarPosts(dna string, keywords string, offset int, limit int) ([]*model.Post, error)
+	GetAccountPostCount(name string) (int, error)
 }
 
 func getCompany(name string) string {

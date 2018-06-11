@@ -43,8 +43,8 @@ type Client interface {
 	PostCount() (int, error)
 	LookupSimilarPosts(dna string, keywords string, offset int, limit int) ([]*model.Post, error)
 
-	Members() ([]*model.Member, error)
-	AddMember(name string) (*model.Member, error)
+	// Members() ([]*model.Member, error)
+	// AddMember(name string) (*model.Member, error)
 	// RemoveMember(m Member) error
 	Close() error
 }
