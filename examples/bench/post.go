@@ -13,9 +13,11 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/juju/ratelimit"
 	metrics "github.com/rcrowley/go-metrics"
-	"github.com/satori/go.uuid"
-	"github.com/weibocom/ipc/client"
+	ipcclient "github.com/weibocom/ipc/client"
+	"github.com/weibocom/ipc/config"
+	"github.com/weibocom/ipc/keys"
 	"github.com/weibocom/ipc/model"
+	"github.com/weibocom/ipc/steem/client"
 	"github.com/weibocom/ipc/store"
 	"github.com/weibocom/ipc/transports/websocket"
 )
@@ -56,7 +58,9 @@ func main() {
 			log.Fatalf("failed to new transport:%s", err.Error())
 		}
 		defer tran.Close()
-		c, cerr := client.NewClient(tran, mysqlStore)
+
+		chain := client.NewSteemClient(tran, config.GetCreator(), keys.GetPrivateKeys()[0], "wb")
+		c, cerr := ipcclient.NewClient(chain, mysqlStore)
 		if cerr != nil {
 			log.Fatalf("failed to new client:%s", cerr.Error())
 		}
@@ -97,7 +101,8 @@ func main() {
 				log.Fatalf("failed to new transport:%s", err.Error())
 			}
 			defer tran.Close()
-			c, cerr := client.NewClient(tran, mysqlStore)
+			chain := client.NewSteemClient(tran, config.GetCreator(), keys.GetPrivateKeys()[0], "wb")
+			c, cerr := ipcclient.NewClient(chain, mysqlStore)
 			if cerr != nil {
 				log.Fatalf("failed to new client:%s", cerr.Error())
 			}
@@ -108,19 +113,16 @@ func main() {
 
 				jj := startIndex + j%accPerClient
 
-				id, _ := uuid.NewV4()
-				postid := id.String()
-
 				var dna model.DNA
 				var post *model.Post
 				_ = post
 				if *async {
-					dna, err = c.PostAsync("wb-"+strconv.Itoa(jj), int64(j), postid, data, postid, []string{"test"})
-					ch <- &Post{"wb-" + strconv.Itoa(jj), dna}
+					// dna, err = c.PostAsync("wb-"+strconv.Itoa(jj), int64(j), postid, data, postid, []string{"test"})
+					// ch <- &Post{"wb-" + strconv.Itoa(jj), dna}
 					continue
 
 				} else {
-					dna, err = c.Post("wb-"+strconv.Itoa(jj), int64(j), postid, data, postid, []string{"test"})
+					dna, err = c.Post("wb-"+strconv.Itoa(jj), int64(j), data)
 					// post, err1 := c.LookupPost("wb-"+strconv.Itoa(jj), dna)
 					// if err1 != nil || post == nil {
 					// 	fmt.Printf("failed to lookup conetent, err : %v\n", err)
@@ -151,7 +153,8 @@ func asyncAck(ch chan *Post, mysqlStore *store.DBStore) {
 		log.Fatalf("failed to new transport:%s", err.Error())
 	}
 	defer tran.Close()
-	c, cerr := client.NewClient(tran, mysqlStore)
+	chain := client.NewSteemClient(tran, config.GetCreator(), keys.GetPrivateKeys()[0], "wb")
+	c, cerr := ipcclient.NewClient(chain, mysqlStore)
 	if cerr != nil {
 		log.Fatalf("failed to new client:%s", cerr.Error())
 	}
@@ -182,7 +185,7 @@ func asyncAck(ch chan *Post, mysqlStore *store.DBStore) {
 	}
 
 }
-func initAccounts(wg *sync.WaitGroup, c client.Client, start, n int) {
+func initAccounts(wg *sync.WaitGroup, c ipcclient.Client, start, n int) {
 	defer wg.Done()
 
 	fmt.Println("start to init users")

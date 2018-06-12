@@ -19,6 +19,7 @@ import (
 )
 
 var (
+	company        = flag.String("company", "wb", "short company name")
 	httpAddress    = flag.String("http", ":8080", "http address")
 	dbAddress      = flag.String("db", "root@/ipc?charset=utf8mb4&parseTime=True&loc=Local&timeout=1s&writeTimeout=3s&readTimeout=3s", "mysql address")
 	bcAddress      = flag.String("bc", "ws://52.80.76.2:38090", "blockchain rpc server address")
@@ -53,7 +54,7 @@ func main() {
 
 	initConfig()
 
-	s := server.New(*httpAddress, *dbAddress, *bcAddress)
+	s := server.New(*httpAddress, *dbAddress, *bcAddress, *company)
 	err := s.Start()
 	if err != nil {
 		log.Fatal(err)

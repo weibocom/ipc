@@ -4,6 +4,7 @@ package model
 
 import (
 	json "encoding/json"
+
 	easyjson "github.com/mailru/easyjson"
 	jlexer "github.com/mailru/easyjson/jlexer"
 	jwriter "github.com/mailru/easyjson/jwriter"
@@ -42,14 +43,12 @@ func easyjson6601e8cdDecodeGithubComWeibocomIpcModel(in *jlexer.Lexer, out *Post
 			out.DNA = string(in.String())
 		case "author":
 			out.Author = string(in.String())
-		case "title":
-			out.Title = string(in.String())
 		case "content":
 			out.Content = string(in.String())
+		case "content_type":
+			out.ContentType = uint8(in.Uint8())
 		case "keywords":
 			out.Keywords = string(in.String())
-		case "uri":
-			out.URI = string(in.String())
 		case "digest":
 			out.Digest = string(in.String())
 		case "created_at":
@@ -100,16 +99,6 @@ func easyjson6601e8cdEncodeGithubComWeibocomIpcModel(out *jwriter.Writer, in Pos
 		}
 		out.String(string(in.Author))
 	}
-	if in.Title != "" {
-		const prefix string = ",\"title\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
-		out.String(string(in.Title))
-	}
 	if in.Content != "" {
 		const prefix string = ",\"content\":"
 		if first {
@@ -120,6 +109,16 @@ func easyjson6601e8cdEncodeGithubComWeibocomIpcModel(out *jwriter.Writer, in Pos
 		}
 		out.String(string(in.Content))
 	}
+	if in.ContentType != 0 {
+		const prefix string = ",\"content_type\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.Uint8(uint8(in.ContentType))
+	}
 	if in.Keywords != "" {
 		const prefix string = ",\"keywords\":"
 		if first {
@@ -129,16 +128,6 @@ func easyjson6601e8cdEncodeGithubComWeibocomIpcModel(out *jwriter.Writer, in Pos
 			out.RawString(prefix)
 		}
 		out.String(string(in.Keywords))
-	}
-	if in.URI != "" {
-		const prefix string = ",\"uri\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
-		out.String(string(in.URI))
 	}
 	if in.Digest != "" {
 		const prefix string = ",\"digest\":"

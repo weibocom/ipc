@@ -73,43 +73,6 @@ func (s *MemcacheStore) GetAccountCount() (int, error) {
 	return 0, ErrNotImplemented
 }
 
-func (s *MemcacheStore) SaveMember(m *model.Member) error {
-	v, err := util.ToJSON(m)
-	if err != nil {
-		return err
-	}
-	key := generateKey(s.prefix, "member", m.Name)
-	return s.mc.Set(&memcache.Item{
-		Key:   key,
-		Value: v,
-	})
-
-	return nil
-}
-
-func (s *MemcacheStore) LoadMember(name string) (*model.Member, error) {
-	key := generateKey(s.prefix, "member", name)
-	item, err := s.mc.Get(key)
-	if err != nil {
-		if err == memcache.ErrCacheMiss {
-			return nil, ErrNonExist
-		}
-		return nil, err
-	}
-
-	a := &model.Member{}
-	err = util.FromJSON(item.Value, a)
-	return a, err
-}
-
-func (s *MemcacheStore) ExistMember(name string) (bool, error) {
-	m, err := s.LoadMember(name)
-	if err == ErrNonExist {
-		return false, nil
-	}
-	return m != nil, err
-}
-
 func (s *MemcacheStore) GetPostCount() (int, error) {
 	return 0, ErrNotImplemented
 }
@@ -133,7 +96,7 @@ func (s *MemcacheStore) SavePost(p *model.Post) error {
 }
 
 func (s *MemcacheStore) LoadPost(dna model.DNA) (*model.Post, error) {
-	key := generateKey(s.prefix, "post", dna.ID())
+	key := generateKey(s.prefix, "post", dna.String())
 	item, err := s.mc.Get(key)
 	if err != nil {
 		if err == memcache.ErrCacheMiss {

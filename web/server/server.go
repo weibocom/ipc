@@ -8,12 +8,15 @@ import (
 	"time"
 
 	"github.com/jinzhu/gorm"
+	"github.com/weibocom/ipc/config"
+	"github.com/weibocom/ipc/keys"
 	"github.com/weibocom/ipc/store"
 	"github.com/weibocom/ipc/transports/websocket"
 	"github.com/weibocom/ipc/web/handler"
 	"github.com/weibocom/ipc/web/service"
 
-	client "github.com/weibocom/ipc/client"
+	ipcclient "github.com/weibocom/ipc/client"
+	client "github.com/weibocom/ipc/steem/client"
 )
 
 type Server struct {
@@ -21,16 +24,18 @@ type Server struct {
 	httpAddress string
 	dbAddress   string
 	bcAddress   string
+	company     string
 
 	DB     *gorm.DB
-	Client client.Client
+	Client ipcclient.Client
 }
 
-func New(httpAddress, dbAddress, bcAddress string) *Server {
+func New(httpAddress, dbAddress, bcAddress string, company string) *Server {
 	return &Server{
 		httpAddress: httpAddress,
 		dbAddress:   dbAddress,
 		bcAddress:   bcAddress,
+		company:     company,
 	}
 }
 
@@ -58,7 +63,8 @@ func (s *Server) Start() error {
 		log.Fatalf("failed to new transport: %v", err)
 	}
 
-	s.Client, err = client.NewClient(tran, store.NewMySQLStore(s.dbAddress))
+	chain := client.NewSteemClient(tran, config.GetCreator(), keys.GetPrivateKeys()[0], s.company)
+	s.Client, err = ipcclient.NewClient(chain, store.NewMySQLStore(s.dbAddress))
 	if err != nil {
 		log.Fatalf("failed to new blockchain client: %v", err)
 	}

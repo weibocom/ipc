@@ -2,7 +2,6 @@ package service
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/weibocom/ipc/content"
 	"github.com/weibocom/ipc/model"
@@ -20,7 +19,7 @@ func AddPost(company string, uid int64, mid int64, title string, content string,
 		}
 	}
 
-	return ipcClient.Post(author, mid, title, []byte(content), strconv.FormatInt(mid, 10), []string{"test"})
+	return ipcClient.Post(author, mid, []byte(content))
 }
 
 func GetContentByMsgID(company string, uid int64, mid int64) (*model.Post, error) {

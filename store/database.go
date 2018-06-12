@@ -72,30 +72,6 @@ func (s *DBStore) GetAccountCount() (int, error) {
 	return count, db.Error
 }
 
-func (s *DBStore) SaveMember(m *model.Member) error {
-	return s.db.Save(m).Error
-}
-
-func (s *DBStore) LoadMember(name string) (*model.Member, error) {
-	a := &model.Member{Name: name}
-	db := s.db.Model(&model.Member{}).Where(a).First(a)
-	if db.RecordNotFound() {
-		return nil, ErrNonExist
-	}
-	if db.Error != nil {
-		return nil, db.Error
-	}
-	return a, nil
-}
-
-func (s *DBStore) ExistMember(name string) (bool, error) {
-	m, err := s.LoadMember(name)
-	if err == ErrNonExist {
-		return false, nil
-	}
-	return m != nil, err
-}
-
 func (s *DBStore) GetPostCount() (int, error) {
 	var count int
 	db := s.db.Model(&model.Post{}).Count(&count)
@@ -117,7 +93,7 @@ func (s *DBStore) SavePost(p *model.Post) error {
 }
 
 func (s *DBStore) LoadPost(dna model.DNA) (*model.Post, error) {
-	a := &model.Post{DNA: dna.ID()}
+	a := &model.Post{DNA: dna.String()}
 	db := s.db.Model(&model.Post{}).Where(a).First(a)
 	if db.RecordNotFound() {
 		return nil, ErrNonExist
@@ -156,7 +132,7 @@ func (s *DBStore) GetPostByAuthor(author string, offset int, limit int) ([]*mode
 
 func (s *DBStore) GetPostByDNA(dna model.DNA) (*model.Post, error) {
 	a := &model.Post{}
-	err := s.db.Model(&model.Post{}).Where("dna = ?", dna.ID()).First(&a).Error
+	err := s.db.Model(&model.Post{}).Where("dna = ?", dna.String()).First(&a).Error
 	return a, err
 }
 

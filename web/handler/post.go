@@ -258,7 +258,7 @@ func addPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		return
 	}
 
-	post, err := service.GetContentByDNA(dna.ID())
+	post, err := service.GetContentByDNA(dna.String())
 	if err != nil {
 		resp := NewErrorResponse(500, err.Error())
 		w.Write(resp.ToBytes())

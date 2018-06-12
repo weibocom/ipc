@@ -1,7 +1,6 @@
 package client
 
 import (
-	"github.com/weibocom/ipc/config"
 	"github.com/weibocom/ipc/keys"
 	"github.com/weibocom/ipc/model"
 )
@@ -23,7 +22,6 @@ func (c *client) GetAccounts(company string, offset int, limit int) ([]*model.Ac
 }
 
 func (c *client) AccountCount() (uint32, error) {
-	//return c.steem.Condenser.GetAccountCount()
 	count, err := c.store.GetAccountCount()
 	return uint32(count), err
 }
@@ -49,15 +47,6 @@ func (c *client) CreateAccount(name string, meta string) (*model.Account, error)
 	if err != nil {
 		return nil, err
 	}
-	publicKey := wif.PublicKey().String()
-
-	creator := config.GetCreator()
-	fee := config.GetCreateAccountFee()
-	err = c.steem.CreateAccount(creator, name, fee, publicKey, publicKey, publicKey, publicKey, meta)
-	if err != nil {
-		return nil, err
-	}
-
 	account := &model.Account{
 		Name: name,
 		WIF:  wif.String(),

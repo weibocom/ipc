@@ -8,7 +8,6 @@ import (
 
 	// RPC
 
-	"github.com/weibocom/ipc/chain"
 	"github.com/weibocom/ipc/encoding"
 	"github.com/weibocom/ipc/signature"
 	"github.com/weibocom/ipc/steem/types"
@@ -28,10 +27,10 @@ func NewSignedTransaction(tx *types.Transaction) *SignedTransaction {
 	return &SignedTransaction{tx}
 }
 
-func (tx *SignedTransaction) Digest(c *chain.Chain) ([]byte, error) {
+func (tx *SignedTransaction) Digest(chainID string) ([]byte, error) {
 	var b bytes.Buffer
 	encoder := encoding.NewRollingEncoder(encoding.NewEncoder(&b))
-	encoder.Encode(c.ID())
+	encoder.Encode(chainID)
 	encoder.Encode(tx.Transaction)
 
 	if encoder.Err() != nil {
@@ -44,8 +43,8 @@ func (tx *SignedTransaction) Digest(c *chain.Chain) ([]byte, error) {
 }
 
 // 基于C实现的签名，与CVerify对应
-func (tx *SignedTransaction) Sign(privKeys [][]byte, chain *chain.Chain) error {
-	digest, err := tx.Digest(chain)
+func (tx *SignedTransaction) Sign(privKeys [][]byte, chainID string) error {
+	digest, err := tx.Digest(chainID)
 	if err != nil {
 		return err
 	}
@@ -66,9 +65,9 @@ func (tx *SignedTransaction) Sign(privKeys [][]byte, chain *chain.Chain) error {
 	return nil
 }
 
-func (tx *SignedTransaction) Verify(pubKeys [][]byte, chain *chain.Chain) (bool, error) {
+func (tx *SignedTransaction) Verify(pubKeys [][]byte, chainID string) (bool, error) {
 	// Compute the digest, again.
-	digest, err := tx.Digest(chain)
+	digest, err := tx.Digest(chainID)
 	if err != nil {
 		return false, err
 	}

@@ -3,7 +3,7 @@ package client
 import (
 	"log"
 
-	"github.com/weibocom/ipc/chain"
+	"github.com/weibocom/ipc/config"
 	"github.com/weibocom/ipc/steem"
 	"github.com/weibocom/ipc/steem/apis/networkbroadcast"
 	"github.com/weibocom/ipc/steem/transactions"
@@ -47,7 +47,7 @@ func (c *Client) SendTrx(privateKeys [][]byte, operations ...types.Operation) (r
 		stx.PushOperation(op)
 	}
 
-	if err := stx.Sign(privateKeys, chain.MainChain); err != nil {
+	if err := stx.Sign(privateKeys, config.GetChainID()); err != nil {
 		log.Printf("transaction sig err:%v\n", err.Error())
 		return nil, err
 	}
@@ -72,7 +72,7 @@ func (c *Client) SendTrxAsync(privateKeys [][]byte, operations ...types.Operatio
 		stx.PushOperation(op)
 	}
 
-	if err := stx.Sign(privateKeys, chain.MainChain); err != nil {
+	if err := stx.Sign(privateKeys, config.GetChainID()); err != nil {
 		log.Printf("transaction sig err:%v\n", err.Error())
 		return err
 	}

@@ -13,8 +13,12 @@ type Account struct {
 
 type DNA []byte
 
-func (dna DNA) ID() string {
+func (dna DNA) String() string {
 	return string(dna)
+}
+
+func (dna DNA) Bytes() []byte {
+	return []byte(dna)
 }
 
 type Member struct {
@@ -29,13 +33,12 @@ type Member struct {
 type Content []byte
 
 type Post struct {
-	MSGID     int64     `gorm:"COLUMN:mid;NOT NULL" json:"mid,omitempty"`
-	DNA       string    `gorm:"COLUMN:dna;index:idx_dna;TYPE:VARCHAR(255);NOT NULL" json:"dna,omitempty"`
-	Author    string    `gorm:"COLUMN:author;TYPE:VARCHAR(64);NOT NULL;index:idx_author" json:"author,omitempty"`
-	Title     string    `gorm:"COLUMN:title;TYPE:VARCHAR(128);NOT NULL" json:"title,omitempty"`
-	Content   string    `gorm:"COLUMN:content;TYPE:TEXT;NOT NULL" json:"content,omitempty"`
-	Keywords  string    `gorm:"COLUMN:keywords;TYPE:VARCHAR(256);index:idx_keywords" json:"keywords,omitempty"`
-	URI       string    `gorm:"COLUMN:uri;TYPE:VARCHAR(64);index:idx_author" json:"uri,omitempty"`
-	Digest    string    `gorm:"COLUMN:digest;TYPE:VARCHAR(64);NOT NULL" json:"digest,omitempty"`
-	CreatedAt time.Time `gorm:"COLUMN:created_at;NOT NULL" json:"created_at,omitempty"`
+	MSGID       int64     `gorm:"COLUMN:mid;NOT NULL" json:"mid,omitempty"`
+	DNA         string    `gorm:"COLUMN:dna;index:idx_dna;TYPE:VARCHAR(255);NOT NULL" json:"dna,omitempty"`
+	Author      string    `gorm:"COLUMN:author;TYPE:VARCHAR(64);NOT NULL;index:idx_author" json:"author,omitempty"`
+	Content     string    `gorm:"COLUMN:content;TYPE:TEXT;NOT NULL" json:"content,omitempty"`
+	ContentType uint8     `gorm:"COLUMN:content_type;TYPE:TINYINT" json:"content_type,omitempty"`
+	Keywords    string    `gorm:"COLUMN:keywords;TYPE:VARCHAR(256);index:idx_keywords" json:"keywords,omitempty"`
+	Digest      string    `gorm:"COLUMN:digest;TYPE:VARCHAR(64);NOT NULL" json:"digest,omitempty"`
+	CreatedAt   time.Time `gorm:"COLUMN:created_at;NOT NULL" json:"created_at,omitempty"`
 }

@@ -65,31 +65,6 @@ func (s *MemStore) GetAccountCount() (int, error) {
 	return 0, ErrNotImplemented
 }
 
-func (s *MemStore) SaveMember(m *model.Member) error {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	s.members[m.Name] = m
-	return nil
-}
-
-func (s *MemStore) LoadMember(name string) (*model.Member, error) {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-
-	v, ok := s.members[name]
-	if ok {
-		return v, nil
-	}
-	return nil, ErrNonExist
-}
-
-func (s *MemStore) ExistMember(name string) (bool, error) {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	_, exist := s.members[name]
-	return exist, nil
-}
-
 func (s *MemStore) GetPostCount() (int, error) {
 	count := atomic.LoadUint64(&s.postCount)
 	return int(count), ErrNotImplemented
@@ -114,7 +89,7 @@ func (s *MemStore) LoadPost(dna model.DNA) (*model.Post, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	v, ok := s.posts[dna.ID()]
+	v, ok := s.posts[dna.String()]
 	if ok {
 		return v, nil
 	}
@@ -124,7 +99,7 @@ func (s *MemStore) LoadPost(dna model.DNA) (*model.Post, error) {
 func (s *MemStore) ExistPost(dna model.DNA) (bool, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	_, exist := s.posts[dna.ID()]
+	_, exist := s.posts[dna.String()]
 	return exist, nil
 }
 
@@ -137,7 +112,7 @@ func (s *MemStore) GetPostByMsgID(author string, mid int64) (*model.Post, error)
 }
 
 func (s *MemStore) GetPostByDNA(dna model.DNA) (*model.Post, error) {
-	return s.posts[dna.ID()], nil
+	return s.posts[dna.String()], nil
 }
 
 func (s *MemStore) GetPostByAuthor(author string, offset int, limit int) ([]*model.Post, error) {

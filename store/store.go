@@ -15,7 +15,6 @@ var (
 
 type Store interface {
 	Account
-	Member
 	Post
 	Close() error
 }
@@ -26,12 +25,6 @@ type Account interface {
 	LoadAccount(name string) (*model.Account, error)
 	GetAccounts(company string, offset int, limit int) ([]*model.Account, error)
 	GetAccountCount() (int, error)
-}
-
-type Member interface {
-	ExistMember(name string) (bool, error)
-	SaveMember(m *model.Member) error
-	LoadMember(name string) (*model.Member, error)
 }
 
 type Post interface {

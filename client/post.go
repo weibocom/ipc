@@ -15,12 +15,10 @@ import (
 
 // TODO
 // snapshot 1. 加密存储； 2. 返回存储后的唯一id。通常是snapshot的digest
-func (c *client) snapshot(account *model.Account, mid int64, author string, title string, content []byte, uri string) ([]byte, model.DNA, error) {
+func (c *client) snapshot(account *model.Account, mid int64, author string, content []byte) ([]byte, model.DNA, error) {
 	sha := sha256.New()
 	sha.Write(util.String2Bytes(author))
-	sha.Write(util.String2Bytes(title))
 	sha.Write(content)
-	sha.Write(util.String2Bytes(uri))
 	digest := sha.Sum(nil)
 
 	dna, err := c.sign(account, digest)
@@ -32,11 +30,9 @@ func (c *client) snapshot(account *model.Account, mid int64, author string, titl
 	post := &model.Post{
 		MSGID:     mid,
 		Author:    author,
-		Title:     title,
 		Content:   string(content), // TODO: 加密
-		URI:       uri,
 		Digest:    hex.EncodeToString(digest),
-		DNA:       dna.ID(),
+		DNA:       dna.String(),
 		CreatedAt: time.Now(),
 	}
 
@@ -67,26 +63,7 @@ func (c *client) PostCount() (int, error) {
 	return c.store.GetPostCount()
 }
 
-func (c *client) Post(author string, mid int64, title string, content []byte, uri string, tags []string) (model.DNA, error) {
-	dna, err := c.PostAsync(author, mid, title, content, uri, tags)
-	if err != nil {
-		return dna, err
-	}
-
-	call := &AsyncPostCall{
-		Author:      author,
-		DNA:         dna,
-		MaxWaitTime: 30 * time.Second,
-		done:        make(chan struct{}),
-	}
-
-	c.asyncPostCallChan <- call
-	<-call.done
-
-	return dna, call.Error
-}
-
-func (c *client) PostSync(author string, mid int64, title string, content []byte, uri string, tags []string) (model.DNA, error) {
+func (c *client) Post(author string, mid int64, content []byte) (model.DNA, error) {
 	account, err := c.lookupAccount(author)
 	if err != nil {
 		return nil, err
@@ -94,47 +71,14 @@ func (c *client) PostSync(author string, mid int64, title string, content []byte
 
 	post, err := c.LookupPostByMsgID(author, mid)
 
-	if err == nil {
+	if err == nil && post != nil {
 		return model.DNA(post.DNA), nil
 	}
-
-	digest, dna, err := c.snapshot(account, mid, author, title, content, uri)
+	_, dna, err := c.snapshot(account, mid, author, content)
 	if err != nil {
 		return nil, err
 	}
-
-	body := hex.EncodeToString(digest)
-
-	accWif, err := keys.DecodeWIF(account.WIF)
-	if err != nil {
-		return nil, err
-	}
-	privateKeys := [][]byte{accWif.PrivateKey().Serialize()}
-	_, err = c.steem.Post(privateKeys, author, title, body, dna.ID(), dna.ID(), "", tags)
-
-	return dna, err
-}
-
-func (c *client) PostAsync(author string, mid int64, title string, content []byte, uri string, tags []string) (model.DNA, error) {
-	account, err := c.lookupAccount(author)
-	if err != nil {
-		return nil, err
-	}
-
-	digest, dna, err := c.snapshot(account, mid, author, title, content, uri)
-	if err != nil {
-		return nil, err
-	}
-
-	body := hex.EncodeToString(digest)
-
-	accWif, err := keys.DecodeWIF(account.WIF)
-	if err != nil {
-		return nil, err
-	}
-	privateKeys := [][]byte{accWif.PrivateKey().Serialize()}
-	err = c.steem.PostAsync(privateKeys, author, title, body, dna.ID(), dna.ID(), "", tags)
-
+	err = c.ipchain.Post(dna.String())
 	return dna, err
 }
 
@@ -175,14 +119,9 @@ func (c *client) LookupPostByDNA(dna model.DNA) (*model.Post, error) {
 func (c *client) LookupSimilarPosts(dna string, keywords string, offset int, limit int) ([]*model.Post, error) {
 	return c.store.LookupSimilarPosts(dna, keywords, offset, limit)
 }
-func (c *client) Verify(author string, dna model.DNA) (bool, error) {
-	// query this post in chain
-	content, err := c.steem.Condenser.GetContent(author, dna.ID())
-	if err != nil {
-		return false, err
-	}
-
-	return content != nil, nil
+func (c *client) Verify(dna model.DNA) bool {
+	err := c.ipchain.Verify(dna.String())
+	return err == nil
 }
 
 func (c *client) CheckSimilar(a, b model.DNA) (float64, error) {
