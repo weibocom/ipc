@@ -20,7 +20,7 @@ type Client interface {
 	GetAccountPostCount(name string) (int, error)
 
 	// chain
-	Post(author string, mid int64, content []byte) (model.DNA, error)
+	Post(author string, mid int64, content []byte, contentType ContentType) (model.DNA, error)
 	Verify(dna model.DNA) bool
 
 	CheckSimilar(a, b model.DNA) (float64, error)

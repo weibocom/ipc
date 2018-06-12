@@ -122,7 +122,7 @@ func main() {
 					continue
 
 				} else {
-					dna, err = c.Post("wb-"+strconv.Itoa(jj), int64(j), data)
+					dna, err = c.Post("wb-"+strconv.Itoa(jj), int64(j), data, ipcclient.ContentPost)
 					// post, err1 := c.LookupPost("wb-"+strconv.Itoa(jj), dna)
 					// if err1 != nil || post == nil {
 					// 	fmt.Printf("failed to lookup conetent, err : %v\n", err)

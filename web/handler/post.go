@@ -249,9 +249,8 @@ func addPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	if title == "" {
 		title = fmt.Sprintf("%s-%d-%d", company, uid, mid)
 	}
-	_ = contentType
 
-	dna, err := service.AddPost(company, uid, mid, title, content, time.Now().UnixNano()/1e6)
+	dna, err := service.AddPost(company, uid, mid, title, content, time.Now().UnixNano()/1e6, contentType)
 	if err != nil {
 		resp := NewErrorResponse(500, err.Error())
 		w.Write(resp.ToBytes())

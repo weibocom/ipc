@@ -3,13 +3,14 @@ package service
 import (
 	"fmt"
 
+	"github.com/weibocom/ipc/client"
 	"github.com/weibocom/ipc/content"
 	"github.com/weibocom/ipc/model"
 	"github.com/weibocom/ipc/store"
 	webmodel "github.com/weibocom/ipc/web/model"
 )
 
-func AddPost(company string, uid int64, mid int64, title string, content string, currentTs int64) (model.DNA, error) {
+func AddPost(company string, uid int64, mid int64, title string, content string, currentTs int64, contentType string) (model.DNA, error) {
 	author := generateUniqueAccount(company, uid)
 	_, err := ipcClient.LookupAccount(author)
 	if err == store.ErrNonExist {
@@ -19,7 +20,8 @@ func AddPost(company string, uid int64, mid int64, title string, content string,
 		}
 	}
 
-	return ipcClient.Post(author, mid, []byte(content))
+	ct := client.ParseContentType(contentType)
+	return ipcClient.Post(author, mid, []byte(content), ct)
 }
 
 func GetContentByMsgID(company string, uid int64, mid int64) (*model.Post, error) {

@@ -38,6 +38,7 @@ type Post struct {
 	Author      string    `gorm:"COLUMN:author;TYPE:VARCHAR(64);NOT NULL;index:idx_author" json:"author,omitempty"`
 	Content     string    `gorm:"COLUMN:content;TYPE:TEXT;NOT NULL" json:"content,omitempty"`
 	ContentType uint8     `gorm:"COLUMN:content_type;TYPE:TINYINT" json:"content_type,omitempty"`
+	StoreType   uint8     `gorm:"COLUMN:store_type;TYPE:TINYINT" json:"store_type,omitempty"`
 	Keywords    string    `gorm:"COLUMN:keywords;TYPE:VARCHAR(256);index:idx_keywords" json:"keywords,omitempty"`
 	Digest      string    `gorm:"COLUMN:digest;TYPE:VARCHAR(64);NOT NULL" json:"digest,omitempty"`
 	CreatedAt   time.Time `gorm:"COLUMN:created_at;NOT NULL" json:"created_at,omitempty"`

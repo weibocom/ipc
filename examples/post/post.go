@@ -39,7 +39,7 @@ func main() {
 
 	log.Printf("create account:%v, %v\n", a, err)
 
-	dna, err := client.Post(account, 1000, []byte(content))
+	dna, err := client.Post(account, 1000, []byte(content), ipcclient.ContentPost)
 
 	if err != nil {
 		log.Fatalf("failed to post: %v", err)

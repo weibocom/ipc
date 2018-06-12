@@ -15,7 +15,7 @@ import (
 
 // TODO
 // snapshot 1. 加密存储； 2. 返回存储后的唯一id。通常是snapshot的digest
-func (c *client) snapshot(account *model.Account, mid int64, author string, content []byte) ([]byte, model.DNA, error) {
+func (c *client) snapshot(account *model.Account, mid int64, author string, content []byte, contentType ContentType) ([]byte, model.DNA, error) {
 	sha := sha256.New()
 	sha.Write(util.String2Bytes(author))
 	sha.Write(content)
@@ -28,12 +28,14 @@ func (c *client) snapshot(account *model.Account, mid int64, author string, cont
 	}
 
 	post := &model.Post{
-		MSGID:     mid,
-		Author:    author,
-		Content:   string(content), // TODO: 加密
-		Digest:    hex.EncodeToString(digest),
-		DNA:       dna.String(),
-		CreatedAt: time.Now(),
+		MSGID:       mid,
+		Author:      author,
+		Content:     string(content),     // store in db in default
+		ContentType: contentType.Value(), // 0 is post
+		StoreType:   StoreInDB.Value(),
+		Digest:      hex.EncodeToString(digest),
+		DNA:         dna.String(),
+		CreatedAt:   time.Now(),
 	}
 
 	err = c.store.SavePost(post)
@@ -63,7 +65,7 @@ func (c *client) PostCount() (int, error) {
 	return c.store.GetPostCount()
 }
 
-func (c *client) Post(author string, mid int64, content []byte) (model.DNA, error) {
+func (c *client) Post(author string, mid int64, content []byte, contentType ContentType) (model.DNA, error) {
 	account, err := c.lookupAccount(author)
 	if err != nil {
 		return nil, err
@@ -74,7 +76,7 @@ func (c *client) Post(author string, mid int64, content []byte) (model.DNA, erro
 	if err == nil && post != nil {
 		return model.DNA(post.DNA), nil
 	}
-	_, dna, err := c.snapshot(account, mid, author, content)
+	_, dna, err := c.snapshot(account, mid, author, content, contentType)
 	if err != nil {
 		return nil, err
 	}
